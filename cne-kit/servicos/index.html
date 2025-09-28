@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="pt"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serviços</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/main.css">
+<meta name="description" content="">
+</head><body>
+<header>
+  <div class="container nav" aria-label="Cabeçalho">
+    <a class="brand" href="/index.html">
+      <img src="/assets/img/logo.svg" alt="Logótipo CNE" width="34" height="34"/>
+      <span>CNE · Guiné‑Bissau</span>
+    </a>
+    <nav>
+      <button class="btn btn-ghost menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">☰</button>
+      <ul id="menu" role="menubar">
+        <li><a data-nav href="/sobre/visao-geral.html">Sobre</a></li>
+        <li><a data-nav href="/eleicoes/index.html">Eleições</a></li>
+        <li><a data-nav href="/servicos/index.html">Serviços</a></li>
+        <li><a data-nav href="/documentos/index.html">Documentos</a></li>
+        <li><a data-nav href="/noticias/index.html">Notícias</a></li>
+        <li><a data-nav href="/portal-do-eleitor/index.html">Portal do Eleitor</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-warning" href="/portal-do-eleitor/index.html"><span>Registar Eleitor</span> ⚑</a>
+    </div>
+  </div>
+</header>
+<main>
+<section class="section"><div class="container">
+  <h1>Serviços</h1>
+  <p class="muted">Acesso rápido aos serviços da CNE.</p>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:12px">
+    <article class="card" style="padding:18px"><h3>🪪 Registo/Atualização</h3><p class="muted">Verifique e atualize os seus dados.</p><a class="btn btn-primary" href="/portal-do-eleitor/index.html">Aceder</a></article>
+    <article class="card" style="padding:18px"><h3>🧾 Certidão de Eleitor</h3><p class="muted">Solicite comprovativos.</p><a class="btn btn-ghost" href="/portal-do-eleitor/index.html">Pedir</a></article>
+    <article class="card" style="padding:18px"><h3>🛡️ Reclamações</h3><p class="muted">Registe e acompanhe.</p><a class="btn btn-ghost" href="/portal-do-eleitor/index.html#reclamacoes">Registar</a></article>
+    <article class="card" style="padding:18px"><h3>📍 Localizar Mesa</h3><p class="muted">Encontre a sua mesa.</p><a class="btn btn-primary" href="/portal-do-eleitor/index.html#mesa">Encontrar</a></article>
+    <article class="card" style="padding:18px"><h3>♿︎ Acessibilidade</h3><p class="muted">Apoios à mobilidade.</p><a class="btn btn-ghost" href="/portal-do-eleitor/index.html">Saber mais</a></article>
+    <article class="card" style="padding:18px"><h3>📞 Atendimento</h3><p class="muted">Contactos de apoio.</p><a class="btn btn-ghost" href="/portal-do-eleitor/index.html">Contactar</a></article>
+  </div>
+</div></section>
+</main>
+<footer>
+  <div class="container" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div class="muted">© <span id="year"></span> Comissão Nacional de Eleições — Guiné‑Bissau</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="btn btn-ghost" title="Acessível" aria-label="Acessível">♿︎ A11y</span>
+      <span class="btn btn-ghost" title="Dados Abertos" aria-label="Dados Abertos">🗃️ Open Data</span>
+    </div>
+  </div>
+  <script src="/assets/js/main.js" defer></script>
+</footer>
+</body></html>

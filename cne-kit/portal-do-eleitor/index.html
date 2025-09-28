@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="pt"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portal do Eleitor</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/main.css">
+<meta name="description" content="">
+</head><body>
+<header>
+  <div class="container nav" aria-label="Cabeçalho">
+    <a class="brand" href="/index.html">
+      <img src="/assets/img/logo.svg" alt="Logótipo CNE" width="34" height="34"/>
+      <span>CNE · Guiné‑Bissau</span>
+    </a>
+    <nav>
+      <button class="btn btn-ghost menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">☰</button>
+      <ul id="menu" role="menubar">
+        <li><a data-nav href="/sobre/visao-geral.html">Sobre</a></li>
+        <li><a data-nav href="/eleicoes/index.html">Eleições</a></li>
+        <li><a data-nav href="/servicos/index.html">Serviços</a></li>
+        <li><a data-nav href="/documentos/index.html">Documentos</a></li>
+        <li><a data-nav href="/noticias/index.html">Notícias</a></li>
+        <li><a data-nav href="/portal-do-eleitor/index.html">Portal do Eleitor</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-warning" href="/portal-do-eleitor/index.html"><span>Registar Eleitor</span> ⚑</a>
+    </div>
+  </div>
+</header>
+<main>
+<section class="section"><div class="container grid" style="grid-template-columns:1fr 1fr;gap:18px;align-items:start">
+  <section class="card" style="padding:18px">
+    <h1>Portal do Eleitor</h1>
+    <h3 id="registo">Verificar registo</h3>
+    <form id="frm-registo" class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+      <input name="id" placeholder="Nº de Eleitor ou BI" required>
+      <input name="dob" placeholder="Data de nascimento (DD/MM/AAAA)">
+      <button class="btn btn-primary" type="submit" style="grid-column:1 / -1">Consultar</button>
+    </form>
+    <div id="out-registo" style="margin-top:10px"></div>
+
+    <h3 id="mesa" style="margin-top:22px">Localizar mesa de voto</h3>
+    <form id="frm-mesa" class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+      <input name="id" placeholder="Nº de Eleitor ou BI" required>
+      <select name="regiao"><option value="">Região (opcional)</option><option>Bissau</option><option>Bafatá</option><option>Cacheu</option><option>Oio</option><option>Quinara</option><option>Gabu</option></select>
+      <input name="sec" placeholder="Secção (opcional)">
+      <button class="btn btn-ghost" type="submit" style="grid-column:1 / -1">Procurar</button>
+    </form>
+    <div id="out-mesa" style="margin-top:10px"></div>
+  </section>
+  <aside class="card" style="padding:18px">
+    <h3>Ajuda rápida</h3>
+    <ul style="margin-left:18px;line-height:1.9">
+      <li>Como votar</li>
+      <li>Direitos e deveres do eleitor</li>
+      <li>Voto no estrangeiro</li>
+      <li>Voto com mobilidade reduzida</li>
+    </ul>
+    <a class="btn btn-ghost" href="/documentos/index.html">Ver FAQ/Docs</a>
+  </aside>
+</div></section>
+<script>
+  function handleDemo(formId,outId,type){const f=document.getElementById(formId);const out=document.getElementById(outId);if(!f||!out)return;f.addEventListener('submit',e=>{e.preventDefault();const id=new FormData(f).get('id')||'000000';out.innerHTML=`<div class='surface' style='padding:12px;border-radius:12px'><strong>${type} — resultado demo</strong><div class='muted'>Nº/BI: ${id}</div><div class='muted'>Estado: <span style='color:#c1ffdd'>Encontrado</span></div><div class='muted'>Mesa: Bissau — Secção 003</div></div>`})}
+  handleDemo('frm-registo','out-registo','Registo Eleitoral');
+  handleDemo('frm-mesa','out-mesa','Localizar Mesa de Voto');
+</script>
+</main>
+<footer>
+  <div class="container" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div class="muted">© <span id="year"></span> Comissão Nacional de Eleições — Guiné‑Bissau</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="btn btn-ghost" title="Acessível" aria-label="Acessível">♿︎ A11y</span>
+      <span class="btn btn-ghost" title="Dados Abertos" aria-label="Dados Abertos">🗃️ Open Data</span>
+    </div>
+  </div>
+  <script src="/assets/js/main.js" defer></script>
+</footer>
+</body></html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="pt"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notícias</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/main.css">
+<meta name="description" content="">
+</head><body>
+<header>
+  <div class="container nav" aria-label="Cabeçalho">
+    <a class="brand" href="/index.html">
+      <img src="/assets/img/logo.svg" alt="Logótipo CNE" width="34" height="34"/>
+      <span>CNE · Guiné‑Bissau</span>
+    </a>
+    <nav>
+      <button class="btn btn-ghost menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">☰</button>
+      <ul id="menu" role="menubar">
+        <li><a data-nav href="/sobre/visao-geral.html">Sobre</a></li>
+        <li><a data-nav href="/eleicoes/index.html">Eleições</a></li>
+        <li><a data-nav href="/servicos/index.html">Serviços</a></li>
+        <li><a data-nav href="/documentos/index.html">Documentos</a></li>
+        <li><a data-nav href="/noticias/index.html">Notícias</a></li>
+        <li><a data-nav href="/portal-do-eleitor/index.html">Portal do Eleitor</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-warning" href="/portal-do-eleitor/index.html"><span>Registar Eleitor</span> ⚑</a>
+    </div>
+  </div>
+</header>
+<main>
+<section class="section"><div class="container">
+  <h1>Notícias</h1>
+  <p class="muted">Comunicados e atualizações oficiais da CNE.</p>
+  <div class="grid" style="grid-template-columns:1fr auto;gap:12px;margin-bottom:12px">
+    <input id="news-search" placeholder="Pesquisar notícias…">
+    <select id="news-filter"><option value="">Todas</option><option>Comunicado</option><option>Calendário</option><option>Parceria</option></select>
+  </div>
+  <div id="news-list" class="grid" style="grid-template-columns:repeat(3,1fr);gap:12px">
+    <article class="card" style="padding:18px" data-type="Comunicado"><h3>Atualização do recenseamento</h3><p class="muted">10 Ago 2025</p><p>Foram abertas novas brigadas móveis nas regiões…</p><a class="btn btn-ghost" href="/noticias/artigo.html?id=recenseamento">Ler</a></article>
+    <article class="card" style="padding:18px" data-type="Calendário"><h3>Calendário de candidaturas</h3><p class="muted">05 Ago 2025</p><p>Publicadas as datas e requisitos para submissão…</p><a class="btn btn-ghost" href="/noticias/artigo.html?id=calendario">Ler</a></article>
+    <article class="card" style="padding:18px" data-type="Parceria"><h3>Parceria com observadores</h3><p class="muted">29 Jul 2025</p><p>Assinado memorando com organizações de observação…</p><a class="btn btn-ghost" href="/noticias/artigo.html?id=parceria">Ler</a></article>
+  </div>
+</div></section>
+<script>
+  const q=document.getElementById('news-search');const f=document.getElementById('news-filter');const list=[...document.querySelectorAll('#news-list article')];
+  function apply(){const qq=(q?.value||'').toLowerCase();const ff=f?.value||'';list.forEach(a=>{const okType=!ff||a.dataset.type===ff;const okQ=!qq||a.textContent.toLowerCase().includes(qq);a.style.display=(okType&&okQ)?'':'none'});} q&&q.addEventListener('input',apply); f&&f.addEventListener('change',apply);
+</script>
+</main>
+<footer>
+  <div class="container" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div class="muted">© <span id="year"></span> Comissão Nacional de Eleições — Guiné‑Bissau</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="btn btn-ghost" title="Acessível" aria-label="Acessível">♿︎ A11y</span>
+      <span class="btn btn-ghost" title="Dados Abertos" aria-label="Dados Abertos">🗃️ Open Data</span>
+    </div>
+  </div>
+  <script src="/assets/js/main.js" defer></script>
+</footer>
+</body></html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="pt"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/main.css">
+<meta name="description" content="">
+</head><body>
+<header>
+  <div class="container nav" aria-label="Cabeçalho">
+    <a class="brand" href="/index.html">
+      <img src="/assets/img/logo.svg" alt="Logótipo CNE" width="34" height="34"/>
+      <span>CNE · Guiné‑Bissau</span>
+    </a>
+    <nav>
+      <button class="btn btn-ghost menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">☰</button>
+      <ul id="menu" role="menubar">
+        <li><a data-nav href="/sobre/visao-geral.html">Sobre</a></li>
+        <li><a data-nav href="/eleicoes/index.html">Eleições</a></li>
+        <li><a data-nav href="/servicos/index.html">Serviços</a></li>
+        <li><a data-nav href="/documentos/index.html">Documentos</a></li>
+        <li><a data-nav href="/noticias/index.html">Notícias</a></li>
+        <li><a data-nav href="/portal-do-eleitor/index.html">Portal do Eleitor</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-warning" href="/portal-do-eleitor/index.html"><span>Registar Eleitor</span> ⚑</a>
+    </div>
+  </div>
+</header>
+<main>
+<section class="section"><div class="container">
+  <h1>Documentos</h1>
+  <p class="muted">Legislação, regulamentos, relatórios e materiais oficiais.</p>
+  <input id="doc-search" placeholder="Pesquisar por título, tipo ou ano…">
+  <div class="card" style="padding:12px;margin-top:12px">
+    <table class="table" id="doc-table"><thead><tr><th>Tipo</th><th>Título</th><th>Ano</th><th>Download</th></tr></thead>
+      <tbody>
+        <tr><td>Lei</td><td>Lei Eleitoral (Consolidada)</td><td>2024</td><td><a class="btn btn-ghost" href="#">PDF</a></td></tr>
+        <tr><td>Regulamento</td><td>Regulamento de Recenseamento</td><td>2025</td><td><a class="btn btn-ghost" href="#">PDF</a></td></tr>
+        <tr><td>Relatório</td><td>Relatório de Auditoria de Sistemas</td><td>2025</td><td><a class="btn btn-ghost" href="#">PDF</a></td></tr>
+        <tr><td>Código</td><td>Código de Conduta Eleitoral</td><td>2023</td><td><a class="btn btn-ghost" href="#">PDF</a></td></tr>
+      </tbody></table>
+  </div>
+</div></section>
+<script>
+  const s=document.getElementById('doc-search');const rows=[...document.querySelectorAll('#doc-table tbody tr')];
+  s&&s.addEventListener('input',()=>{const q=s.value.toLowerCase();rows.forEach(tr=>tr.style.display=tr.textContent.toLowerCase().includes(q)?'':'none')});
+</script>
+</main>
+<footer>
+  <div class="container" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div class="muted">© <span id="year"></span> Comissão Nacional de Eleições — Guiné‑Bissau</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="btn btn-ghost" title="Acessível" aria-label="Acessível">♿︎ A11y</span>
+      <span class="btn btn-ghost" title="Dados Abertos" aria-label="Dados Abertos">🗃️ Open Data</span>
+    </div>
+  </div>
+  <script src="/assets/js/main.js" defer></script>
+</footer>
+</body></html>

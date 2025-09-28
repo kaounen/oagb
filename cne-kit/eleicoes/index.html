@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="pt"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eleições</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/main.css">
+<meta name="description" content="">
+</head><body>
+<header>
+  <div class="container nav" aria-label="Cabeçalho">
+    <a class="brand" href="/index.html">
+      <img src="/assets/img/logo.svg" alt="Logótipo CNE" width="34" height="34"/>
+      <span>CNE · Guiné‑Bissau</span>
+    </a>
+    <nav>
+      <button class="btn btn-ghost menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">☰</button>
+      <ul id="menu" role="menubar">
+        <li><a data-nav href="/sobre/visao-geral.html">Sobre</a></li>
+        <li><a data-nav href="/eleicoes/index.html">Eleições</a></li>
+        <li><a data-nav href="/servicos/index.html">Serviços</a></li>
+        <li><a data-nav href="/documentos/index.html">Documentos</a></li>
+        <li><a data-nav href="/noticias/index.html">Notícias</a></li>
+        <li><a data-nav href="/portal-do-eleitor/index.html">Portal do Eleitor</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-warning" href="/portal-do-eleitor/index.html"><span>Registar Eleitor</span> ⚑</a>
+    </div>
+  </div>
+</header>
+<main>
+<section class="section"><div class="container grid" style="grid-template-columns:1.1fr .9fr;gap:18px;align-items:start">
+  <section>
+    <h1>Eleições</h1>
+    <p class="muted">Tipos de eleições, calendário, candidaturas e resultados.</p>
+    <div class="grid" style="grid-template-columns:repeat(2,1fr);gap:12px;margin-top:8px">
+      <div class="surface" style="padding:12px;border-radius:12px"><strong>Presidenciais</strong><p class="muted">Eleição do Presidente.</p></div>
+      <div class="surface" style="padding:12px;border-radius:12px"><strong>Legislativas</strong><p class="muted">Assembleia Nacional Popular.</p></div>
+      <div class="surface" style="padding:12px;border-radius:12px"><strong>Autárquicas</strong><p class="muted">Órgãos locais.</p></div>
+      <div class="surface" style="padding:12px;border-radius:12px"><strong>Referendos</strong><p class="muted">Consultas populares.</p></div>
+    </div>
+    <h3 style="margin:16px 0 8px">Eleições anteriores</h3>
+    <table class="table"><thead><tr><th>Ano</th><th>Tipo</th><th>Resultados</th></tr></thead>
+      <tbody>
+        <tr><td>2019</td><td>Presidenciais</td><td><a class="btn btn-ghost" href="#">PDF</a></td></tr>
+        <tr><td>2023</td><td>Legislativas</td><td><a class="btn btn-ghost" href="#">PDF</a></td></tr>
+      </tbody></table>
+  </section>
+  <aside class="card" style="padding:18px">
+    <h3>Calendário (resumo)</h3>
+    <ul style="margin-left:18px;line-height:1.9">
+      <li><strong>01 Ago</strong> — Recenseamento</li>
+      <li><strong>15 Ago</strong> — Candidaturas</li>
+      <li><strong>20 Set</strong> — Campanha</li>
+      <li><strong>10 Nov</strong> — Votação</li>
+      <li><strong>11–20 Nov</strong> — Apuração</li>
+    </ul>
+  </aside>
+</div></section>
+</main>
+<footer>
+  <div class="container" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div class="muted">© <span id="year"></span> Comissão Nacional de Eleições — Guiné‑Bissau</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="btn btn-ghost" title="Acessível" aria-label="Acessível">♿︎ A11y</span>
+      <span class="btn btn-ghost" title="Dados Abertos" aria-label="Dados Abertos">🗃️ Open Data</span>
+    </div>
+  </div>
+  <script src="/assets/js/main.js" defer></script>
+</footer>
+</body></html>

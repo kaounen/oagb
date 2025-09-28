@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php:*)",
+      "Bash(claude mcp:*)",
+      "Bash(node:*)",
+      "Bash(npm --version)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npx playwright:*)",
+      "Bash(npm test)",
+      "Bash(npm run test:headed:*)",
+      "Bash(npm search:*)",
+      "Bash(where claude)",
+      "Bash(uvx:*)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(uv tool run:*)",
+      "Bash(where python)",
+      "Bash(C:Python313python.exe -m uv tool run --help)",
+      "Bash(where pip)",
+      "Bash(where uv)",
+      "Bash(uv:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(npx -y @upstash/context7-mcp:*)",
+      "WebFetch(domain:docs.firecrawl.dev)",
+      "Bash(npx:*)",
+      "Bash(env FIRECRAWL_API_KEY=fc-8a0992f63ac24c7092c3535bfd59f975 npx -y firecrawl-mcp --help)",
+      "WebFetch(domain:docs.claude.com)",
+      "WebSearch",
+      "WebFetch(domain:apidog.com)",
+      "Bash(where github-spec-kit)",
+      "Bash(specify --help)",
+      "Bash(chcp:*)",
+      "Bash(specify --version)",
+      "Bash(specify init:*)",
+      "Bash(specify)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

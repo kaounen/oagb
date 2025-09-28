@@ -1,0 +1,8 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="CNE Guiné-Bissau">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1"><stop offset="0%" stop-color="#d90429"/><stop offset="100%" stop-color="#f7c325"/></linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g1)"/>
+  <circle cx="46" cy="18" r="10" fill="#008751"/>
+  <polygon points="18,40 26,40 30,32 34,40 42,40 36,46 38,56 30,51 22,56 24,46" fill="#0a0a0a"/>
+</svg>

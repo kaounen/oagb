@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="pt"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notícia — CNE</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/main.css">
+<meta name="description" content="">
+</head><body>
+<header>
+  <div class="container nav" aria-label="Cabeçalho">
+    <a class="brand" href="/index.html">
+      <img src="/assets/img/logo.svg" alt="Logótipo CNE" width="34" height="34"/>
+      <span>CNE · Guiné‑Bissau</span>
+    </a>
+    <nav>
+      <button class="btn btn-ghost menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">☰</button>
+      <ul id="menu" role="menubar">
+        <li><a data-nav href="/sobre/visao-geral.html">Sobre</a></li>
+        <li><a data-nav href="/eleicoes/index.html">Eleições</a></li>
+        <li><a data-nav href="/servicos/index.html">Serviços</a></li>
+        <li><a data-nav href="/documentos/index.html">Documentos</a></li>
+        <li><a data-nav href="/noticias/index.html">Notícias</a></li>
+        <li><a data-nav href="/portal-do-eleitor/index.html">Portal do Eleitor</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-warning" href="/portal-do-eleitor/index.html"><span>Registar Eleitor</span> ⚑</a>
+    </div>
+  </div>
+</header>
+<main>
+<section class="section"><div class="container card" style="padding:18px">
+  <article>
+    <h1 id="t">Título da notícia</h1>
+    <p class="muted" id="m">Data • Tipo</p>
+    <p id="c">Conteúdo completo da notícia…</p>
+    <a class="btn btn-ghost" href="/noticias/index.html">← Voltar</a>
+  </article>
+</div></section>
+<script>
+  const params=new URLSearchParams(location.search);const id=params.get('id');
+  const db={
+    recenseamento:{t:'Atualização do recenseamento',m:'10 Ago 2025 • Comunicado',c:'Foram abertas novas brigadas móveis nas regiões de Bafatá e Gabu, aumentando a cobertura do recenseamento. Cidadãos podem verificar o local mais próximo no Portal do Eleitor.'},
+    calendario:{t:'Calendário de candidaturas',m:'05 Ago 2025 • Calendário',c:'Foi publicado o calendário oficial com prazos para submissão de candidaturas. Consulte a página de Eleições para requisitos e formulários.'},
+    parceria:{t:'Parceria com observadores',m:'29 Jul 2025 • Parceria',c:'A CNE assinou memorando com redes de observação eleitoral para reforçar mecanismos de integridade e transparência durante o escrutínio.'}
+  };
+  const n=db[id]||{t:'Notícia não encontrada',m:'',c:'A notícia solicitada não existe ou foi movida.'};
+  document.getElementById('t').textContent=n.t;document.getElementById('m').textContent=n.m;document.getElementById('c').textContent=n.c;
+</script>
+</main>
+<footer>
+  <div class="container" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div class="muted">© <span id="year"></span> Comissão Nacional de Eleições — Guiné‑Bissau</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="btn btn-ghost" title="Acessível" aria-label="Acessível">♿︎ A11y</span>
+      <span class="btn btn-ghost" title="Dados Abertos" aria-label="Dados Abertos">🗃️ Open Data</span>
+    </div>
+  </div>
+  <script src="/assets/js/main.js" defer></script>
+</footer>
+</body></html>
