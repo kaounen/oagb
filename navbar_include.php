@@ -3,7 +3,7 @@
         <img src="img/logo3.png" style="width:70%;height:auto;padding-top:5%;" align="center" border="0" alt="OAGB Logo">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <center><span class="fa fa-bars"></span></center>
+        <span class="fa fa-bars"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto py-0">
@@ -12,6 +12,7 @@
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">ORDEM</a>
                 <div class="dropdown-menu m-0">
                     <a href="apresentacao-historia.php" class="dropdown-item">Apresentação e História</a>
+                    <a href="bastonario-ordem.php" class="dropdown-item">O Bastonário</a>  
                     <a href="orgaos-sociais.php" class="dropdown-item">Órgãos Sociais</a>                            
                     <a href="comissoes-especializadas.php" class="dropdown-item">Comissões Especializadas</a>
                     <a href="cooperacao-institucional.php" class="dropdown-item">Cooperação Institucional</a>
@@ -20,7 +21,6 @@
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">ADVOGADOS</a>
                 <div class="dropdown-menu m-0">
-                    <a href="advogados.php" class="dropdown-item">Advogados</a>
                     <a href="pesquisa-advogados.php" class="dropdown-item">Pesquisa de Advogados</a>                            
                     <a href="advogados-inscritos.php" class="dropdown-item">Advogados Inscritos em vigor</a>
                     <a href="pesquisa-estagiarios.php" class="dropdown-item">Pesquisa de Advogados Estagiários</a>                            
@@ -40,9 +40,10 @@
             </div>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">COMUNICAÇÃO</a>
-                <div class="dropdown-menu m-0">
+                <div class="dropdown-menu m-0" style="left: auto; right: 0;">
                     <a href="agenda.php" class="dropdown-item">Agenda</a>
                     <a href="noticias.php" class="dropdown-item">Notícias</a>
+                    <a href="anuncios.php" class="dropdown-item">Anúncios</a>
                 </div>
             </div>
             <a href="contacto.php" class="nav-item nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'contacto.php') ? 'active' : ''; ?>">CONTACTO</a>

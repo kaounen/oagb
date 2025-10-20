@@ -92,151 +92,128 @@ $meta_description = "Conheça a história, missão e valores da Ordem dos Advoga
     <link href="css/style.css" rel="stylesheet">
     
     <style>
-        .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 100px 0 50px;
-            margin-bottom: 50px;
-        }
-        
-        .timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-        
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #c18046;
-            transform: translateX(-50%);
-        }
-        
-        .timeline-item {
-            position: relative;
-            padding: 20px 0;
-        }
-        
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 30px;
-            width: 20px;
-            height: 20px;
+        /* Styles for page consistency */
+        .quick-actions .btn {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: #c18046;
-            border: 4px solid white;
-            transform: translateX(-50%);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .timeline-content {
-            width: 45%;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .timeline-item:nth-child(odd) .timeline-content {
-            margin-left: auto;
-        }
-        
-        .timeline-year {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #c18046;
-            margin-bottom: 10px;
-        }
-        
-        .stats-box {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.3s ease;
         }
-        
-        .stats-box:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        .quick-actions .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
+        .bg-header .navbar { background: transparent !important; }
         
-        .stats-number {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #c18046;
-            margin-bottom: 10px;
+        @media (max-width: 991.98px) {
+            .navbar-dark .navbar-nav .nav-link { color: white !important; }
+
+            /* Adicionar espaçamento no título e breadcrumbs mobile */
+            .bg-header .text-center {
+                padding-top: 8rem !important;
+            }
         }
-        
-        .stats-label {
-            font-size: 1.1rem;
-            color: #666;
-        }
-        
-        .values-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-            border-left: 5px solid #c18046;
-            transition: all 0.3s ease;
-        }
-        
-        .values-card:hover {
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transform: translateX(10px);
-        }
-        
-        .values-card h4 {
-            color: #c18046;
-            margin-bottom: 15px;
-        }
-        
-        .section-divider {
-            height: 2px;
-            background: linear-gradient(to right, transparent, #c18046, transparent);
-            margin: 50px 0;
-        }
-        
-        .content-section {
-            margin-bottom: 50px;
-        }
-        
-        .content-section h3 {
-            font-family: 'Libre Baskerville', serif;
-            color: #4D1C21;
-            margin-bottom: 30px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        
-        .content-section h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: #c18046;
-        }
-        
+        .mobile-contacts { line-height: 1.2; }
+        .contact-line { margin-bottom: 0.1rem; font-size: 0.85rem; line-height: 1.1; }
+        .contact-line:last-child { margin-bottom: 0; }
+
+        /* Original page styles */
+        .timeline { position: relative; padding: 20px 0; }
+        .timeline::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: #c18046; transform: translateX(-50%); }
+        .timeline-item { position: relative; padding: 20px 0; }
+        .timeline-item::before { content: ''; position: absolute; left: 50%; top: 30px; width: 20px; height: 20px; border-radius: 50%; background: #c18046; border: 4px solid white; transform: translateX(-50%); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .timeline-content { width: 45%; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .timeline-item:nth-child(odd) .timeline-content { margin-left: auto; }
+        .timeline-year { font-size: 1.5rem; font-weight: bold; color: #c18046; margin-bottom: 10px; }
+        .stats-box { background: white; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .stats-box:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .stats-number { font-size: 3rem; font-weight: bold; color: #c18046; margin-bottom: 10px; }
+        .stats-label { font-size: 1.1rem; color: #666; }
+        .values-card { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; border-left: 5px solid #c18046; transition: all 0.3s ease; }
+        .values-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.1); transform: translateX(10px); }
+        .values-card h4 { color: #c18046; margin-bottom: 15px; }
+        .section-divider { height: 2px; background: linear-gradient(to right, transparent, #c18046, transparent); margin: 50px 0; }
+        .content-section { margin-bottom: 50px; }
+        .content-section h3 { font-family: 'Libre Baskerville', serif; color: #4D1C21; margin-bottom: 30px; position: relative; padding-bottom: 15px; }
+        .content-section h3::after { content: ''; position: absolute; bottom: 0; left: 0; width: 60px; height: 3px; background: #c18046; }
         @media (max-width: 768px) {
-            .timeline::before {
-                left: 30px;
+            .timeline::before { left: 30px; }
+            .timeline-item::before { left: 30px; }
+            .timeline-content { width: calc(100% - 60px); margin-left: 60px !important; }
+        }
+
+        /* Scroll effect styles from index.php */
+        @media (min-width: 992px) {
+            .pt-lg-7 {
+                padding-top: 8rem !important;
             }
-            
-            .timeline-item::before {
-                left: 30px;
+            .navbar-dark {
+                position: fixed !important;
+                top: 45px !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 1030 !important;
+                width: 100% !important;
+                transition: all 0.3s ease !important;
+                background: transparent !important;
+                padding: 15px 0 !important;
             }
-            
-            .timeline-content {
-                width: calc(100% - 60px);
-                margin-left: 60px !important;
+            .navbar-dark.navbar-expand-lg { flex-wrap: nowrap !important; }
+            .navbar-dark .navbar-collapse { flex-basis: auto !important; }
+            .navbar-dark.px-5 { padding-left: 3rem !important; padding-right: 3rem !important; }
+            .navbar-dark .navbar-brand { padding: 0 !important; }
+            .navbar-dark .navbar-brand img {
+                width: 70% !important;
+                height: auto !important;
+                padding-top: 5% !important;
+                transition: all 0.3s ease !important;
+            }
+            .navbar-scrolled {
+                background-color: rgba(255, 255, 255, 0.95) !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+                top: 45px !important;
+                padding: 8px 0 !important;
+            }
+            .navbar-scrolled .navbar-brand img {
+                width: 50% !important;
+                height: auto !important;
+                padding-top: 2% !important;
+                transition: all 0.3s ease !important;
+                filter: none !important;
+            }
+            .bg-dark {
+                position: fixed !important;
+                top: 0 !important;
+                width: 100% !important;
+                z-index: 1040 !important;
+                transition: all 0.3s ease !important;
+            }
+            .topbar-scrolled {
+                background-color: rgba(255, 255, 255, 0.95) !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+            }
+            .topbar-scrolled .text-light, .topbar-scrolled i {
+                color: #B1A276 !important;
+            }
+            .topbar-scrolled .btn-outline-light {
+                border-color: #B1A276 !important;
+                color: #B1A276 !important;
+            }
+            .topbar-scrolled .btn-outline-light:hover {
+                background-color: #B1A276 !important;
+                border-color: #B1A276 !important;
+                color: white !important;
+            }
+            .navbar-scrolled .navbar-nav .nav-link, .navbar-scrolled .navbar-nav .dropdown-toggle, .navbar-scrolled .btn {
+                color: #B1A276 !important;
+            }
+            .navbar-scrolled .navbar-nav .nav-link:hover {
+                color: #9d8f64 !important;
             }
         }
     </style>
@@ -272,26 +249,92 @@ $meta_description = "Conheça a história, missão e valores da Ordem dos Advoga
     </div>
     <!-- Topbar End -->
 
-    <!-- Navbar Start -->
-    <div class="container-fluid position-relative p-0">
+    <!-- Desktop Navbar -->
+    <div class="container-fluid position-relative p-0 d-none d-lg-block">
         <?php include 'includes/navbar.php'; ?>
+    </div>
 
-        <div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
-            <div class="row py-5">
-                <div class="col-12 pt-lg-5 mt-lg-5 text-center">
-                    <h1 class="display-4 text-white animated zoomIn"><?php echo htmlspecialchars($pagina->titulo); ?></h1>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a href="index.php" class="text-white">Início</a></li>
-                            <li class="breadcrumb-item"><a href="#" class="text-white">Ordem</a></li>
-                            <li class="breadcrumb-item text-white active" aria-current="page">Apresentação e História</li>
-                        </ol>
-                    </nav>
+    <!-- Header Start -->
+    <div class="container-fluid bg-primary pb-5 pt-0 pt-lg-5 bg-header" style="margin-bottom: 90px; position: relative;">
+        <!-- Mobile Contact Info -->
+        <div class="container-fluid d-block d-lg-none px-3 py-3" style="position: absolute; top: 0; left: 0; right: 0; z-index: 1000;">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <div class="mobile-contacts">
+                        <div class="contact-line">
+                            <strong class="text-white">Rua 15, Bissau, Guiné-Bissau</strong>
+                        </div>
+                        <div class="contact-line">
+                            <strong class="text-white">+245 955 475 889</strong>
+                        </div>
+                        <div class="contact-line">
+                            <strong class="text-white">info@oagb.gw</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 text-end">
+                    <button type="button" class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#searchModal">
+                        <i class="fa fa-search me-1"></i>Pesquisar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navbar inside header -->
+        <div class="container-fluid position-relative p-0 d-block d-lg-none" style="position: absolute; top: 80px; left: 0; right: 0; z-index: 1000;">
+            <?php include 'includes/navbar.php'; ?>
+        </div>
+
+        <div class="row" style="padding-top: 3rem; padding-bottom: calc(3rem - 30px);">
+            <div class="col-12 text-center pt-lg-7">
+                <h1 class="display-4 text-white animated zoomIn"><?php echo $page_title; ?></h1>
+
+                <!-- Breadcrumbs -->
+                <div class="mb-3">
+                    <a href="index.php" class="h5 text-white">Início</a>
+                    <i class="far fa-circle text-white px-2"></i>
+                    <a href="#" class="h5 text-white">Ordem</a>
+                    <i class="far fa-circle text-white px-2"></i>
+                    <a href="apresentacao-historia.php" class="h5 text-white"><?php echo $page_title; ?></a>
+                </div>
+
+                <!-- Quick Action Links -->
+                <div class="quick-actions mt-3">
+                    <a href="javascript:history.back()" class="btn btn-outline-light btn-sm me-2" title="Voltar atrás">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <a href="javascript:window.print()" class="btn btn-outline-light btn-sm me-2" title="Imprimir">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm me-2" title="Partilhar" onclick="sharePage()">
+                        <i class="fas fa-share-alt"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm" title="Traduzir" onclick="translatePage()">
+                        <i class="fas fa-language"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Navbar End -->
+    <!-- Header End -->
+
+    <!-- Full Screen Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content" style="background: rgba(9, 30, 62, .7);">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn bg-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center justify-content-center">
+                    <form action="pesquisa.php" method="GET" class="input-group" style="max-width: 600px;">
+                        <input type="text" name="q" class="form-control bg-transparent border-primary p-3" placeholder="Digite a palavra de pesquisa" required>
+                        <button class="btn btn-primary px-4" type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Full Screen Search End -->
 
     <!-- Content Start -->
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
@@ -434,5 +477,95 @@ $meta_description = "Conheça a história, missão e valores da Ordem dos Advoga
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+
+    <!-- Quick Actions Functions -->
+    <script>
+        // Function to share page
+        function sharePage() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.title,
+                    text: 'Confira esta página da OAGB',
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                // Fallback: copy URL to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Link copiado para a área de transferência!');
+                }).catch(() => {
+                    // Further fallback: show URL in prompt
+                    prompt('Copie este link:', window.location.href);
+                });
+            }
+        }
+
+        // Function to translate page (Google Translate)
+        function translatePage() {
+            const googleTranslateScript = document.getElementById('google-translate-script');
+
+            if (!googleTranslateScript) {
+                // Add Google Translate script
+                const script = document.createElement('script');
+                script.id = 'google-translate-script';
+                script.type = 'text/javascript';
+                script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                document.head.appendChild(script);
+
+                // Initialize Google Translate
+                window.googleTranslateElementInit = function() {
+                    new google.translate.TranslateElement({
+                        pageLanguage: 'pt',
+                        includedLanguages: 'en,fr,es,pt',
+                        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                    }, 'google_translate_element');
+                };
+
+                // Create translate element container if it doesn't exist
+                if (!document.getElementById('google_translate_element')) {
+                    const translateDiv = document.createElement('div');
+                    translateDiv.id = 'google_translate_element';
+                    translateDiv.style.position = 'fixed';
+                    translateDiv.style.top = '10px';
+                    translateDiv.style.right = '10px';
+                    translateDiv.style.zIndex = '9999';
+                    translateDiv.style.backgroundColor = 'white';
+                    translateDiv.style.padding = '10px';
+                    translateDiv.style.borderRadius = '5px';
+                    translateDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                    document.body.appendChild(translateDiv);
+                }
+            } else {
+                // Toggle translate element visibility
+                const translateElement = document.getElementById('google_translate_element');
+                if (translateElement) {
+                    translateElement.style.display = translateElement.style.display === 'none' ? 'block' : 'none';
+                }
+            }
+        }
+    </script>
+
+    <!-- Desktop Navbar Scroll Effect -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar-dark');
+            const topbar = document.querySelector('.container-fluid.bg-dark.px-5.d-none.d-lg-block');
+            
+            if (navbar && window.innerWidth >= 992) { // Only apply on desktop
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 45) { // Use a small threshold for inner pages
+                        navbar.classList.add('navbar-scrolled');
+                        if (topbar) {
+                            topbar.classList.add('topbar-scrolled');
+                        }
+                    } else {
+                        navbar.classList.remove('navbar-scrolled');
+                        if (topbar) {
+                            topbar.classList.remove('topbar-scrolled');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
