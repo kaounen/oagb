@@ -1,50 +1,70 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# OAGB Website Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Mobile-First Development
+Development via Claude Code web on mobile; All changes must be small, focused commits; Clear documentation for each change; Work in feature branches (e.g., 002-padronizar-header-mobile)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Component-Based Structure
+Reusable PHP includes (navbar, footer, etc.); Consistent styling across all pages; Maintain desktop and mobile compatibility; Follow Bootstrap 5 framework
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Security First (NON-NEGOTIABLE)
+No API keys or secrets in code; Use .gitignore for sensitive files; Environment variables for configuration; Regular security audits
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Documentation Required
+Every change documented in MD files; State saved in ESTADO_ACTUAL_SESSAO.md; Fix summaries (e.g., NAVBAR_MOBILE_FIX_SUMMARY.md); Code comments for complex logic
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Testing & Quality
+Test on both desktop and mobile; Verify navbar scroll effects; Check carousel transitions; Validate responsive design
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Technology Stack
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**Backend**: PHP 7.4+ with PDO/MySQL
+**Frontend**: Bootstrap 5, jQuery, Font Awesome, Lineicons
+**Database**: MySQL (korakund_ordem)
+**Fonts**: Open Sans, Libre Baskerville
+**Version Control**: Git + GitHub (kaounen/oagb)
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## File Structure
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+```
+/                   - Main PHP pages (index.php, noticias.php, etc.)
+/includes/          - Reusable components (navbar, footer, functions)
+/css/               - Stylesheets
+/js/                - JavaScript files
+/img/               - Images and assets
+/gestao/            - Admin panel (CodeIgniter)
+/ajax/              - AJAX handlers
+*.md                - Documentation files
+```
+
+## Development Workflow
+
+1. **Branch Naming**: `00X-descriptive-name` (e.g., 002-padronizar-header-mobile)
+2. **Commits**: Small, descriptive, in Portuguese or English
+3. **Documentation**: Update ESTADO_ACTUAL_SESSAO.md after significant changes
+4. **Push**: Always to feature branch first, then PR to master
+5. **Testing**: Test locally before push, verify on mobile when possible
+
+## Key Features
+
+### Desktop
+- Fixed navbar with scroll effect (logo 70% → 50%)
+- Topbar changes white → golden on scroll
+- Smooth carousel transitions
+- Facts cards overlapping slider
+
+### Mobile  
+- Centered logo with menu button below
+- Expandable dark menu
+- Carousel with overlay content
+- Responsive design (Bootstrap breakpoint: 991.98px)
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution guides all development on OAGB website.
+All commits must respect these principles.
+Use feature branches for all changes.
+Document everything for mobile development continuity.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-01-15 | **Last Amended**: 2025-01-15

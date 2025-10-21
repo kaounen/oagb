@@ -1,0 +1,100 @@
+# AI Configuration - SECRETS
+ai_config.php
+ask_ai.php
+ask_ai.py
+test_zai_*.py
+test_glm_*.py
+.env
+.env.local
+.env.*.local
+config.local.php
+*_config.php
+
+# Claude settings
+.claude/settings.local.json
+
+# AI Documentation (opcional - descomente se não quiser versionar)
+# AI_DEVELOPMENT_GUIDE.md
+# COMANDOS_AI.md
+# COMO_USAR_AI.md
+# README_AI*.md
+# ZAI_*.md
+
+# Backups
+backups/
+*_backup.php
+apresentacao-historia_backup.php
+temp_*.php
+
+# Test files
+test-*.html
+test_*.php
+test_*.js
+test-results/
+playwright-report/
+specs/
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+.Python
+python/
+
+# Node modules
+node_modules/
+package-lock.json
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+error_log
+
+# Archives
+*.zip
+*.rar
+*.7z
+MaterialDesign-master.zip
+feather.zip
+ionicons.designerpack.zip
+lineicons5-free-pakage.zip
+transfonter.org-*.zip
+
+# Extracted folders
+lineicons5-free-pakage/
+transfonter.org-*/
+
+# Database dumps (opcional)
+# *.sql
+
+# Git scripts (opcional - manter no repo para facilitar)
+# git_*.bat
+
+# AI Memory (Serena)
+.serena/memories/
+
+# Playwright MCP
+.playwright-mcp/
+
+# Examples (opcional)
+# examples/
+
+# Gestão/Admin (CUIDADO: pode conter dados sensíveis)
+# gestao/
+
+# Conteúdo OAGB (opcional - depende se quer versionar imagens/assets)
+# conteudoOAGB/

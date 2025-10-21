@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organograma - Bastonário Prof. Doutor Januário Pedro Correia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: #4a7c59;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(74, 124, 89, 0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .organogram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .level {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            position: relative;
+        }
+
+        .box {
+            background: linear-gradient(135deg, #f8fdf5 0%, #e8f5e0 100%);
+            border: 3px solid #5a9367;
+            border-radius: 12px;
+            padding: 25px 35px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            box-shadow: 0 4px 15px rgba(90, 147, 103, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            min-width: 250px;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(90, 147, 103, 0.35);
+            border-color: #4a7c59;
+        }
+
+        .box.top {
+            background: linear-gradient(135deg, #5a9367 0%, #4a7c59 100%);
+            color: white;
+            border-color: #3d6447;
+            min-width: 300px;
+        }
+
+        .box.top:hover {
+            background: linear-gradient(135deg, #4a7c59 0%, #3d6447 100%);
+        }
+
+        /* Connector lines */
+        .connector-vertical {
+            width: 3px;
+            height: 40px;
+            background: #5a9367;
+            margin: 0 auto;
+        }
+
+        .connector-horizontal {
+            height: 3px;
+            background: #5a9367;
+            position: absolute;
+            top: -20px;
+        }
+
+        .level-3 {
+            position: relative;
+        }
+
+        .level-3::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: #5a9367;
+        }
+
+        .level-3::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 20px;
+            background: #5a9367;
+        }
+
+        .level-4-left, .level-4-right {
+            display: flex;
+            gap: 30px;
+            position: relative;
+        }
+
+        .level-4-container {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            width: 100%;
+        }
+
+        .level-4-left::before,
+        .level-4-right::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 60px);
+            height: 3px;
+            background: #5a9367;
+        }
+
+        .level-4-left::after,
+        .level-4-right::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 20px;
+            background: #5a9367;
+        }
+
+        .box.small {
+            min-width: 220px;
+            padding: 20px 25px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 1200px) {
+            .level-4-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .box {
+                min-width: 200px;
+                padding: 20px 25px;
+                font-size: 16px;
+            }
+
+            .box.small {
+                min-width: 180px;
+                font-size: 14px;
+            }
+
+            .level {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .level-4-left, .level-4-right {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        .info-tooltip {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .box:hover .info-tooltip {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-image">JPC</div>
+            <h1>Bastonário Prof. Doutor Januário Pedro Correia</h1>
+        </div>
+
+        <div class="organogram">
+            <!-- Level 1: Assembleia-Geral -->
+            <div class="level">
+                <div class="box top">
+                    ASSEMBLEIA-GERAL
+                    <div class="info-tooltip">Órgão máximo de decisão</div>
+                </div>
+            </div>
+
+            <div class="connector-vertical"></div>
+
+            <!-- Level 2: Bastonário -->
+            <div class="level">
+                <div class="box top">
+                    BASTONÁRIO
+                    <div class="info-tooltip">Órgão executivo principal</div>
+                </div>
+            </div>
+
+            <div class="connector-vertical"></div>
+
+            <!-- Level 3: Conselho Nacional e Secretário-Geral -->
+            <div class="level level-3">
+                <div class="box">
+                    CONSELHO NACIONAL
+                    <div class="info-tooltip">Órgão consultivo</div>
+                </div>
+                <div class="box">
+                    SECRETARIO-GERAL
+                    <div class="info-tooltip">Órgão administrativo</div>
+                </div>
+            </div>
+
+            <div class="connector-vertical"></div>
+
+            <!-- Level 4: Comissões -->
+            <div class="level-4-container">
+                <div class="level-4-left">
+                    <div class="box small">
+                        C. ÉTICA D.P.P.C.P.L
+                        <div class="info-tooltip">Comissão de Ética</div>
+                    </div>
+                    <div class="box small">
+                        C. ACESSO D. JUSTIÇA P.O.
+                        <div class="info-tooltip">Comissão de Acesso à Justiça</div>
+                    </div>
+                </div>
+
+                <div class="level-4-right">
+                    <div class="box small">
+                        C. DIREITO HUMANO
+                        <div class="info-tooltip">Comissão de Direitos Humanos</div>
+                    </div>
+                    <div class="box small">
+                        C. DESPORTO R.P.C.A
+                        <div class="info-tooltip">Comissão de Desporto</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive functionality
+        document.querySelectorAll('.box').forEach(box => {
+            box.addEventListener('click', function() {
+                // Add a pulse animation on click
+                this.style.animation = 'pulse 0.5s ease';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 500);
+            });
+        });
+
+        // Add CSS animation for pulse effect
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+

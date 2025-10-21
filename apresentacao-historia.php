@@ -107,18 +107,196 @@ $meta_description = "Conheça a história, missão e valores da Ordem dos Advoga
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         .bg-header .navbar { background: transparent !important; }
-        
-        @media (max-width: 991.98px) {
-            .navbar-dark .navbar-nav .nav-link { color: white !important; }
 
-            /* Adicionar espaçamento no título e breadcrumbs mobile */
-            .bg-header .text-center {
-                padding-top: 8rem !important;
-            }
-        }
+        /* Mobile contacts styling */
         .mobile-contacts { line-height: 1.2; }
         .contact-line { margin-bottom: 0.1rem; font-size: 0.85rem; line-height: 1.1; }
         .contact-line:last-child { margin-bottom: 0; }
+
+        /* Mobile header carousel styling */
+        .mobile-header-slide {
+            position: relative;
+            overflow: hidden;
+            background-color: #091E3E;
+        }
+
+        /* Mobile navbar adjustments - matching index.php */
+        @media (max-width: 991.98px) {
+            .mobile-header-slide .navbar {
+                padding: 1rem 1rem;
+                margin-bottom: 2rem;
+                background: transparent !important;
+            }
+
+            /* Logo centralizado e menu com texto MENU na linha seguinte */
+            .mobile-header-slide .navbar {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                padding: 1rem !important;
+            }
+
+            .mobile-header-slide .navbar-brand {
+                margin-bottom: 1.5rem;
+                order: 1;
+            }
+
+            .mobile-header-slide .navbar-brand img {
+                width: 220px !important;
+                max-width: 90% !important;
+            }
+
+            /* Botão menu com texto MENU em linha separada */
+            .mobile-header-slide .navbar-toggler {
+                order: 2;
+                margin: 0 auto !important;
+                position: relative !important;
+                right: auto !important;
+                top: auto !important;
+                transform: none !important;
+                display: block !important;
+            }
+
+            /* Adicionar texto MENU ao botão */
+            .mobile-header-slide .navbar-toggler::after {
+                content: ' MENU';
+                margin-left: 8px;
+                font-family: 'Open Sans', sans-serif;
+                font-weight: 600;
+                font-size: 14px;
+            }
+
+  
+            .mobile-header-slide .navbar-collapse {
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                border-top: 1px solid rgba(255,255,255,0.2);
+            }
+
+            .mobile-header-slide .navbar-nav {
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+
+            .mobile-header-slide .navbar-nav .nav-link {
+                color: white !important;
+                font-size: 1.1rem;
+                font-weight: 600;
+                padding: 1rem !important;
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+
+            .mobile-header-slide .navbar-nav .dropdown-menu {
+                background: rgba(255, 255, 255, 0.95);
+                border: none;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+
+            .mobile-header-slide .navbar-nav .dropdown-menu .dropdown-item {
+                color: #091E3E;
+                padding: 0.8rem 1.5rem;
+                font-weight: 500;
+            }
+
+            .mobile-header-slide .navbar-nav .dropdown-menu .dropdown-item:hover {
+                background-color: var(--primary);
+                color: white;
+            }
+
+            /* Hide search button in mobile navbar - already exists in header */
+            .mobile-header-slide .navbar .btn {
+                display: none !important;
+            }
+
+            /* Mobile slide content positioning and interactions */
+            .mobile-slide-content {
+                position: absolute !important;
+                bottom: 140px !important;
+                z-index: 600 !important;
+                transition: all 0.3s ease !important;
+                pointer-events: auto !important;
+            }
+
+            /* When navbar is expanded, move content up even more */
+            .navbar-collapse.show ~ .mobile-slide-content,
+            .navbar-collapse.collapsing ~ .mobile-slide-content {
+                bottom: 200px !important;
+                z-index: 500 !important;
+            }
+
+            /* Ensure menu content is above slide content when expanded */
+            .mobile-header-slide .navbar-collapse {
+                z-index: 1001 !important;
+                background: rgba(0,0,0,0.9) !important;
+                border-radius: 10px !important;
+                margin-top: 1rem !important;
+                backdrop-filter: blur(10px) !important;
+            }
+
+            /* Force menu to be above indicators when expanded */
+            .mobile-header-slide .navbar-collapse.show,
+            .mobile-header-slide .navbar-collapse.collapsing {
+                z-index: 1100 !important;
+            }
+
+            /* Ensure menu links are always clickable */
+            .mobile-header-slide .navbar-nav .nav-link,
+            .mobile-header-slide .navbar-nav .dropdown-item {
+                position: relative;
+                z-index: 1101 !important;
+                pointer-events: auto !important;
+            }
+
+            /* Make content fully interactive */
+            .mobile-slide-content h1,
+            .mobile-slide-content p,
+            .mobile-slide-content a {
+                pointer-events: auto !important;
+                user-select: text !important;
+            }
+
+            /* Remove any blocking elements */
+            .mobile-header-slide::before,
+            .mobile-header-slide::after {
+                display: none !important;
+            }
+
+            /* Ensure sufficient height for content */
+            .mobile-header-slide {
+                min-height: 110vh !important;
+            }
+
+            /* Mobile contact info styling */
+            .contact-line strong {
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+                font-weight: 600;
+            }
+
+            /* Ensure proper z-index layering */
+            .mobile-header-slide .contact-line,
+            .mobile-header-slide .navbar-brand,
+            .mobile-header-slide .navbar-toggler,
+            .mobile-header-slide .navbar-nav {
+                position: relative;
+                z-index: 1050;
+            }
+
+            /* Search modal z-index fixes */
+            #searchModal {
+                z-index: 2050 !important;
+            }
+
+            #searchModal .modal-dialog {
+                z-index: 2051 !important;
+            }
+
+            .modal-backdrop {
+                z-index: 2049 !important;
+            }
+
+          }
 
         /* Original page styles */
         .timeline { position: relative; padding: 20px 0; }
@@ -145,46 +323,84 @@ $meta_description = "Conheça a história, missão e valores da Ordem dos Advoga
             .timeline-content { width: calc(100% - 60px); margin-left: 60px !important; }
         }
 
-        /* Scroll effect styles from index.php */
+        /* Menu desktop com fundo branco no scroll - barra de endereços sempre visível */
         @media (min-width: 992px) {
-            .pt-lg-7 {
-                padding-top: 8rem !important;
-            }
+            /* Fazer o navbar fixo no topo com posicionamento consistente */
             .navbar-dark {
                 position: fixed !important;
-                top: 45px !important;
+                top: 45px !important; /* Sempre abaixo da barra de endereços */
                 left: 0 !important;
                 right: 0 !important;
                 z-index: 1030 !important;
                 width: 100% !important;
                 transition: all 0.3s ease !important;
                 background: transparent !important;
-                padding: 15px 0 !important;
+                padding: 15px 0 !important; /* Padding padrão */
             }
-            .navbar-dark.navbar-expand-lg { flex-wrap: nowrap !important; }
-            .navbar-dark .navbar-collapse { flex-basis: auto !important; }
-            .navbar-dark.px-5 { padding-left: 3rem !important; padding-right: 3rem !important; }
-            .navbar-dark .navbar-brand { padding: 0 !important; }
+
+            /* Garantir estrutura Bootstrap consistente - SEMPRE */
+            .navbar-dark.navbar-expand-lg {
+                flex-wrap: nowrap !important;
+            }
+
+            .navbar-dark .navbar-collapse {
+                flex-basis: auto !important;
+            }
+
+            /* Manter padding lateral consistente - SEMPRE */
+            .navbar-dark.px-5 {
+                padding-left: 3rem !important;
+                padding-right: 3rem !important;
+            }
+
+            /* Logo padrão - posicionamento consistente */
+            .navbar-dark .navbar-brand {
+                padding: 0 !important; /* Sem padding extra */
+            }
+
             .navbar-dark .navbar-brand img {
-                width: 70% !important;
+                width: 70% !important; /* Tamanho original */
                 height: auto !important;
-                padding-top: 5% !important;
+                padding-top: 5% !important; /* Padding-top original */
                 transition: all 0.3s ease !important;
             }
+
+            /* Navbar mais compacto durante scroll - manter posicionamentos */
             .navbar-scrolled {
                 background-color: rgba(255, 255, 255, 0.95) !important;
                 backdrop-filter: blur(10px) !important;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+                /* Manter sempre na mesma posição mas reduzir altura */
                 top: 45px !important;
-                padding: 8px 0 !important;
+                padding: 8px 0 !important; /* Padding reduzido para navbar mais compacto */
             }
+
+            /* Logo menor durante scroll - manter posicionamento horizontal */
+            .navbar-scrolled .navbar-brand {
+                padding: 0 !important; /* Manter o mesmo padding do estado normal */
+            }
+
             .navbar-scrolled .navbar-brand img {
-                width: 50% !important;
+                width: 50% !important; /* Logo menor durante scroll */
                 height: auto !important;
-                padding-top: 2% !important;
+                padding-top: 2% !important; /* Reduzir apenas padding-top para compactar */
                 transition: all 0.3s ease !important;
                 filter: none !important;
             }
+
+            /* Remover o espaçamento do container do navbar */
+            .container-fluid.position-relative.p-0.d-none.d-lg-block {
+                margin-bottom: 0 !important;
+            }
+
+            /* Ajustar o conteúdo principal para começar logo após o navbar fixo */
+            .bg-header {
+                margin-top: 0 !important; /* Remover margin para eliminar espaço branco */
+                position: relative;
+                top: 0 !important;
+            }
+
+            /* Manter a barra de endereços sempre visível */
             .bg-dark {
                 position: fixed !important;
                 top: 0 !important;
@@ -192,28 +408,78 @@ $meta_description = "Conheça a história, missão e valores da Ordem dos Advoga
                 z-index: 1040 !important;
                 transition: all 0.3s ease !important;
             }
+
+            /* Mudança da barra de endereços durante scroll - fundo branco */
             .topbar-scrolled {
                 background-color: rgba(255, 255, 255, 0.95) !important;
                 backdrop-filter: blur(10px) !important;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
             }
-            .topbar-scrolled .text-light, .topbar-scrolled i {
+
+            /* Cores douradas #B1A276 para textos da barra de endereços quando scrolled */
+            .topbar-scrolled .text-light {
                 color: #B1A276 !important;
             }
+
             .topbar-scrolled .btn-outline-light {
                 border-color: #B1A276 !important;
                 color: #B1A276 !important;
             }
+
             .topbar-scrolled .btn-outline-light:hover {
                 background-color: #B1A276 !important;
                 border-color: #B1A276 !important;
                 color: white !important;
             }
-            .navbar-scrolled .navbar-nav .nav-link, .navbar-scrolled .navbar-nav .dropdown-toggle, .navbar-scrolled .btn {
+
+            /* Forçar mudança de cor em todos os elementos da topbar */
+            .topbar-scrolled small {
                 color: #B1A276 !important;
             }
+
+            .topbar-scrolled i {
+                color: #B1A276 !important;
+            }
+
+            /* Cores douradas #B1A276 para links do navbar quando scrolled */
+            .navbar-scrolled .navbar-nav .nav-link {
+                color: #B1A276 !important;
+            }
+
             .navbar-scrolled .navbar-nav .nav-link:hover {
+                color: #9d8f64 !important; /* Tom mais escuro de #B1A276 */
+            }
+
+            .navbar-scrolled .navbar-nav .nav-link.active {
+                color: #B1A276 !important;
+                font-weight: 600;
+            }
+
+            /* Garantir que todos os itens do menu principal tenham a cor dourada */
+            .navbar-scrolled .navbar-nav .nav-item .nav-link {
+                color: #B1A276 !important;
+            }
+
+            .navbar-scrolled .navbar-nav .dropdown .nav-link {
+                color: #B1A276 !important;
+            }
+
+            .navbar-scrolled .navbar-nav .dropdown-toggle {
+                color: #B1A276 !important;
+            }
+
+            /* Botão de pesquisa também dourado #B1A276 quando scrolled */
+            .navbar-scrolled .btn {
+                color: #B1A276 !important;
+            }
+
+            .navbar-scrolled .btn:hover {
                 color: #9d8f64 !important;
+            }
+
+            /* Ajustar padding do conteúdo para não ficar sobreposto pelo navbar fixo */
+            .bg-header {
+                padding-top: 8rem !important;
             }
         }
     </style>
@@ -226,7 +492,7 @@ $meta_description = "Conheça a história, missão e valores da Ordem dos Advoga
     </div>
     <!-- Spinner End -->
 
-    <!-- Topbar Start -->
+    <!-- Desktop Topbar Start -->
     <div class="container-fluid bg-dark px-5 d-none d-lg-block">
         <div class="row gx-0">
             <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
@@ -247,81 +513,123 @@ $meta_description = "Conheça a história, missão e valores da Ordem dos Advoga
             </div>
         </div>
     </div>
-    <!-- Topbar End -->
+    <!-- Desktop Topbar End -->
 
-    <!-- Desktop Navbar -->
+    <!-- Desktop Navbar & Header Start -->
     <div class="container-fluid position-relative p-0 d-none d-lg-block">
         <?php include 'includes/navbar.php'; ?>
-    </div>
 
-    <!-- Header Start -->
-    <div class="container-fluid bg-primary pb-5 pt-0 pt-lg-5 bg-header" style="margin-bottom: 90px; position: relative;">
-        <!-- Mobile Contact Info -->
-        <div class="container-fluid d-block d-lg-none px-3 py-3" style="position: absolute; top: 0; left: 0; right: 0; z-index: 1000;">
-            <div class="row align-items-center">
-                <div class="col-8">
-                    <div class="mobile-contacts">
-                        <div class="contact-line">
-                            <strong class="text-white">Rua 15, Bissau, Guiné-Bissau</strong>
-                        </div>
-                        <div class="contact-line">
-                            <strong class="text-white">+245 955 475 889</strong>
-                        </div>
-                        <div class="contact-line">
-                            <strong class="text-white">info@oagb.gw</strong>
-                        </div>
+        <!-- Header Content -->
+        <div class="container-fluid bg-primary pb-5 pt-lg-7 bg-header">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4 text-white animated zoomIn"><?php echo $page_title; ?></h1>
+
+                    <!-- Breadcrumbs -->
+                    <div class="mb-3">
+                        <a href="index.php" class="h5 text-white">Início</a>
+                        <i class="far fa-circle text-white px-2"></i>
+                        <a href="#" class="h5 text-white">Ordem</a>
+                        <i class="far fa-circle text-white px-2"></i>
+                        <a href="apresentacao-historia.php" class="h5 text-white"><?php echo $page_title; ?></a>
+                    </div>
+
+                    <!-- Quick Action Links -->
+                    <div class="quick-actions mt-3">
+                        <a href="javascript:history.back()" class="btn btn-outline-light btn-sm me-2" title="Voltar atrás">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        <a href="javascript:window.print()" class="btn btn-outline-light btn-sm me-2" title="Imprimir">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-sm me-2" title="Partilhar" onclick="sharePage()">
+                            <i class="fas fa-share-alt"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-sm" title="Traduzir" onclick="translatePage()">
+                            <i class="fas fa-language"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="col-4 text-end">
-                    <button type="button" class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#searchModal">
-                        <i class="fa fa-search me-1"></i>Pesquisar
-                    </button>
-                </div>
             </div>
         </div>
+    </div>
+    <!-- Desktop Navbar & Header End -->
 
-        <!-- Mobile Navbar inside header -->
-        <div class="container-fluid position-relative p-0 d-block d-lg-none" style="position: absolute; top: 80px; left: 0; right: 0; z-index: 1000;">
-            <?php include 'includes/navbar.php'; ?>
-        </div>
+    <!-- Mobile Header Start -->
+    <div class="d-lg-none">
+        <!-- Mobile Background -->
+        <div class="mobile-header-slide" style="background-image: url('img/close-up-scales-justice.jpg'); background-size: cover; background-position: center; min-height: 110vh; position: relative;">
 
-        <div class="row" style="padding-top: 3rem; padding-bottom: calc(3rem - 30px);">
-            <div class="col-12 text-center pt-lg-7">
-                <h1 class="display-4 text-white animated zoomIn"><?php echo $page_title; ?></h1>
-
-                <!-- Breadcrumbs -->
-                <div class="mb-3">
-                    <a href="index.php" class="h5 text-white">Início</a>
-                    <i class="far fa-circle text-white px-2"></i>
-                    <a href="#" class="h5 text-white">Ordem</a>
-                    <i class="far fa-circle text-white px-2"></i>
-                    <a href="apresentacao-historia.php" class="h5 text-white"><?php echo $page_title; ?></a>
+            <!-- Mobile Contact Info -->
+            <div class="container-fluid px-3 py-3" style="position: absolute; top: 0; left: 0; right: 0; z-index: 1000;">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <div class="mobile-contacts">
+                            <div class="contact-line">
+                                <strong class="text-white">Rua 15, Bissau, Guiné-Bissau</strong>
+                            </div>
+                            <div class="contact-line">
+                                <strong class="text-white">+245 955 475 889</strong>
+                            </div>
+                            <div class="contact-line">
+                                <strong class="text-white">info@oagb.gw</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 text-end">
+                        <button type="button" class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#searchModal">
+                            <i class="fa fa-search me-1"></i>Pesquisar
+                        </button>
+                    </div>
                 </div>
+            </div>
 
-                <!-- Quick Action Links -->
-                <div class="quick-actions mt-3">
-                    <a href="javascript:history.back()" class="btn btn-outline-light btn-sm me-2" title="Voltar atrás">
-                        <i class="fas fa-arrow-left"></i>
-                    </a>
-                    <a href="javascript:window.print()" class="btn btn-outline-light btn-sm me-2" title="Imprimir">
-                        <i class="fas fa-print"></i>
-                    </a>
-                    <a href="#" class="btn btn-outline-light btn-sm me-2" title="Partilhar" onclick="sharePage()">
-                        <i class="fas fa-share-alt"></i>
-                    </a>
-                    <a href="#" class="btn btn-outline-light btn-sm" title="Traduzir" onclick="translatePage()">
-                        <i class="fas fa-language"></i>
-                    </a>
+            <!-- Mobile Navbar -->
+            <div class="container-fluid position-relative p-0" style="position: absolute; top: 80px; left: 0; right: 0; z-index: 1000;">
+                <?php include 'includes/navbar.php'; ?>
+            </div>
+
+            <!-- Mobile Header Content -->
+            <div class="mobile-slide-content" style="position: absolute; bottom: 140px; left: 0; right: 0; z-index: 500; padding: 1rem 1.5rem;">
+                <div class="text-center" style="padding: 0;">
+                    <h1 class="text-white mb-2" style="font-family: 'Open Sans', sans-serif; font-size: 1.25rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.9);">
+                        <?php echo $page_title; ?>
+                    </h1>
+
+                    <!-- Breadcrumbs -->
+                    <div class="mb-3">
+                        <a href="index.php" class="h5 text-white">Início</a>
+                        <i class="far fa-circle text-white px-2"></i>
+                        <a href="#" class="h5 text-white">Ordem</a>
+                        <i class="far fa-circle text-white px-2"></i>
+                        <a href="apresentacao-historia.php" class="h5 text-white"><?php echo $page_title; ?></a>
+                    </div>
+
+                    <!-- Quick Action Links -->
+                    <div class="quick-actions mt-3">
+                        <a href="javascript:history.back()" class="btn btn-outline-light btn-sm me-2" title="Voltar atrás">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        <a href="javascript:window.print()" class="btn btn-outline-light btn-sm me-2" title="Imprimir">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-sm me-2" title="Partilhar" onclick="sharePage()">
+                            <i class="fas fa-share-alt"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-sm" title="Traduzir" onclick="translatePage()">
+                            <i class="fas fa-language"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Header End -->
+    <!-- Mobile Header End -->
 
     <!-- Full Screen Search Start -->
-    <div class="modal fade" id="searchModal" tabindex="-1">
+    <div class="modal fade" id="searchModal" tabindex="-1" style="z-index: 2050;">
         <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content" style="background: rgba(9, 30, 62, .7);">
+            <div class="modal-content" style="background: rgba(9, 30, 62, .7); z-index: 2051;">
                 <div class="modal-header border-0">
                     <button type="button" class="btn bg-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -544,15 +852,15 @@ $meta_description = "Conheça a história, missão e valores da Ordem dos Advoga
         }
     </script>
 
-    <!-- Desktop Navbar Scroll Effect -->
+    <!-- Desktop Navbar Scroll Effect - manter barra de endereços visível -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const navbar = document.querySelector('.navbar-dark');
-            const topbar = document.querySelector('.container-fluid.bg-dark.px-5.d-none.d-lg-block');
-            
-            if (navbar && window.innerWidth >= 992) { // Only apply on desktop
+            const topbar = document.querySelector('.bg-dark'); // Desktop topbar
+
+            if (navbar && window.innerWidth >= 992) { // Só aplicar em desktop
                 window.addEventListener('scroll', function() {
-                    if (window.scrollY > 45) { // Use a small threshold for inner pages
+                    if (window.scrollY > 100) {
                         navbar.classList.add('navbar-scrolled');
                         if (topbar) {
                             topbar.classList.add('topbar-scrolled');

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <title>Teste Navbar Scroll</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        
+        /* Simular topbar */
+        .bg-dark { 
+            background: #343a40; 
+            color: white; 
+            padding: 10px; 
+            text-align: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1040;
+            transition: transform 0.3s ease;
+        }
+        
+        /* Navbar */
+        .navbar-dark { 
+            background: transparent; 
+            padding: 15px; 
+            text-align: center;
+            position: fixed;
+            top: 45px;
+            width: 100%;
+            z-index: 1030;
+            transition: all 0.3s ease;
+            border: 2px solid red; /* Para visualizar */
+        }
+        
+        .navbar-scrolled { 
+            background: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+            top: 0 !important;
+        }
+        
+        .topbar-scrolled {
+            transform: translateY(-100%) !important;
+        }
+        
+        .content { 
+            height: 3000px; 
+            background: linear-gradient(to bottom, #fff, #ccc); 
+            padding-top: 120px;
+        }
+        
+        .debug { 
+            position: fixed; 
+            top: 100px; 
+            right: 10px; 
+            background: yellow; 
+            padding: 10px; 
+            z-index: 9999; 
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-dark">Desktop Topbar</div>
+    
+    <div class="navbar-dark">
+        <div>Navbar - Role para baixo para testar</div>
+    </div>
+    
+    <div class="debug">
+        <div>Scroll: <span id="scroll">0</span></div>
+        <div>Navbar classes: <span id="classes">-</span></div>
+    </div>
+    
+    <div class="content">
+        <h1>Teste de Scroll</h1>
+        <p>Role a página para ver o efeito no navbar...</p>
+        
+        <div style="margin-top: 200px;">
+            <h2>Seção 1</h2>
+            <p>Conteúdo da seção 1</p>
+        </div>
+        
+        <div style="margin-top: 300px;">
+            <h2>Seção 2</h2>
+            <p>Conteúdo da seção 2</p>
+        </div>
+        
+        <div style="margin-top: 400px;">
+            <h2>Seção 3</h2>
+            <p>Conteúdo da seção 3</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Testando navbar scroll...');
+            
+            const navbar = document.querySelector('.navbar-dark');
+            const topbar = document.querySelector('.bg-dark');
+            const scrollSpan = document.getElementById('scroll');
+            const classesSpan = document.getElementById('classes');
+            
+            window.addEventListener('scroll', function() {
+                const scrollY = window.scrollY;
+                scrollSpan.textContent = scrollY;
+                classesSpan.textContent = navbar.className;
+                
+                console.log('Scroll:', scrollY);
+                
+                if (scrollY > 100) {
+                    navbar.classList.add('navbar-scrolled');
+                    if (topbar) {
+                        topbar.classList.add('topbar-scrolled');
+                    }
+                    console.log('Added classes');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                    if (topbar) {
+                        topbar.classList.remove('topbar-scrolled');
+                    }
+                    console.log('Removed classes');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
