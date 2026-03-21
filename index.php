@@ -299,7 +299,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                     <div class="mobile-header-contacts container-fluid px-1 pt-0 pb-1">
                         <!-- Primeira Linha: Contactos -->
                         <div class="row mb-2">
-                            <div class="col-12 d-flex flex-nowrap justify-content-center align-items-center text-center" style="gap: 10px; overflow-x: auto;">
+                            <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; gap: 8px; overflow-x: auto; width: 100%;">
                                 <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-map-marker-alt text-white-50 me-1"></i>Bissau, Guiné-Bissau</small>
                                 <div style="width: 1px; height: 10px; background: rgba(255,255,255,0.4);"></div>
                                 <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-phone-alt text-white-50 me-1"></i>+245 955 475 889</small>
@@ -310,7 +310,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                         
                         <!-- Segunda Linha: 3 Botões Principais -->
                         <div class="row mb-1">
-                            <div class="col-12 d-flex flex-nowrap justify-content-center align-items-center" style="gap: 12px;">
+                            <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; gap: 12px; overflow-x: auto; width: 100%;">
                                 <!-- Botão Pesquisa -->
                                 <button type="button" class="btn btn-link text-white p-0 text-decoration-none" data-bs-toggle="modal" data-bs-target="#searchModal" onclick="event.stopPropagation();">
                                      <i class="fa fa-search" style="font-size: 1.1rem;"></i>
