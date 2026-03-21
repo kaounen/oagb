@@ -14,7 +14,7 @@
                 <button type="button" class="btn btn-link text-white-50 p-0 text-decoration-none dropdown-toggle-nocaret topbar-btn" data-bs-toggle="modal" data-bs-target="#searchModal" style="font-size: 0.85rem;">
                      <i class="fa fa-search"></i>
                 </button>
-                <div style="width: 1px; height: 15px; background: rgba(255,255,255,0.15);"></div>
+                <div class="topbar-divider" style="width: 1px; height: 15px; background: rgba(255,255,255,0.15);"></div>
                 <!-- UN Language Picker -->
                 <div class="dropdown">
                     <a href="#" class="text-white-50 p-0 text-decoration-none topbar-btn" data-bs-toggle="dropdown" title="Mudar Idioma" style="font-size: 0.85rem;">
@@ -30,7 +30,7 @@
                         <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
                     </div>
                 </div>
-                <div style="width: 1px; height: 15px; background: rgba(255,255,255,0.15);"></div>
+                <div class="topbar-divider" style="width: 1px; height: 15px; background: rgba(255,255,255,0.15);"></div>
                 <!-- Portal Button with Text -->
                 <a href="portal/login.php" class="btn btn-sm btn-outline-light px-3 fw-bold text-uppercase d-flex align-items-center topbar-btn" style="border-radius: 20px; border-color: rgba(255,255,255,0.15); font-size: 0.65rem; letter-spacing: 0.8px; background: rgba(255,255,255,0.03); height: 28px;">
                     <i class="fas fa-user-circle me-1"></i> Área Reservada

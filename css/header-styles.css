@@ -579,7 +579,8 @@
     }
 
     /* Textos dourados quando topbar scrolled */
-    .topbar-scrolled .text-light {
+    .topbar-scrolled .text-light,
+    .topbar-scrolled .text-white-50 {
         color: #B1A276 !important;
     }
 
@@ -589,6 +590,10 @@
 
     .topbar-scrolled i {
         color: #B1A276 !important;
+    }
+
+    .topbar-scrolled .topbar-divider {
+        background: rgba(177, 162, 118, 0.4) !important; /* Cor dourada semi-transparente */
     }
 
     .topbar-scrolled .btn-outline-light {

@@ -16,48 +16,14 @@
     new WOW().init();
 
 
-    // Sticky Navbar + Topbar — Direct Style Manipulation (bypass CSS specificity)
+    // Sticky Navbar + Topbar — via CSS classes with !important (cleanest approach)
     $(window).scroll(function () {
-        var scrolled = $(this).scrollTop() > 40;
-        var $topbar = $('#topbar');
-        var $navbar = $('.navbar-dark:visible').first();
-
-        if (scrolled) {
-            $topbar.css({
-                'background': '#ffffff',
-                'box-shadow': '0 2px 12px rgba(0,0,0,0.08)',
-                'border-bottom': 'none'
-            });
-            $topbar.find('.text-white-50').css('color', '#888888');
-            $topbar.find('.topbar-btn').css('color', '#555555');
-            $topbar.find('button.topbar-btn i, a.topbar-btn i').css('color', '#a07850');
-            $topbar.find('.btn-outline-light').css({
-                'color': '#a07850',
-                'border-color': 'rgba(0,0,0,0.15)',
-                'background': 'rgba(0,0,0,0.03)'
-            });
-            $navbar.css({
-                'background': '#ffffff',
-                'box-shadow': '0 2px 12px rgba(0,0,0,0.06)'
-            });
+        if ($(this).scrollTop() > 40) {
+            $('#topbar').addClass('is-scrolled');
+            $('.navbar-dark').addClass('is-scrolled shadow-sm');
         } else {
-            $topbar.css({
-                'background': 'transparent',
-                'box-shadow': 'none',
-                'border-bottom': '1px solid rgba(255,255,255,0.08)'
-            });
-            $topbar.find('.text-white-50').css('color', '');
-            $topbar.find('.topbar-btn').css('color', '');
-            $topbar.find('button.topbar-btn i, a.topbar-btn i').css('color', '');
-            $topbar.find('.btn-outline-light').css({
-                'color': '',
-                'border-color': '',
-                'background': ''
-            });
-            $navbar.css({
-                'background': 'transparent',
-                'box-shadow': 'none'
-            });
+            $('#topbar').removeClass('is-scrolled');
+            $('.navbar-dark').removeClass('is-scrolled shadow-sm');
         }
     });
 

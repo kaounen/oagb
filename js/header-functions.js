@@ -186,7 +186,7 @@ function readAloud() {
  */
 function initializeNavbarScrollEffect() {
     const navbar = document.querySelector('.navbar-dark');
-    const topbar = document.querySelector('.bg-dark.px-5.d-none.d-lg-block'); // Desktop topbar - simplified selector
+    const topbar = document.querySelector('#topbar'); // Desktop topbar fixed selector
 
     if (navbar && window.innerWidth >= 992) { // Only apply on desktop
         let ticking = false;
@@ -198,11 +198,13 @@ function initializeNavbarScrollEffect() {
                         navbar.classList.add('navbar-scrolled');
                         if (topbar) {
                             topbar.classList.add('topbar-scrolled');
+                            topbar.classList.add('is-scrolled');
                         }
                     } else {
                         navbar.classList.remove('navbar-scrolled');
                         if (topbar) {
                             topbar.classList.remove('topbar-scrolled');
+                            topbar.classList.remove('is-scrolled');
                         }
                     }
                     ticking = false;

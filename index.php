@@ -208,10 +208,10 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
 
     <!-- Header Styles (Componente reutilizável) -->
-    <link href="css/header-styles.css" rel="stylesheet">
+    <link href="css/header-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
 
     <!-- Index Specific Styles -->
     <link href="css/index-styles.css" rel="stylesheet">
@@ -609,10 +609,10 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=<?php echo time(); ?>"></script>
 
     <!-- Header Functions (Componente reutilizável) -->
-    <script src="js/header-functions.js"></script>
+    <script src="js/header-functions.js?v=<?php echo time(); ?>"></script>
 
     </body>
 </html>
