@@ -1,6 +1,6 @@
 <!-- Topbar Start -->
 <div id="topbar" class="container-fluid topbar d-none d-lg-block">
-    <div class="container px-0">
+    <div class="container">
         <div class="row gx-0 align-items-center">
             <div class="col-lg-7 text-start topbar-contacts">
                 <div class="d-inline-flex align-items-center" style="height: 40px;">

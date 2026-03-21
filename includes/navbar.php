@@ -21,8 +21,8 @@ $publico_ativo = in_array($pagina_atual, $publico_pages);
 $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark py-3 py-lg-0 px-0">
-    <div class="container px-0">
+<nav class="navbar navbar-expand-lg navbar-dark py-3 py-lg-0">
+    <div class="container">
         <a href="index.php" class="navbar-brand p-0">
         <img src="img/logo3.png" class="oagb-logo" alt="OAGB Logo">
     </a>
@@ -70,7 +70,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="anuncios.php" class="dropdown-item">Anúncios</a>
                 </div>
             </div>
-            <a href="contacto.php" class="nav-item nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'contacto.php') ? 'active' : ''; ?>">CONTACTO</a>
+            <a href="contacto.php" class="nav-item nav-link pe-lg-0 <?php echo (basename($_SERVER['PHP_SELF']) == 'contacto.php') ? 'active' : ''; ?>">CONTACTO</a>
         </div>
         
         <!-- Mobile Buttons (Visible only on mobile) -->

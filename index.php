@@ -300,15 +300,15 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                         <!-- Primeira Linha: Contactos -->
                         <div class="row mb-3">
                             <div class="col-12 d-flex flex-column align-items-center text-center">
-                                <small class="text-white mb-2" style="font-size: 0.8rem;"><i class="fa fa-map-marker-alt text-white-50 me-2"></i>Rua 15, Bissau, Guiné-Bissau</small>
-                                <small class="text-white mb-2" style="font-size: 0.8rem;"><i class="fa fa-phone-alt text-white-50 me-2"></i>+245 955 475 889</small>
+                                <small class="text-white" style="font-size: 0.8rem; margin-bottom: 2px;"><i class="fa fa-map-marker-alt text-white-50 me-2"></i>Rua 15, Bissau, Guiné-Bissau</small>
+                                <small class="text-white" style="font-size: 0.8rem; margin-bottom: 2px;"><i class="fa fa-phone-alt text-white-50 me-2"></i>+245 955 475 889</small>
                                 <small class="text-white" style="font-size: 0.8rem;"><i class="fa fa-envelope-open text-white-50 me-2"></i>info@oagb.gw</small>
                             </div>
                         </div>
                         
                         <!-- Segunda Linha: 3 Botões Principais -->
                         <div class="row mb-2">
-                            <div class="col-12 d-flex justify-content-center align-items-center" style="gap: 15px;">
+                            <div class="col-12 d-flex flex-nowrap justify-content-center align-items-center" style="gap: 12px;">
                                 <!-- Botão Pesquisa -->
                                 <button type="button" class="btn btn-link text-white p-0 text-decoration-none" data-bs-toggle="modal" data-bs-target="#searchModal" onclick="event.stopPropagation();">
                                      <i class="fa fa-search" style="font-size: 1.1rem;"></i>
@@ -321,14 +321,14 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                                     <a href="#" class="text-white p-0 text-decoration-none" data-bs-toggle="dropdown" title="Mudar Idioma" onclick="event.stopPropagation();">
                                         <i class="fa fa-globe" style="font-size: 1.2rem;"></i>
                                     </a>
-                                    <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-2" style="min-width: 170px; z-index: 2000; background: rgba(255, 255, 255, 0.98);">
-                                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
-                                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
-                                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
-                                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
-                                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
-                                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
-                                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2" style="font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
+                                    <div class="dropdown-menu border-0 rounded-3 shadow-lg p-2 dropdown-menu-center" style="min-width: 150px; z-index: 2000; background: rgba(255, 255, 255, 0.98); position: absolute; left: 50%; transform: translateX(-50%); margin-top: 10px;">
+                                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="font-size: 0.80rem;"><span class="me-2" style="font-size: 1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
+                                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="font-size: 0.80rem;"><span class="me-2" style="font-size: 1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
+                                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="font-size: 0.80rem;"><span class="me-2" style="font-size: 1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
+                                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="font-size: 0.80rem;"><span class="me-2" style="font-size: 1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
+                                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="font-size: 0.80rem;"><span class="me-2" style="font-size: 1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
+                                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="font-size: 0.80rem;"><span class="me-2" style="font-size: 1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
+                                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="font-size: 0.80rem;"><span class="me-2" style="font-size: 1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
                                     </div>
                                 </div>
                                 
