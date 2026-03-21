@@ -296,18 +296,20 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                     <img class="w-100" src="<?php echo htmlspecialchars($img_path); ?>" alt="Slide">
 
                     <!-- Mobile Contact Info & Buttons -->
-                    <div class="mobile-header-contacts container-fluid px-3 pt-4 pb-2">
+                    <div class="mobile-header-contacts container-fluid px-1 pt-0 pb-1">
                         <!-- Primeira Linha: Contactos -->
-                        <div class="row mb-3">
-                            <div class="col-12 d-flex flex-column align-items-center text-center">
-                                <small class="text-white" style="font-size: 0.8rem; margin-bottom: 2px;"><i class="fa fa-map-marker-alt text-white-50 me-2"></i>Rua 15, Bissau, Guiné-Bissau</small>
-                                <small class="text-white" style="font-size: 0.8rem; margin-bottom: 2px;"><i class="fa fa-phone-alt text-white-50 me-2"></i>+245 955 475 889</small>
-                                <small class="text-white" style="font-size: 0.8rem;"><i class="fa fa-envelope-open text-white-50 me-2"></i>info@oagb.gw</small>
+                        <div class="row mb-2">
+                            <div class="col-12 d-flex flex-nowrap justify-content-center align-items-center text-center" style="gap: 10px; overflow-x: auto;">
+                                <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-map-marker-alt text-white-50 me-1"></i>Bissau, Guiné-Bissau</small>
+                                <div style="width: 1px; height: 10px; background: rgba(255,255,255,0.4);"></div>
+                                <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-phone-alt text-white-50 me-1"></i>+245 955 475 889</small>
+                                <div style="width: 1px; height: 10px; background: rgba(255,255,255,0.4);"></div>
+                                <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-envelope-open text-white-50 me-1"></i>info@oagb.gw</small>
                             </div>
                         </div>
                         
                         <!-- Segunda Linha: 3 Botões Principais -->
-                        <div class="row mb-2">
+                        <div class="row mb-1">
                             <div class="col-12 d-flex flex-nowrap justify-content-center align-items-center" style="gap: 12px;">
                                 <!-- Botão Pesquisa -->
                                 <button type="button" class="btn btn-link text-white p-0 text-decoration-none" data-bs-toggle="modal" data-bs-target="#searchModal" onclick="event.stopPropagation();">
