@@ -308,7 +308,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                         
                         <!-- Segunda Linha: 3 Botões Principais -->
                         <div class="row mb-1">
-                            <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; gap: 12px; overflow-x: auto; width: 100%;">
+                            <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; gap: 12px; width: 100%;">
                                 <!-- Botão Pesquisa -->
                                 <button type="button" class="btn btn-sm btn-outline-light px-2 fw-bold d-flex align-items-center mobile-pill-btn" data-bs-toggle="modal" data-bs-target="#searchModal">
                                      <i class="fa fa-search" style="font-size: 1rem;"></i>
