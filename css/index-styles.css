@@ -205,7 +205,7 @@ a.linkSublinhado:hover {
     }
 
     #header-carousel-mobile .carousel-caption {
-        bottom: 310px;
+        bottom: 10% !important;
         padding: 0 1.5rem;
     }
 

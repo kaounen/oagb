@@ -293,7 +293,7 @@
     }
 
     #header-carousel-mobile .carousel-caption {
-        bottom: 310px;
+        bottom: 10% !important;
         padding: 0 1.5rem;
         z-index: 1040;
     }
@@ -307,7 +307,7 @@
     #header-carousel-mobile .carousel-control-prev,
     #header-carousel-mobile .carousel-control-next {
         top: auto !important;
-        bottom: 310px !important;
+        bottom: 10% !important;
         height: 150px !important;
     }
 

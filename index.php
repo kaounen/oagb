@@ -214,13 +214,13 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <link href="css/header-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
 
     <!-- Index Specific Styles -->
-    <link href="css/index-styles.css" rel="stylesheet">
+    <link href="css/index-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
     
     <!-- Banner Inscrição na Ordem -->
-    <link href="css/banner-inscricao.css" rel="stylesheet">
+    <link href="css/banner-inscricao.css?v=<?php echo time(); ?>" rel="stylesheet">
     
     <!-- Footer Styles -->
-    <link href="css/footer-styles.css" rel="stylesheet">
+    <link href="css/footer-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
 </head>
 
 <body>
@@ -284,7 +284,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <!-- Mobile Header Start -->
     <div class="d-block d-lg-none">
         <!-- Mobile Carousel with overlay content -->
-        <div id="header-carousel-mobile" class="carousel slide carousel-fade" data-bs-ride="carousel" style="position: relative;">
+        <div id="header-carousel-mobile" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-touch="true" style="position: relative;">
             <div class="carousel-inner">
                 <?php
                 $first = true;
