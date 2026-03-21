@@ -344,7 +344,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                     </div>
 
                     <!-- Mobile Slide Content -->
-                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-end" style="padding: 1rem 1.5rem;">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-end" style="padding: 1rem 3.5rem;">
                         <div class="p-3" style="max-width: 900px;">
                             <h1 class="display-4 text-white mb-3 animated zoomIn fonText" style="text-decoration:underline; font-size: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.9);">
                                 <?php echo htmlspecialchars($slide->titulo); ?>

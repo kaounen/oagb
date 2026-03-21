@@ -294,7 +294,7 @@
 
     #header-carousel-mobile .carousel-caption {
         bottom: 10% !important;
-        padding: 0 1.5rem;
+        padding: 0 3.5rem;
         z-index: 1040;
     }
 
@@ -307,8 +307,9 @@
     #header-carousel-mobile .carousel-control-prev,
     #header-carousel-mobile .carousel-control-next {
         top: auto !important;
-        bottom: 10% !important;
+        bottom: 15% !important;
         height: 150px !important;
+        width: 15% !important; /* Limit arrow coverage on sides */
     }
 
     .mobile-navbar-wrapper .navbar {

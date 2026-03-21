@@ -206,7 +206,7 @@ a.linkSublinhado:hover {
 
     #header-carousel-mobile .carousel-caption {
         bottom: 10% !important;
-        padding: 0 1.5rem;
+        padding: 0 3.5rem;
     }
 
     /* Corrigir z-index do botão para aparecer acima do conteúdo e fact-cards */
