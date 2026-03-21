@@ -307,7 +307,7 @@
     #header-carousel-mobile .carousel-control-prev,
     #header-carousel-mobile .carousel-control-next {
         top: auto !important;
-        bottom: 15% !important;
+        bottom: 18% !important;
         height: 150px !important;
         width: 15% !important; /* Limit arrow coverage on sides */
     }
