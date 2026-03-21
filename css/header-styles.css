@@ -303,6 +303,14 @@
         z-index: 1050;
     }
 
+    /* Ajustar posição das setas do slider no mobile para ficarem alinhadas ao texto */
+    #header-carousel-mobile .carousel-control-prev,
+    #header-carousel-mobile .carousel-control-next {
+        top: auto !important;
+        bottom: 310px !important;
+        height: 150px !important;
+    }
+
     .mobile-navbar-wrapper .navbar {
         display: flex !important;
         flex-direction: column !important;
