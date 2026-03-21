@@ -616,9 +616,15 @@
         color: #B1A276 !important;
     }
 
-    .topbar-scrolled .btn-outline-light:hover {
+    .topbar-scrolled .btn-outline-light:hover,
+    .topbar-scrolled .btn-outline-light:focus {
         background-color: #B1A276 !important;
         border-color: #B1A276 !important;
+        color: white !important;
+    }
+
+    .topbar-scrolled .btn-outline-light:hover i,
+    .topbar-scrolled .btn-outline-light:focus i {
         color: white !important;
     }
 

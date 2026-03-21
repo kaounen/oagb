@@ -52,7 +52,10 @@ $breadcrumb = "";
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
+    
+    <!-- Header Styles (Componente reutilizável) -->
+    <link href="css/header-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
 </head>
 
 <body>
