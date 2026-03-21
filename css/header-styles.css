@@ -440,7 +440,7 @@
     /* Fazer o navbar fixo no topo com posicionamento consistente */
     .navbar-dark {
         position: fixed !important;
-        top: 45px !important;
+        top: 40px !important; /* Altura exata do topbar = 40px */
         left: 0 !important;
         right: 0 !important;
         z-index: 1030 !important;
@@ -482,7 +482,7 @@
         background-color: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: blur(10px) !important;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
-        top: 45px !important;
+        top: 40px !important;
         padding: 8px 0 !important;
     }
 

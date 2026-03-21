@@ -21,8 +21,9 @@ $publico_ativo = in_array($pagina_atual, $publico_pages);
 $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark ps-5 pe-lg-5 py-3 py-lg-0" style="padding-right: 4rem !important;">
-    <a href="index.php" class="navbar-brand p-0">
+<nav class="navbar navbar-expand-lg navbar-dark py-3 py-lg-0 px-0">
+    <div class="container px-0">
+        <a href="index.php" class="navbar-brand p-0">
         <img src="img/logo3.png" class="oagb-logo" alt="OAGB Logo">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -81,6 +82,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
         </a>
         <div id="" class="d-lg-none">&nbsp;</div>
     </div>
+    </div> <!-- Fecha .container -->
 </nav>
 
 <style>
@@ -99,6 +101,55 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
         align-items: center !important;
         padding: 0 !important;
         position: relative;
+    }
+
+    /* Toggler button adjusted */
+    .navbar-toggler {
+        margin: 0 auto !important;
+        display: block;
+    }
+
+    /* Menu collapse centralizado */
+    .navbar-collapse {
+        text-align: center !important;
+        background: rgba(9,30,62,0.95);
+        border-radius: 8px;
+        padding: 1rem 0;
+        margin-top: 1rem;
+    }
+
+    .navbar-collapse .nav-link {
+        color: rgba(255,255,255,0.9) !important;
+        padding: 0.7rem 1rem !important;
+    }
+
+    .navbar-collapse .nav-link.active {
+        color: #B1A276 !important;
+        font-weight: bold;
+    }
+
+    /* Dropdowns centralizados abertos no mobile em vez de flutuar */
+    .navbar-collapse .dropdown-menu {
+        position: static !important;
+        float: none !important;
+        width: 100%;
+        text-align: center !important;
+        border: none;
+        background: rgba(0,0,0,0.25);
+        box-shadow: none;
+        margin: 0;
+        padding: 0.5rem 0;
+    }
+
+    .navbar-collapse .dropdown-menu .dropdown-item {
+        color: rgba(255,255,255,0.8) !important;
+        text-align: center !important;
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-collapse .dropdown-menu .dropdown-item:hover {
+        color: #B1A276 !important;
+        background: transparent !important;
     }
 }
 </style>
