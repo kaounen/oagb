@@ -91,16 +91,16 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
     .navbar {
         padding-left: 0 !important;
         padding-right: 0 !important;
-        padding-top: 1.5rem !important; /* Increase top padding */
+        padding-top: 3rem !important; /* Aumento expressivo para garantir que a margem é visível */
     }
 
     .navbar-brand {
-        margin: 0 auto 1.5rem !important;
+        margin: 0 auto 2rem !important;
         width: 100%;
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        padding: 0.5rem 0 0 0 !important; /* Aumentar um pouco o padding top do logo */
+        padding: 0 !important; 
         position: relative;
     }
 
@@ -111,7 +111,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
 
     /* Toggler button adjusted */
     .navbar-toggler {
-        margin: 1.2rem auto 0.5rem !important; /* Add top margin to push the menu down a little */
+        margin: 2.5rem auto 1rem !important; /* Aumento ainda maior do espaçamento entre logo e menu */
         display: block;
     }
 
