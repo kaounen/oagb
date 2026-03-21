@@ -21,14 +21,14 @@
                     <a href="#" class="text-white-50 p-0 text-decoration-none topbar-btn" data-bs-toggle="dropdown" title="Mudar Idioma" style="font-size: 0.85rem;">
                         <i class="fa fa-globe"></i>
                     </a>
-                    <div class="dropdown-menu m-0 dropdown-menu-end border-0 rounded-3 shadow-lg p-2" style="min-width: 170px; z-index: 2000; margin-top: 15px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);">
-                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
-                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
-                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
-                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
-                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
-                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2 mb-1" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
-                        <a href="#" class="dropdown-item py-2 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
+                    <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2000; margin-top: 15px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: absolute; left: 50%; transform: translateX(-50%); right: auto;">
+                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
+                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
+                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
+                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
+                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
+                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
+                        <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
                     </div>
                 </div>
                 <div class="topbar-divider" style="width: 1px; height: 15px; background: rgba(255,255,255,0.15);"></div>

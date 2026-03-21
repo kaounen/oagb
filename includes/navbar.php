@@ -103,6 +103,11 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
         position: relative;
     }
 
+    .navbar-brand img {
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
     /* Toggler button adjusted */
     .navbar-toggler {
         margin: 0 auto !important;
@@ -135,14 +140,14 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
         width: 100%;
         text-align: center !important;
         border: none;
-        background: rgba(0,0,0,0.25);
+        background: rgba(0,0,0,0.3) !important;
         box-shadow: none;
         margin: 0;
         padding: 0.5rem 0;
     }
 
     .navbar-collapse .dropdown-menu .dropdown-item {
-        color: rgba(255,255,255,0.8) !important;
+        color: rgba(255,255,255,0.85) !important;
         text-align: center !important;
         padding: 0.5rem 1rem;
     }
