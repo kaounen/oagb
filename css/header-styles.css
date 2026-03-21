@@ -118,8 +118,8 @@
 #header-carousel .carousel-item,
 #header-carousel-mobile .carousel-item {
     position: relative;
-    overflow: hidden;
-    height: 100vh; /* FORÇA ALTURA IGUAL PARA PREVENIR SALTO DE SLIDES */
+    overflow: visible;
+    min-height: 100vh; /* Mantém uniformidade visual sem clipar a página */
 }
 
 #header-carousel .carousel-item img,
