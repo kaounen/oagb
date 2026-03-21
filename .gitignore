@@ -1,0 +1,103 @@
+# ========================================
+# SEGURANÇA - Ficheiros com Credenciais
+# ========================================
+.env
+.env.local
+.env.*.local
+ai_config.php
+ask_ai.php
+
+# ========================================
+# IDE & Editor
+# ========================================
+.vscode/
+.idea/
+.sublime-project
+.sublime-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ========================================
+# Node & NPM
+# ========================================
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# ========================================
+# Composer
+# ========================================
+vendor/
+composer.lock
+
+# ========================================
+# PHP
+# ========================================
+*.log
+error_log
+access_log
+
+# ========================================
+# Sistema Operativo
+# ========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ========================================
+# Build & Dist
+# ========================================
+dist/
+build/
+*.tar.gz
+*.zip
+
+# ========================================
+# Ficheiros Locais de Desenvolvimento
+# ========================================
+local.config.php
+debug/
+cache/
+temp/
+tmp/
+
+# ========================================
+# Cópias & Backups
+# ========================================
+*-backup.php
+*_backup.php
+*_old.php
+*_copy.php
+*.bak
+*.backup
+
+# ========================================
+# Ficheiros de Teste Local
+# ========================================
+test_local.php
+test_*.php
+debug_*.php
+
+# ========================================
+# Google Cloud & Credenciais
+# ========================================
+service-account-key.json
+credentials.json
+GOOGLE_APPLICATION_CREDENTIALS
+
+# ========================================
+# Ficheiros de Configuração Sensível
+# ========================================
+config.local.php
+database.local.php
+secrets.php
+secrets.json
+nul

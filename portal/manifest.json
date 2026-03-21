@@ -1,0 +1,15 @@
+{
+  "name": "OAGB Portal",
+  "short_name": "OAGB",
+  "start_url": "/oagb/portal/login.php",
+  "display": "standalone",
+  "background_color": "#111923",
+  "theme_color": "#B1A276",
+  "icons": [
+    {
+      "src": "/oagb/img/logo3.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

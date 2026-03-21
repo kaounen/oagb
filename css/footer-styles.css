@@ -1,0 +1,177 @@
+/* Modern White Footer Styles - Refined v6 (Final Vertical/Mobile Balance) */
+.footer-section {
+    background-color: #ffffff;
+    color: #111923;
+    padding: 90px 0 0 0; /* Aumentado para o menu não parecer "subido" no desktop */
+    font-family: 'Open Sans', sans-serif;
+    border-top: 1px solid #f1f1f1;
+}
+
+.footer-logo {
+    max-width: 140px;
+    margin-bottom: 20px;
+}
+
+.footer-about-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #555555;
+    margin-bottom: 20px;
+}
+
+.footer-social-links {
+    display: flex;
+    gap: 10px;
+}
+
+.footer-social-link {
+    width: 35px;
+    height: 35px;
+    background-color: #f8f9fa;
+    color: #111923;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.footer-social-link:hover {
+    background-color: #B1A276;
+    color: white;
+    border-color: #B1A276;
+}
+
+.footer-heading {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #111923;
+    margin-bottom: 20px; /* Reduzido de 25px para 20px para maior coesão */
+}
+
+.footer-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-nav-item {
+    margin-bottom: 8px; /* Reduzido de 10px para 8px para diminuir o vácuo vertical */
+}
+
+.footer-nav-link {
+    color: #555555;
+    text-decoration: none !important;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.footer-nav-link:hover {
+    color: #B1A276;
+}
+
+.footer-newsletter-text {
+    font-size: 0.85rem;
+    color: #555555;
+    margin-bottom: 15px;
+}
+
+.footer-newsletter-form {
+    display: flex;
+    background-color: #fbfbfc;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 3px;
+}
+
+.footer-newsletter-input {
+    background: transparent;
+    border: none;
+    flex: 1;
+    padding: 8px 12px;
+    color: #111923;
+    font-size: 0.85rem;
+    outline: none !important;
+}
+
+.footer-newsletter-btn {
+    background-color: #B1A276;
+    color: white;
+    border: none;
+    padding: 0 15px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    border-radius: 3px;
+}
+
+.footer-copyright-row {
+    margin-top: 60px; /* Mais espaço no desktop para respirar */
+    padding-top: 20px;
+    padding-bottom: 30px;
+    border-top: 1px solid #f1f1f1;
+}
+
+.footer-copyright {
+    font-size: 0.8rem;
+    color: #777777;
+    margin: 0;
+}
+
+.footer-copyright a {
+    color: #111923;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-partner-logo {
+    max-height: 18px;
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+
+/* Responsividade e Equilíbrio Mobile Centralizado */
+@media (max-width: 991px) {
+    .footer-section {
+        padding: 45px 0 0 0;
+        text-align: center !important;
+    }
+    
+    .footer-logo {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .footer-social-links {
+        justify-content: center !important;
+    }
+    
+    .footer-heading {
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .footer-nav-item {
+        margin-bottom: 6px; /* Ainda mais compacto no mobile */
+    }
+    
+    .footer-newsletter-form {
+        max-width: 320px;
+        margin: 0 auto;
+    }
+    
+    /* Eliminação de vácuos no mobile SEM sacrificar o desktop */
+    .footer-copyright-row {
+        margin-top: 15px !important;
+        padding-top: 15px !important;
+        padding-bottom: 25px !important;
+    }
+    
+    /* Reduzir margens negativas desnecessárias das colunas */
+    .mb-4 {
+        margin-bottom: 1rem !important;
+    }
+}

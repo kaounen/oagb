@@ -1,0 +1,202 @@
+/* ========================================
+   FOOTER STYLES - css/footer-styles.css
+   Estilos reutilizáveis para footer em todas as páginas
+   Última atualização: 2025-11-10
+   ======================================== */
+
+/* ========== FOOTER - Títulos com Underline ========== */
+.section-title-sm h3 {
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0px !important;
+    display: block;
+    font-family: 'Open Sans', sans-serif !important;
+    color: #5B463F !important;
+}
+
+/* Restaurar a barra castanha curta (::after) debaixo dos títulos */
+.section-title-sm {
+    padding-bottom: 0.75rem !important;
+    border: none !important;
+    border-bottom: none !important;
+    margin-bottom: 1rem !important;
+    position: relative;
+    overflow: visible !important;
+}
+
+/* Remover qualquer ::before e ::after conflitantes */
+.section-title-sm::before {
+    display: none !important;
+}
+
+.section-title-sm::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 45% !important;
+    height: 3px !important;
+    background-color: #c18046 !important;
+    display: block !important;
+    z-index: 10 !important;
+    opacity: 1 !important;
+}
+
+/* Garantir que h3 no footer não tem border */
+.col-lg-8 .section-title-sm h3 {
+    border: none !important;
+    border-bottom: none !important;
+    padding-bottom: 0.5rem !important;
+}
+
+/* ========== FOOTER - Formulário Newsletter ========== */
+/* Reduzir altura do formulário (Desktop e Mobile) */
+#newsletter-form .input-group {
+    gap: 0;
+}
+
+#newsletter-form .form-control {
+    padding: 0.5rem 1rem !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 0.95rem;
+}
+
+#newsletter-form .btn {
+    padding: 0.5rem 1rem !important;
+    height: 36px !important;
+    min-height: 36px !important;
+}
+
+/* ========== FOOTER - Desktop ========== */
+@media (min-width: 992px) {
+    /* Alinhar logo do footer verticalmente com títulos */
+    .col-lg-4.col-md-6.footer-about {
+        padding-top: 3rem;
+    }
+
+    /* Aumentar largura do formulário de inscrição */
+    #newsletter-form {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    #newsletter-form .input-group {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+/* ========== FOOTER - Versão Mobile Centralizada ========== */
+@media (max-width: 991.98px) {
+    /* Traço centrado no mobile */
+    .section-title-sm::after {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    /* Centralizar logo do footer - reduzir 30px do topo */
+    .col-lg-4.col-md-6.footer-about {
+        text-align: center;
+        margin-bottom: 2rem;
+        margin-top: -30px;
+        padding-top: 0 !important;
+    }
+
+    .col-lg-4.col-md-6.footer-about img {
+        margin-top: -40px;
+    }
+
+    /* Centralizar coluna de menus no mobile */
+    .col-lg-8.col-md-6 {
+        width: 100%;
+    }
+
+    /* Centralizar cada coluna de menu */
+    .col-lg-4.col-md-12 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        padding-top: 0 !important;
+    }
+
+    /* Aumentar distância dos títulos dos menus do topo */
+    .col-lg-4.col-md-12 .section-title-sm {
+        margin-top: 2rem !important;
+    }
+
+    .col-lg-4.col-md-12 .d-flex {
+        flex-direction: column;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center;
+    }
+
+    /* Centralizar links do menu */
+    .link-animated {
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    /* Centralizar icons sociais */
+    .col-lg-4.col-md-12 .d-flex.mt-4 {
+        justify-content: center !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 0.5rem !important;
+    }
+
+    .col-lg-4.col-md-12 .d-flex.mt-4 a {
+        flex-shrink: 0 !important;
+    }
+
+    /* Formulário newsletter - Mobile: aumentar largura, deixar paddings left/right */
+    #newsletter-form {
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin: 0 auto;
+    }
+
+    #newsletter-form .input-group {
+        width: 100%;
+    }
+
+    #newsletter-form .form-control {
+        flex: 1;
+    }
+
+    /* Centralizar secção de copyright - Reduzir distância do topo */
+    .row.justify-content-end {
+        justify-content: center !important;
+        margin-top: -4rem !important;
+    }
+
+    /* Centralizar texto e logo da empresa */
+    .d-flex.align-items-center.justify-content-center {
+        flex-direction: column;
+        text-align: center;
+        height: auto !important;
+        padding-bottom: 1.5rem;
+    }
+
+    /* Garantir que o logo ADA fica centralizado e com mais espaço */
+    .d-flex.align-items-center.justify-content-center p {
+        margin: 1rem 0 0 0 !important;
+        padding-bottom: 0.5rem;
+    }
+}
+
+/* Helper classes for footer */
+.mobile-contacts { 
+    line-height: 1.2; 
+}
+
+.contact-line { 
+    margin-bottom: 0.1rem; 
+    font-size: 0.85rem; 
+    line-height: 1.1; 
+}
+
+.contact-line:last-child { 
+    margin-bottom: 0; 
+}

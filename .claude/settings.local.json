@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php:*)",
+      "WebFetch(domain:code.claude.com)",
+      "WebFetch(domain:platform.moonshot.ai)",
+      "Bash(nul)",
+      "Bash(xargs:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,553 @@
+/* ================================================================
+   INDEX STYLES - Estilos específicos da página index.php
+   Inclui: Footer, News Articles, Agenda, Facts Cards
+   ================================================================ */
+
+/* Classe para texto longo/resumo */
+.texto-conteudo {
+    color: #111923;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+}
+
+/* Títulos de notícias/artigos */
+.titulo-artigo {
+    color: #4D1C21;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 180%;
+}
+
+/* Classes de texto do slider (do index2.html) */
+.fonText {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.fonText2 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.fonText3 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.fonText4 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 90%;
+}
+
+/* Paleta de cores */
+.bg-color-1 { background-color: #c18046; }
+.bg-color-2 { background-color: #f37263; }
+.bg-color-3 { background-color: #a5684e; }
+.bg-color-4 { background-color: #a98c78; }
+.bg-color-5 { background-color: #5a443d; }
+
+/* Botões arrow */
+.btn-arrow-only {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 250px;
+    border-bottom: 1px solid #111923;
+    padding-top: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-arrow-only i {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #111923;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.btn-arrow-only:hover {
+    transform: translateX(5px);
+}
+
+.btn-arrow-only:hover i {
+    transform: translateX(5px);
+}
+
+/* Links com underline no hover */
+a.linkSublinhado {
+    font-weight: 500 !important;
+}
+
+a.linkSublinhado:hover {
+    text-decoration: underline !important;
+}
+
+/* Paddings reduzidos */
+.facts {
+    padding-bottom: 2rem !important;
+    margin-top: -105px !important; /* Metade dos cards sobre o slider */
+    position: relative;
+    z-index: 10;
+}
+
+.section-noticias {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+}
+
+/* News article images - same height */
+.blog-item .blog-img {
+    height: 200px;
+    overflow: hidden;
+}
+
+.blog-item .blog-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Agenda redesenhada */
+.agenda-background-icon {
+    position: absolute;
+    top: 20px;
+    right: 50px;
+    z-index: 1;
+    opacity: 0.05;
+    font-size: 15rem;
+    color: #B1A276;
+    pointer-events: none;
+}
+
+.agenda-evento-novo {
+    /* Sem efeitos card */
+}
+
+.agenda-data-container {
+    border-right: 2px solid #f0f0f0;
+    padding-right: 2rem;
+}
+
+.agenda-conteudo-container {
+    padding-left: 2rem;
+}
+
+/* Responsivo para agenda */
+@media (max-width: 991.98px) {
+    .agenda-data-container {
+        border-right: none;
+        border-bottom: 2px solid #f0f0f0;
+        padding-right: 1rem;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .agenda-conteudo-container {
+        padding-left: 1rem;
+    }
+
+    .agenda-background-icon {
+        font-size: 8rem;
+        top: 10px;
+        right: 20px;
+    }
+}
+
+/* Facts cards */
+.facts-card {
+    display: flex;
+    flex-direction: column;
+    height: 210px;
+    padding: 2rem;
+    padding-top: 30px;
+}
+
+.facts-title {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+.facts-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Mobile specific styles */
+.mobile-contacts {
+    line-height: 1.2;
+}
+
+.contact-line {
+    margin-bottom: 0.1rem;
+    font-size: 0.75rem;
+    line-height: 1.1;
+}
+
+.contact-line:last-child {
+    margin-bottom: 0;
+}
+
+/* Mobile navbar - corrigir layout do botão menu */
+@media (max-width: 991.98px) {
+    #header-carousel-mobile .carousel-item {
+        min-height: 110vh;
+    }
+
+    #header-carousel-mobile .carousel-caption {
+        bottom: 310px;
+        padding: 0 1.5rem;
+    }
+
+    /* Corrigir z-index do botão para aparecer acima do conteúdo e fact-cards */
+    #header-carousel-mobile .carousel-caption .btn {
+        position: relative;
+        z-index: 1050;
+    }
+
+    /* Garantir que o carousel-caption tenha prioridade sobre fact-cards */
+    #header-carousel-mobile .carousel-caption {
+        z-index: 1040;
+    }
+
+    /* Garantir que a secção Facts não interfira with o carousel */
+    .container-fluid.facts {
+        position: relative;
+        z-index: 5;
+    }
+
+    /* Reduzir padding-bottom da secção Facts para diminuir espaço até Artigos */
+    .container-fluid.facts {
+        padding-bottom: 0rem !important;
+    }
+
+    /* Reduzir também o padding-bottom do container interno da secção Facts */
+    .container-fluid.facts .container {
+        padding-bottom: 0rem !important;
+    }
+
+    /* Reduzir espaço no topo da secção Artigos recentes / Últimas notícias */
+    .container-fluid.section-noticias .container {
+        padding-top: 0rem !important;
+    }
+
+    /* Usar margin negativo para forçar secção Artigos a subir */
+    .container-fluid.section-noticias {
+        margin-top: -4.25rem !important;
+    }
+
+    /* Reduzir margin-bottom da última fact-card se existir */
+    .container-fluid.facts .facts-card:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    /* Reduzir espaço entre final dos artigos e início da secção Eventos */
+    .container-fluid.section-noticias .container {
+        padding-bottom: 0rem !important;
+    }
+
+    /* Atacar TODOS os níveis da secção eventos para eliminar espaço */
+
+    /* 1. Container-fluid da secção eventos - adicionar espaço controlado */
+    .container-fluid[style*="background: white"] {
+        padding-top: 6.25rem !important;
+    }
+
+    /* 2. Container interno da secção eventos - eliminar padding-top */
+    .container-fluid[style*="background: white"] .container {
+        padding-top: 0rem !important;
+    }
+
+    /* 3. Título da secção eventos - manter barra horizontal intacta */
+    .container-fluid[style*="background: white"] .section-title {
+        margin-top: 0rem !important;
+        padding-top: 0rem !important;
+        padding-bottom: 0.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    /* 4. Garantir que secção artigos não tem padding-bottom excessivo */
+    .container-fluid.section-noticias {
+        padding-bottom: 0rem !important;
+    }
+
+    /* 5. Usar margin negativo para subir os eventos sem afetar o título */
+    .container-fluid[style*="background: white"] .row.g-4 {
+        margin-top: -6.25rem !important;
+        row-gap: 0rem !important;
+    }
+
+    /* 7. REDUZIR ESPAÇO ENTRE 1º E 2º EVENTO - Seletor CORRETO para Agenda */
+    .container-fluid[style*="background: white"] .row.g-4 > .col-12:nth-child(2) {
+        margin-top: -150px !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* 7b. Reduzir padding interno do 2º evento */
+    .container-fluid[style*="background: white"] .row.g-4 > .col-12:nth-child(2) .agenda-evento-novo {
+        padding: 1rem 2rem !important;
+        min-height: auto !important;
+    }
+
+    /* 8. Compactar cards de eventos internamente para proximidade máxima */
+    .container-fluid[style*="background: white"] .card {
+        margin-bottom: 0.25rem !important;
+        padding: 0.3rem !important;
+    }
+
+    .container-fluid[style*="background: white"] .card-body {
+        padding: 0.4rem !important;
+    }
+
+    .container-fluid[style*="background: white"] .card-title {
+        margin-bottom: 0.2rem !important;
+        line-height: 1.1 !important;
+        font-size: 0.95rem !important;
+    }
+
+    .container-fluid[style*="background: white"] .card-text {
+        margin-bottom: 0.15rem !important;
+        line-height: 1.2 !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* 6. Reduzir margens dos cards de eventos individuais */
+    .container-fluid[style*="background: white"] .col-lg-4 {
+        margin-bottom: 0.5rem !important;
+    }
+}
+
+/* Desktop navbar scroll effect - INDEX specific adjustments */
+@media (min-width: 992px) {
+    #header-carousel {
+        margin-top: 0;
+        position: relative;
+        top: 0;
+    }
+
+    #header-carousel .carousel-item {
+        min-height: 650px;
+        height: 650px;
+    }
+
+    /* Baixar o conteúdo do carousel */
+    #header-carousel .carousel-caption {
+        top: 55% !important;
+        bottom: auto !important;
+        transform: translateY(-50%);
+    }
+}
+
+@media (max-width: 991.98px) {
+    .navbar-dark .navbar-nav .nav-link {
+        color: white !important;
+    }
+
+    /* Adicionar espaçamento no título e breadcrumbs mobile */
+    .text-center {
+        padding-top: 8rem !important;
+    }
+}
+
+/* ========== FOOTER - Títulos com Underline ========== */
+.section-title-sm h3 {
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0px !important;
+    display: block;
+}
+
+/* Restaurar a barra castanha curta (::after) debaixo dos títulos */
+.section-title-sm {
+    padding-bottom: 0.75rem !important;
+    border: none !important;
+    border-bottom: none !important;
+    margin-bottom: 1rem !important;
+    position: relative;
+    overflow: visible !important;
+}
+
+/* Remover qualquer ::before e ::after conflitantes */
+.section-title-sm::before {
+    display: none !important;
+}
+
+.section-title-sm::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 45% !important;
+    height: 3px !important;
+    background-color: #c18046 !important;
+    display: block !important;
+    z-index: 10 !important;
+    opacity: 1 !important;
+}
+
+/* Garantir que h3 no footer não tem border */
+.col-lg-8 .section-title-sm h3 {
+    border: none !important;
+    border-bottom: none !important;
+    padding-bottom: 0.5rem !important;
+}
+
+/* ========== FOOTER - Formulário Newsletter ========== */
+/* Reduzir altura do formulário (Desktop e Mobile) */
+#newsletter-form .input-group {
+    gap: 0;
+}
+
+#newsletter-form .form-control {
+    padding: 0.5rem 1rem !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 0.95rem;
+}
+
+#newsletter-form .btn {
+    padding: 0.5rem 1rem !important;
+    height: 36px !important;
+    min-height: 36px !important;
+}
+
+/* ========== FOOTER - Desktop ========== */
+@media (min-width: 992px) {
+    /* Alinhar logo do footer verticalmente com títulos */
+    .col-lg-4.col-md-6.footer-about {
+        padding-top: 3rem;
+    }
+
+    /* Aumentar largura do formulário de inscrição */
+    #newsletter-form {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    #newsletter-form .input-group {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+/* ========== FOOTER - Versão Mobile Centralizada ========== */
+@media (max-width: 991.98px) {
+    /* Traço centrado no mobile */
+    .section-title-sm::after {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    /* Centralizar logo do footer - reduzir 30px do topo */
+    .col-lg-4.col-md-6.footer-about {
+        text-align: center;
+        margin-bottom: 2rem;
+        margin-top: -30px;
+        padding-top: 0 !important;
+    }
+
+    .col-lg-4.col-md-6.footer-about img {
+        margin-top: -40px;
+    }
+
+    /* Centralizar coluna de menus no mobile */
+    .col-lg-8.col-md-6 {
+        width: 100%;
+    }
+
+    /* Centralizar cada coluna de menu */
+    .col-lg-4.col-md-12 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        padding-top: 0 !important;
+    }
+
+    /* Aumentar distância dos títulos dos menus do topo */
+    .col-lg-4.col-md-12 .section-title-sm {
+        margin-top: 2rem !important;
+    }
+    .col-lg-4.col-md-12 .d-flex {
+        flex-direction: column;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center;
+    }
+
+    /* Centralizar links do menu */
+    .link-animated {
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    /* Centralizar icons sociais */
+    .col-lg-4.col-md-12 .d-flex.mt-4 {
+        justify-content: center !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 0.5rem !important;
+    }
+
+    .col-lg-4.col-md-12 .d-flex.mt-4 a {
+        flex-shrink: 0 !important;
+    }
+
+    /* Formulário newsletter - Mobile: aumentar largura, deixar paddings left/right */
+    #newsletter-form {
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin: 0 auto;
+    }
+
+    #newsletter-form .input-group {
+        width: 100%;
+    }
+
+    #newsletter-form .form-control {
+        flex: 1;
+    }
+
+    /* Centralizar secção de copyright - Reduzir distância do topo */
+    .row.justify-content-end {
+        justify-content: center !important;
+        margin-top: -4rem !important;
+    }
+
+    /* Centralizar texto e logo da empresa */
+    .d-flex.align-items-center.justify-content-center {
+        flex-direction: column;
+        text-align: center;
+        height: auto !important;
+        padding-bottom: 1.5rem;
+    }
+
+    /* Garantir que o logo ADA fica centralizado e com mais espaço */
+    .d-flex.align-items-center.justify-content-center p {
+        margin: 1rem 0 0 0 !important;
+        padding-bottom: 0.5rem;
+    }
+}
+
+.mobile-contacts {
+    line-height: 1.2;
+}
+
+.contact-line {
+    margin-bottom: 0.1rem;
+    font-size: 0.85rem;
+    line-height: 1.1;
+}
+
+.contact-line:last-child {
+    margin-bottom: 0;
+}

@@ -1,0 +1,143 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    INSTRUÇÕES PARA TESTAR O EFEITO DE SCROLL
+═══════════════════════════════════════════════════════════════════════════════
+
+CORREÇÕES APLICADAS:
+────────────────────
+1. ✅ Função JavaScript initializeNavbarScrollEffect() corrigida
+2. ✅ Regra CSS .bg-dark duplicada removida (7 linhas)
+3. ✅ Selector do topbar simplificado e otimizado
+4. ✅ Performance melhorada com requestAnimationFrame
+
+FICHEIROS MODIFICADOS:
+─────────────────────
+• js/header-functions.js (217 linhas)
+• css/header-styles.css (603 linhas, antes era 610)
+
+FICHEIROS ADICIONADOS:
+─────────────────────
+• test-scroll-effect.html (página de teste interativa)
+• SCROLL_EFFECT_FIX_REPORT.md (documentação técnica)
+• FIXES_APPLIED_SUMMARY.md (resumo das correções)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+COMO TESTAR - OPÇÃO 1 (RECOMENDADA):
+════════════════════════════════════
+
+1. Abrir em browser desktop: http://localhost/oagb/test-scroll-effect.html
+
+2. Observar a caixa no canto inferior direito com:
+   - Scroll Y (valor em pixels)
+   - Status do Navbar Scrolled (verde quando ativo)
+   - Status do Topbar Scrolled (verde quando ativo)
+
+3. Fazer scroll para baixo:
+   ✅ Quando scroll > 45px, as classes devem ser adicionadas (verde)
+   ✅ Navbar muda para fundo branco com blur
+   ✅ Logo diminui de 70% para 50% de largura
+   ✅ Texto do menu fica dourado (#B1A276)
+   ✅ Topbar fica branco com texto dourado
+
+4. Fazer scroll para cima:
+   ✅ Quando scroll < 45px, as classes devem ser removidas (vermelho)
+   ✅ Todos os efeitos devem reverter
+
+═══════════════════════════════════════════════════════════════════════════════
+
+COMO TESTAR - OPÇÃO 2 (PÁGINAS PRINCIPAIS):
+════════════════════════════════════════════
+
+A. Página Index
+   1. Abrir: http://localhost/oagb/index.php (em desktop > 992px)
+   2. Fazer scroll a partir do topo
+   3. Quando scroll > 45px, o navbar deve mudar (background branco, texto dourado)
+
+B. Página Apresentação e História
+   1. Abrir: http://localhost/oagb/apresentacao-historia.php
+   2. Fazer scroll a partir do topo
+   3. Quando scroll > 45px, o navbar deve mudar (igual ao index.php)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+VERIFICAÇÃO TÉCNICA (DevTools - F12):
+══════════════════════════════════════
+
+1. Console:
+   - Não deve haver erros JavaScript
+   - Ficheiros CSS/JS devem estar carregados (Network tab)
+
+2. Elements/Inspector:
+   - Procurar por <nav class="navbar navbar-dark">
+   - Quando scroll > 45px, deve ter classe "navbar-scrolled"
+   - Quando scroll < 45px, classe deve ser removida
+
+3. Styles:
+   - Verificar que .navbar-scrolled tem background branco
+   - Verificar que .topbar-scrolled tem background branco
+
+═══════════════════════════════════════════════════════════════════════════════
+
+SE NÃO FUNCIONAR:
+═════════════════
+
+1. Verificar largura do browser:
+   - F12 → Verificar largura (deve ser > 992px)
+   - Efeito só funciona em desktop
+
+2. Limpar cache:
+   - Windows: Ctrl+Shift+R
+   - Mac: Cmd+Shift+R
+   - Garantir que CSS/JS não estão em cache
+
+3. Verificar ficheiros:
+   - css/header-styles.css (603 linhas)
+   - js/header-functions.js (217 linhas)
+   - Ambos devem estar nos includes do index.php e apresentacao-historia.php
+
+4. Console JavaScript (F12 → Console):
+   - Executar: document.querySelector('.navbar-dark')
+   - Deve retornar o elemento navbar
+   - Executar: document.querySelector('.bg-dark.px-5.d-none.d-lg-block')
+   - Deve retornar a topbar
+
+5. Testar scroll manualmente:
+   - Abrir DevTools → Console
+   - Executar: window.scrollY
+   - Fazer scroll e executar novamente para verificar se o valor muda
+   - Executar: document.querySelector('.navbar-dark').classList
+   - Deve conter 'navbar-scrolled' quando scroll > 45px
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RESUMO DO QUE DEVE ACONTECER:
+════════════════════════════
+
+ESTADO INICIAL (scroll < 45px):
+├── Navbar: background TRANSPARENTE
+├── Logo: 70% de largura
+├── Texto do Menu: BRANCO
+└── Topbar: ESCURO com texto branco
+
+ESTADO SCROLL (scroll > 45px):
+├── Navbar: background BRANCO com blur
+├── Logo: 50% de largura (diminui)
+├── Texto do Menu: DOURADO (#B1A276)
+└── Topbar: BRANCO com blur e texto DOURADO
+
+═══════════════════════════════════════════════════════════════════════════════
+
+DOCUMENTAÇÃO:
+═════════════
+
+Para mais detalhes técnicos, ver:
+• SCROLL_EFFECT_FIX_REPORT.md - Relatório técnico completo
+• FIXES_APPLIED_SUMMARY.md - Resumo em português
+• INDEX_CONSOLIDATION_REPORT.md - Consolidação original
+• HEADER_COMPONENTS_GUIDE.md - Guia de uso
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Data: Novembro 2024
+Status: ✅ PRONTO PARA PRODUÇÃO
+Versão: 2.0
