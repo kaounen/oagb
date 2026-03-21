@@ -310,14 +310,14 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                         <div class="row mb-1">
                             <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; gap: 12px; overflow-x: auto; width: 100%;">
                                 <!-- Botão Pesquisa -->
-                                <button type="button" class="btn btn-link text-white p-0 text-decoration-none" data-bs-toggle="modal" data-bs-target="#searchModal" onclick="event.stopPropagation();">
-                                     <i class="fa fa-search" style="font-size: 1.1rem;"></i>
+                                <button type="button" class="btn btn-sm btn-outline-light px-3 fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#searchModal" style="border-radius: 20px; border-color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.15); font-size: 0.70rem;" onclick="event.stopPropagation();">
+                                     <i class="fa fa-search" style="font-size: 1rem;"></i>
                                 </button>
                                 
                                 <!-- Botão Tradução -->
                                 <div class="dropdown">
-                                    <a href="#" class="text-white p-0 text-decoration-none" data-bs-toggle="dropdown" title="Mudar Idioma" onclick="event.stopPropagation();">
-                                        <i class="fa fa-globe" style="font-size: 1.2rem;"></i>
+                                    <a href="#" class="btn btn-sm btn-outline-light px-3 fw-bold d-flex align-items-center" data-bs-toggle="dropdown" title="Mudar Idioma" style="border-radius: 20px; border-color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.15); font-size: 0.70rem;" onclick="event.stopPropagation();">
+                                        <i class="fa fa-globe" style="font-size: 1rem;"></i>
                                     </a>
                                     <div class="dropdown-menu border-0 rounded-3 shadow-lg p-2 dropdown-menu-center" style="min-width: 150px; z-index: 2000; background: rgba(255, 255, 255, 0.98); position: absolute; left: 50%; transform: translateX(-50%); margin-top: 10px;">
                                         <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="font-size: 0.80rem;"><span class="me-2" style="font-size: 1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
