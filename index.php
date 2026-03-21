@@ -296,14 +296,12 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                     <img class="w-100" src="<?php echo htmlspecialchars($img_path); ?>" alt="Slide">
 
                     <!-- Mobile Contact Info & Buttons -->
-                    <div class="mobile-header-contacts container-fluid px-1 pt-0 pb-1">
+                    <div class="mobile-header-contacts container-fluid px-1 pt-3 pb-1">
                         <!-- Primeira Linha: Contactos -->
-                        <div class="row mb-2">
+                        <div class="row mb-3">
                             <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; gap: 8px; overflow-x: auto; width: 100%;">
                                 <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-map-marker-alt text-white-50 me-1"></i>Bissau, Guiné-Bissau</small>
-                                <div style="width: 1px; height: 10px; background: rgba(255,255,255,0.4);"></div>
                                 <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-phone-alt text-white-50 me-1"></i>+245 955 475 889</small>
-                                <div style="width: 1px; height: 10px; background: rgba(255,255,255,0.4);"></div>
                                 <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-envelope-open text-white-50 me-1"></i>info@oagb.gw</small>
                             </div>
                         </div>
@@ -315,8 +313,6 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                                 <button type="button" class="btn btn-link text-white p-0 text-decoration-none" data-bs-toggle="modal" data-bs-target="#searchModal" onclick="event.stopPropagation();">
                                      <i class="fa fa-search" style="font-size: 1.1rem;"></i>
                                 </button>
-                                
-                                <div style="width: 1px; height: 18px; background: rgba(255,255,255,0.4);"></div>
                                 
                                 <!-- Botão Tradução -->
                                 <div class="dropdown">
@@ -333,8 +329,6 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                                         <a href="#" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="font-size: 0.80rem;"><span class="me-2" style="font-size: 1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
                                     </div>
                                 </div>
-                                
-                                <div style="width: 1px; height: 18px; background: rgba(255,255,255,0.4);"></div>
                                 
                                 <!-- Botão Área Reservada -->
                                 <a href="portal/login.php" class="btn btn-sm btn-outline-light px-3 fw-bold text-uppercase d-flex align-items-center" style="border-radius: 20px; border-color: rgba(255,255,255,0.8); font-size: 0.70rem; letter-spacing: 0.5px; background: rgba(255,255,255,0.15);" onclick="event.stopPropagation();">
