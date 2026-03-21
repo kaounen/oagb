@@ -640,12 +640,20 @@
 
     /* Desktop Hover Effect for the 3 topbar buttons */
     #topbar:not(.topbar-scrolled) .topbar-btn {
-        transition: background-color 0.3s ease, border-color 0.3s ease !important;
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
     }
     
     #topbar:not(.topbar-scrolled) .topbar-btn:hover,
+    #topbar:not(.topbar-scrolled) .topbar-btn:active,
     #topbar:not(.topbar-scrolled) .topbar-btn:focus {
         background: rgba(255,255,255,0.15) !important;
+        color: white !important;
+    }
+
+    #topbar:not(.topbar-scrolled) .topbar-btn:hover i,
+    #topbar:not(.topbar-scrolled) .topbar-btn:active i,
+    #topbar:not(.topbar-scrolled) .topbar-btn:focus i {
+        color: white !important;
     }
 
     /* Ajustar padding do conteúdo para não ficar sobreposto pelo navbar fixo */
