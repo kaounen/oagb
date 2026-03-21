@@ -158,8 +158,9 @@
     z-index: 3000 !important;
     display: inline-block !important;
     text-decoration: none !important;
-    border: 2px solid rgba(255,255,255,0.8) !important;
-    background-color: rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255,255,255,0.8) !important;
+    background-color: rgba(255,255,255,0.15) !important;
+    border-radius: 20px !important;
     backdrop-filter: blur(10px) !important;
     transition: all 0.3s ease !important;
     min-height: 45px !important;
@@ -341,10 +342,10 @@
         justify-content: center !important;
         gap: 0.5rem !important;
         color: white !important;
-        border: 2px solid #B1A276 !important;
-        background: transparent !important;
+        border: 1px solid rgba(255, 255, 255, 0.8) !important;
+        background: rgba(255, 255, 255, 0.15) !important;
         padding: 0.5rem 1.2rem !important;
-        border-radius: 6px !important;
+        border-radius: 20px !important;
         transition: background-color 0.3s ease-out, border-color 0.3s ease-out, box-shadow 0.3s ease-out;
     }
 
