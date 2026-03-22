@@ -256,75 +256,7 @@ a.linkSublinhado:hover {
         padding-bottom: 0rem !important;
     }
 
-    /* Atacar TODOS os níveis da secção eventos para eliminar espaço */
-
-    /* 1. Container-fluid da secção eventos - adicionar espaço controlado */
-    .container-fluid[style*="background: white"] {
-        padding-top: 6.25rem !important;
-    }
-
-    /* 2. Container interno da secção eventos - eliminar padding-top */
-    .container-fluid[style*="background: white"] .container {
-        padding-top: 0rem !important;
-    }
-
-    /* 3. Título da secção eventos - manter barra horizontal intacta */
-    .container-fluid[style*="background: white"] .section-title {
-        margin-top: 0rem !important;
-        padding-top: 0rem !important;
-        padding-bottom: 0.5rem !important;
-        margin-bottom: 1rem !important;
-    }
-
-    /* 4. Garantir que secção artigos não tem padding-bottom excessivo */
-    .container-fluid.section-noticias {
-        padding-bottom: 0rem !important;
-    }
-
-    /* 5. Usar margin negativo para subir os eventos sem afetar o título */
-    .container-fluid[style*="background: white"] .row.g-4 {
-        margin-top: -6.25rem !important;
-        row-gap: 0rem !important;
-    }
-
-    /* 7. REDUZIR ESPAÇO ENTRE 1º E 2º EVENTO - Seletor CORRETO para Agenda */
-    .container-fluid[style*="background: white"] .row.g-4 > .col-12:nth-child(2) {
-        margin-top: -150px !important;
-        margin-bottom: 0 !important;
-    }
-
-    /* 7b. Reduzir padding interno do 2º evento */
-    .container-fluid[style*="background: white"] .row.g-4 > .col-12:nth-child(2) .agenda-evento-novo {
-        padding: 1rem 2rem !important;
-        min-height: auto !important;
-    }
-
-    /* 8. Compactar cards de eventos internamente para proximidade máxima */
-    .container-fluid[style*="background: white"] .card {
-        margin-bottom: 0.25rem !important;
-        padding: 0.3rem !important;
-    }
-
-    .container-fluid[style*="background: white"] .card-body {
-        padding: 0.4rem !important;
-    }
-
-    .container-fluid[style*="background: white"] .card-title {
-        margin-bottom: 0.2rem !important;
-        line-height: 1.1 !important;
-        font-size: 0.95rem !important;
-    }
-
-    .container-fluid[style*="background: white"] .card-text {
-        margin-bottom: 0.15rem !important;
-        line-height: 1.2 !important;
-        font-size: 0.85rem !important;
-    }
-
-    /* 6. Reduzir margens dos cards de eventos individuais */
-    .container-fluid[style*="background: white"] .col-lg-4 {
-        margin-bottom: 0.5rem !important;
-    }
+    /* Estilos fixos problemáticos da Agenda foram removidos. A nova agenda lida com o seu próprio layout. */
 }
 
 /* Desktop navbar scroll effect - INDEX specific adjustments */

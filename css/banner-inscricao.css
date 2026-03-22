@@ -1,166 +1,149 @@
-/* Banner Inscrição na Ordem */
+/* Banner Inscrição na Ordem - Modern Dark Radial Design */
 .banner-inscricao {
     position: relative;
     width: 100%;
-    height: 310px;
-    background-image: url('../img/low-key-filter-law-bookshelf-with-wooden-judge-s-gavel-golden-scale-3d-rendering.jpg');
-    background-size: cover;
-    background-position: center;
+    min-height: 480px;
+    background-color: #000000;
     overflow: hidden;
+    padding: 80px 0;
     display: flex;
     align-items: center;
 }
 
-.banner-inscricao::before {
-    content: '';
+/* Círculos Glassmorphism Sobrepostos */
+.banner-circle {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%; /* Agora ocupa exatamente metade conforme solicitado */
-    height: 100%;
-    /* Gradiente com barras mais largas e gradiente subtil no laranja principal */
-    background: linear-gradient(90deg, 
-        #5a443d 0px, 
-        #5a443d 15px, 
-        #a5684e 15px, 
-        #a5684e 30px, 
-        #c18046 30px, 
-        #b1723a 100%
-    );
-    clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+    border-radius: 50%;
     z-index: 1;
-    opacity: 1;
+    pointer-events: none;
 }
 
-.banner-inscricao-container {
+.circle-1 {
+    width: 900px;
+    height: 900px;
+    left: -200px;
+    top: -200px;
+    background: radial-gradient(circle, rgba(230,230,230,0.18) 0%, rgba(200,200,200,0.05) 50%, transparent 70%);
+}
+
+.circle-2 {
+    width: 700px;
+    height: 700px;
+    left: -120px;
+    top: -100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(220,220,220,0.08) 50%, transparent 75%);
+}
+
+.circle-3 {
+    width: 450px;
+    height: 450px;
+    left: -50px;
+    top: 0px;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.15) 50%, transparent 80%);
+}
+
+.circle-4 {
+    width: 250px;
+    height: 250px;
+    left: 20px;
+    top: 50px;
+    background: radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.2) 60%, transparent 85%);
+}
+
+.container-content {
     position: relative;
     z-index: 2;
-    display: flex;
-    width: 100%;
-    height: 100%;
+}
+
+.text-section {
+    color: #ffffff;
+    padding-left: 2rem;
+}
+
+.titulo-inscricao {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 3.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+    letter-spacing: -1.5px;
+    color: #ffffff !important;
+}
+
+.titulo-inscricao br {
+    display: block;
+}
+
+.texto-conteudo {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    line-height: 1.7;
+    max-width: 500px;
+}
+
+/* Botão Moderno com Orb (Pilula Laranja Intenso) */
+.banner-pill-btn {
+    display: inline-flex;
     align-items: center;
-    padding: 0 !important;
-}
-
-.banner-left {
-    flex: 1;
-    max-width: 50%;
-    color: white;
-    text-align: left;
-    padding-left: 55px;
-}
-
-.banner-left .banner-p-text {
-    color: white !important;
-    font-size: 1.25rem !important;
-    line-height: 1.35;
-    margin-bottom: 20px;
-    max-width: 450px;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-}
-
-.banner-btn-link {
+    background: linear-gradient(90deg, #ff7a00 0%, #ff8c23 100%);
+    color: #ffffff !important;
+    padding: 12px 14px 12px 30px;
+    border-radius: 50px;
     text-decoration: none !important;
-    display: inline-block;
-    cursor: pointer;
-}
-
-.banner-btn-link:hover {
-    transform: translateX(10px);
-}
-
-.banner-btn-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 220px;
-}
-
-.banner-btn-wrapper .btn-text {
     font-family: 'Open Sans', sans-serif;
     font-weight: 700;
-    font-size: 0.85rem;
-    color: white;
-    text-transform: uppercase;
-    margin-bottom: 0px; /* Removido qualquer espaçamento para unir à seta */
-    line-height: 1;
-    z-index: 3;
+    font-size: 1.1rem;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(255, 122, 0, 0.4);
+    border: none;
+    margin-top: 10px;
 }
 
-.banner-btn-wrapper .btn-arrow-only {
-    border-color: white !important;
-    max-width: 200px;
-    height: 1px;
-    margin-top: 0px; 
+.banner-pill-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(255, 122, 0, 0.6);
+    background: linear-gradient(90deg, #ff8c23 0%, #ffa54f 100%);
 }
 
-.banner-btn-wrapper .btn-arrow-only i {
-    color: white !important;
-    top: -10px; /* Ajuste milimétrico para alinhamento profissional */
-    font-size: 20px;
+.banner-pill-btn .btn-text {
+    margin-right: 25px;
 }
 
-.banner-right {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    text-align: right;
-    padding-right: 30px;
+.banner-pill-btn .btn-orb {
+    width: 34px;
+    height: 34px;
+    background: radial-gradient(circle at 30% 30%, #ffffff 0%, #ffd1a3 40%, #ff9d33 100%);
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 6px rgba(180,70,0,0.5), 0 3px 6px rgba(0,0,0,0.2);
 }
 
-.banner-right h2.titulo-inscricao {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 3.5rem;
-    font-weight: 700;
-    color: white !important;
-    margin: 0;
-    line-height: 1.1;
-    text-shadow: 1px 1px 5px rgba(0,0,0,0.4); /* Sombra subtil conforme solicitado */
-}
-
-/* Responsividade */
+/* Mobile Responsiveness */
 @media (max-width: 991px) {
     .banner-inscricao {
-        height: auto;
-        min-height: 320px;
-        padding: 70px 0 30px 0; /* Aumentado o topo para equilibrar com a diagonal mais alta */
+        padding: 50px 0;
+        min-height: auto;
     }
     
-    .banner-inscricao::before {
-        width: 100%;
-        /* Diagonal RADICALMENTE agressiva no mobile (35%) conforme solicitado */
-        clip-path: polygon(0 0, 100% 0, 100% 35%, 0% 100%);
-        opacity: 0.95;
+    .text-section {
+        padding-left: 15px;
+        padding-right: 15px;
+        text-align: center;
     }
     
-    .banner-inscricao-container {
-        flex-direction: column;
-        justify-content: center;
-        padding: 0 40px !important;
+    .titulo-inscricao {
+        font-size: 2.5rem;
     }
     
-    .banner-left {
+    .texto-conteudo {
         max-width: 100%;
-        padding-left: 0;
-        margin-bottom: 35px;
-        text-align: left;
-        width: 100%;
+        margin: 0 auto 30px auto;
+        font-size: 1rem;
     }
     
-    .banner-btn-wrapper .btn-text {
-        margin-bottom: 5px;
-    }
-    
-    .banner-right {
-        width: 100%;
-        justify-content: flex-end;
-        text-align: right;
-    }
-}
-
-@media (max-width: 576px) {
-    .banner-right h2.titulo-inscricao {
-        font-size: 1.8rem;
-    }
+    .circle-1 { left: 50%; top: -450px; transform: translateX(-50%); width: 800px; height: 800px; }
+    .circle-2 { left: 50%; top: -300px; transform: translateX(-50%); width: 600px; height: 600px; }
+    .circle-3 { left: 50%; top: -150px; transform: translateX(-50%); width: 350px; height: 350px; }
+    .circle-4 { left: 50%; top: -50px; transform: translateX(-50%); width: 180px; height: 180px; }
 }
