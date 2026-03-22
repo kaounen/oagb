@@ -564,7 +564,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                         
                         <!-- Conteúdo à direita -->
                         <div class="col-lg-9 col-md-8 agenda-conteudo-container">
-                            <h4 class="mb-3" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.8rem; font-weight: 600;">
+                            <h4 class="mb-2" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.3rem; font-weight: 600; line-height: 1.3;">
                                 <a href="evento.php?id=<?php echo $evento->id; ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
                                     <?php echo htmlspecialchars($evento->titulo); ?>
                                 </a>

@@ -2,14 +2,14 @@
 .banner-inscricao {
     position: relative;
     width: 100%;
-    min-height: 480px;
+    min-height: 380px; /* Reduzido de 480px para 380px para diminuir o tamanho do banner */
     background-color: #111;
     background-image: url('../img/low-key-filter-law-bookshelf-with-wooden-judge-s-gavel-golden-scale-3d-rendering.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed; /* Parallax opcional para efeito premium */
     overflow: hidden;
-    padding: 80px 0;
+    padding: 60px 0; /* Padding reduzido correspondendo à nova altura */
     display: flex;
     align-items: center;
 }
@@ -34,7 +34,7 @@
     pointer-events: none;
     /* Sombras precisas para definir explicitamente as arestas do circulo - imitando os círculos concêntricos e sólidos da imagem de inspiração branca/cinzenta */
     box-shadow: 20px 0px 50px rgba(0, 0, 0, 0.2); 
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(177, 162, 118, 0.15); /* Reflexo dourado subtil nas arestas */
 }
 
 .circle-1 {
@@ -43,7 +43,7 @@
     left: -400px;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.03); /* Círculo extremo maior e mais ténue */
+    background: rgba(91, 70, 63, 0.05); /* Tons Castanhos OAGB super transparentes */
 }
 
 .circle-2 {
@@ -52,7 +52,7 @@
     left: -350px;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(200, 200, 200, 0.05);
+    background: rgba(91, 70, 63, 0.1);
 }
 
 .circle-3 {
@@ -61,7 +61,7 @@
     left: -280px;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(177, 162, 118, 0.1); /* Tons Dourados */
 }
 
 .circle-4 {
@@ -70,7 +70,7 @@
     left: -150px;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.15); /* Círculo mais branco e próximo do centro */
+    background: rgba(177, 162, 118, 0.18); /* Dourado mais concentrado e próximo do centro */
 }
 
 .container-content {
@@ -85,10 +85,10 @@
 
 .titulo-inscricao {
     font-family: 'Libre Baskerville', serif;
-    font-size: 3.8rem;
+    font-size: 3.2rem;
     font-weight: 700;
     line-height: 1.1;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     letter-spacing: -1.5px;
     color: #ffffff !important;
 }
@@ -99,10 +99,10 @@
 
 .texto-conteudo {
     font-family: 'Open Sans', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #e0e0e0;
-    line-height: 1.7;
-    max-width: 500px;
+    line-height: 1.6;
+    max-width: 450px;
 }
 
 /* Botão Moderno de acordo com os Header/Mobile Buttons OAGB */
