@@ -150,26 +150,32 @@
 /* Responsividade e Equilíbrio Mobile Centralizado */
 @media (max-width: 991px) {
     .footer-section {
-        padding: 45px 0 0 0;
+        padding: 25px 0 0 0;
         text-align: center !important;
     }
     
     .footer-logo {
         margin-left: auto;
         margin-right: auto;
+        margin-bottom: 10px;
     }
     
     .footer-social-links {
         justify-content: center !important;
+        margin-top: 0.5rem !important;
     }
     
     .footer-heading {
-        margin-top: 20px;
-        margin-bottom: 15px;
+        margin-top: 10px;
+        margin-bottom: 8px;
     }
     
     .footer-nav-item {
-        margin-bottom: 6px; /* Ainda mais compacto no mobile */
+        margin-bottom: 4px; /* Ainda mais compacto no mobile */
+    }
+    
+    .footer-newsletter-text {
+        margin-bottom: 10px;
     }
     
     .footer-newsletter-form {
@@ -179,13 +185,18 @@
     
     /* Eliminação de vácuos no mobile SEM sacrificar o desktop */
     .footer-copyright-row {
-        margin-top: 15px !important;
+        margin-top: 5px !important;
         padding-top: 15px !important;
-        padding-bottom: 25px !important;
+        padding-bottom: 15px !important;
     }
     
-    /* Reduzir margens negativas desnecessárias das colunas */
-    .mb-4 {
-        margin-bottom: 1rem !important;
+    /* Reduzir margens das colunas estruturais */
+    .footer-section .mb-4 {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Copyright text margin bottom reduction */
+    .footer-copyright-row .mb-3 {
+        margin-bottom: 0.25rem !important;
     }
 }
