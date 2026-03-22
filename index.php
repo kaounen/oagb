@@ -528,7 +528,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
             </div>
             
             <?php if (!empty($proximos_eventos)): ?>
-            <div class="row g-4">
+            <div class="row g-4 justify-content-center">
                 <?php foreach ($proximos_eventos as $evento): 
                     // Extrair componentes da data
                     $data_evento = new DateTime($evento->data_evento);
@@ -545,7 +545,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                     ];
                     $mes_pt = $meses_pt[$mes] ?? $mes;
                 ?>
-                <div class="col-12 mb-4">
+                <div class="col-lg-10 col-xl-9 col-12 mb-4">
                     <div class="agenda-evento-novo row align-items-center" style="padding: 2rem; min-height: 180px;">
                         <!-- Data à esquerda -->
                         <div class="col-lg-3 col-md-4 text-center agenda-data-container">
