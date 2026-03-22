@@ -108,14 +108,14 @@ if (document.getElementById('newsletter-form')) {
 <!-- Full Screen Search Start -->
 <div class="modal fade" id="searchModal" tabindex="-1" style="z-index: 2050;">
     <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content" style="background: rgba(9, 30, 62, .7); z-index: 2051;">
-            <div class="modal-header border-0">
+        <div class="modal-content" style="background: rgba(77, 28, 33, 0.9); z-index: 2051;">
+            <div class="modal-header" style="border-bottom: none !important;">
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 30px; top: 30px; z-index: 2060;"></button>
             </div>
             <div class="modal-body d-flex align-items-center justify-content-center">
                 <form action="pesquisa.php" method="GET" class="input-group" style="max-width: 600px;">
-                    <input type="text" name="q" class="form-control bg-transparent border-primary p-3" placeholder="Digite a palavra de pesquisa" required>
-                    <button class="btn btn-primary px-4" type="submit"><i class="bi bi-search"></i></button>
+                    <input type="text" name="q" class="form-control bg-transparent text-white p-3" placeholder="O que procura?" style="border: 2px solid #B1A276; border-right: none; border-radius: 20px 0 0 20px;" required>
+                    <button class="btn px-4" type="submit" style="background-color: #B1A276; color: white; border: 2px solid #B1A276; border-radius: 0 20px 20px 0; transition: .3s;"><i class="bi bi-search"></i></button>
                 </form>
             </div>
         </div>
