@@ -16,7 +16,6 @@
     new WOW().init();
 
 
-    // Sticky Navbar + Topbar — via CSS classes with !important (cleanest approach)
     $(window).scroll(function () {
         if ($(this).scrollTop() > 40) {
             $('#topbar').addClass('is-scrolled');
@@ -26,6 +25,8 @@
             $('.navbar-dark').removeClass('is-scrolled shadow-sm');
         }
     });
+    // Dispara o evento de scroll imediatamente para corrigir refreshes a meio da página
+    $(window).trigger('scroll');
 
     // Dropdown on mouse hover
     const $dropdown = $(".dropdown");

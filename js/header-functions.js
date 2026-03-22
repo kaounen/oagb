@@ -189,6 +189,15 @@ function initializeNavbarScrollEffect() {
     const topbar = document.querySelector('#topbar'); // Desktop topbar fixed selector
 
     if (navbar && window.innerWidth >= 992) { // Only apply on desktop
+        // Efeito imediato caso a página seja carregada a meio do scroll
+        if (window.scrollY > 45) {
+            navbar.classList.add('navbar-scrolled');
+            if (topbar) {
+                topbar.classList.add('topbar-scrolled');
+                topbar.classList.add('is-scrolled');
+            }
+        }
+        
         let ticking = false;
 
         window.addEventListener('scroll', function() {
