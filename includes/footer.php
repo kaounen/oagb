@@ -47,8 +47,8 @@
                 <h4 class="footer-heading">Newsletter</h4>
                 <p class="footer-newsletter-text mb-3">Subscreva as principais novidades da OAGB.</p>
                 <form action="subscricao.php" method="POST" id="newsletter-form" class="footer-newsletter-form">
-                    <input type="email" name="email" class="footer-newsletter-input" placeholder="Seu e-mail" required>
-                    <button type="submit" class="footer-newsletter-btn">Enviar</button>
+                    <input type="email" name="email" class="footer-newsletter-input" placeholder="O seu e-mail" required>
+                    <button type="submit" class="footer-newsletter-btn" aria-label="Subscrever"><i class="fas fa-paper-plane"></i></button>
                 </form>
                 <div id="newsletter-message" class="mt-2 text-start"></div>
             </div>
