@@ -471,7 +471,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
             <div class="row g-5">
                 <?php foreach ($noticias_destaque as $noticia): ?>
                 <div class="col-lg-4">
-                    <div class="blog-item bg-light rounded overflow-hidden">
+                    <div class="blog-item bg-light rounded overflow-hidden h-100 d-flex flex-column">
                         <div class="blog-img position-relative overflow-hidden">
                             <?php 
                             $raw_noticia_imagem = $noticia->imagem_destaque ?? '';
@@ -485,8 +485,8 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                             ?>
                             <img class="img-fluid" src="<?php echo htmlspecialchars($img_noticia); ?>" alt="<?php echo htmlspecialchars($noticia->titulo); ?>">
                         </div>
-                        <div class="p-4">
-                            <h4 class="mb-3 titulo-artigo">
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <h4 class="mb-3 titulo-artigo" style="min-height: 4.5rem;">
                                 <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="linkSublinhado" style="color:#4D1C21;">
                                     <?php echo htmlspecialchars($noticia->titulo); ?>
                                 </a>
@@ -496,10 +496,10 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                                     <?php echo format_date_pt($noticia->data_publicacao); ?>
                                 </small>
                             </div>
-                            <p class="texto-conteudo mb-3">
+                            <p class="texto-conteudo mb-3 flex-grow-1">
                                 <?php echo htmlspecialchars(truncate_text($noticia->resumo, 120)); ?>
                             </p>
-                            <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="d-block">
+                            <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="d-block mt-auto pt-3">
                                 <div class="btn-arrow-only">
                                     <i class="bi bi-arrow-right"></i>
                                 </div>
