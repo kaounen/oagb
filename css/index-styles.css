@@ -271,8 +271,8 @@ a.linkSublinhado:hover {
 }
 
 .section-noticias .titulo-artigo a {
-    line-height: 1.2 !important;
-    font-size: 1.25rem !important;
+    line-height: 1.15 !important;
+    font-size: 1.1rem !important;
 }
 
 /* Desktop navbar scroll effect - INDEX specific adjustments */

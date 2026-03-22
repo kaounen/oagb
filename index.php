@@ -486,7 +486,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                             <img class="img-fluid" src="<?php echo htmlspecialchars($img_noticia); ?>" alt="<?php echo htmlspecialchars($noticia->titulo); ?>">
                         </div>
                         <div class="p-4 d-flex flex-column flex-grow-1">
-                            <h4 class="mb-3 titulo-artigo" style="min-height: 4.5rem;">
+                            <h4 class="mb-3 titulo-artigo">
                                 <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="linkSublinhado" style="color:#4D1C21;">
                                     <?php echo htmlspecialchars($noticia->titulo); ?>
                                 </a>
