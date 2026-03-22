@@ -108,7 +108,7 @@ if (document.getElementById('newsletter-form')) {
 <!-- Full Screen Search Start -->
 <div class="modal fade" id="searchModal" tabindex="-1" style="z-index: 2050;">
     <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content" style="background: rgba(77, 28, 33, 0.9); z-index: 2051;">
+        <div class="modal-content" style="background: rgba(45, 30, 25, 0.95); z-index: 2051;">
             <div class="modal-header" style="border-bottom: none !important;">
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 30px; top: 30px; z-index: 2060;"></button>
             </div>
