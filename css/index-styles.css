@@ -353,8 +353,8 @@ a.linkSublinhado:hover {
         color: white !important;
     }
 
-    /* Adicionar espaçamento no título e breadcrumbs mobile */
-    .text-center {
+    /* Adicionar espaçamento no título e breadcrumbs mobile restrito ao page header */
+    .container-fluid.page-header .text-center, .container-fluid.bg-header .text-center {
         padding-top: 8rem !important;
     }
 }
