@@ -266,13 +266,13 @@ a.linkSublinhado:hover {
 .agenda-evento-novo .texto-conteudo {
     line-height: 1.3 !important;
     font-size: 0.9rem !important;
-    color: #555 !important;
+    color: #111923 !important;
     margin-bottom: 0.5rem !important;
 }
 
 .section-noticias .titulo-artigo a {
-    line-height: 1.1 !important;
-    font-size: 1.1rem !important;
+    line-height: 1.2 !important;
+    font-size: 1.25rem !important;
 }
 
 /* Desktop navbar scroll effect - INDEX specific adjustments */
