@@ -463,7 +463,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <!-- Blog Start -->
     <?php if (!empty($noticias_destaque)): ?>
     <div class="container-fluid section-noticias section-noticias-index">
-        <div class="container pt-0 pb-0"> <!-- REDUZIDO pt-1 pb-2 para total compactação (Desktop) -->
+        <div class="container pt-4 pb-0"> <!-- Restaurado pt-4 para dar um pouco de respiro em relação ao topo (Desktop) -->
             <div class="section-title text-center position-relative pb-4 mb-5 mx-auto" style="max-width: 600px;"> <!-- Aumentado pb-4 para afastar artigos do título e sua linha cor-de-laranja -->
                 <h5 class="text-primary text-uppercase" style="font-family: 'Open Sans', sans-serif; font-weight: 400;">Artigos recentes</h5>
                 <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">Últimas notícias</h1>
@@ -515,7 +515,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <!-- Blog End -->
 
     <!-- Agenda Start -->
-    <div class="container-fluid pt-0 pb-3 section-agenda-index" style="background: white; position: relative; overflow: hidden;"> <!-- REDUZIDO pt-1 para pt-0 -->
+    <div class="container-fluid pt-4 pb-3 section-agenda-index" style="background: white; position: relative; overflow: hidden;"> <!-- Restaurado pt-4 para não ficar colado nas Notícias acima (Desktop) -->
         <!-- Ícone de agenda no fundo -->
         <div class="agenda-background-icon">
             <i class="far fa-calendar-alt"></i>
