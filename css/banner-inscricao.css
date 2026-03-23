@@ -43,7 +43,7 @@
     left: -400px;
     top: 50%;
     transform: translateY(-50%);
-    background-image: linear-gradient(rgba(50, 30, 25, 0.7), rgba(91, 70, 63, 0.85)), url('../gestao/assets/uploads/files/professional-businessman-working-with-documents-his-modern-office.jpg');
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)), url('../gestao/assets/uploads/files/professional-businessman-working-with-documents-his-modern-office.jpg');
     background-size: cover;
     background-position: center right;
     background-repeat: no-repeat;
