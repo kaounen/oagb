@@ -122,3 +122,6 @@ if (document.getElementById('newsletter-form')) {
     </div>
 </div>
 <!-- Full Screen Search End -->
+
+<!-- Header Functions (Componente Reutilizável) -->
+<script src="js/header-functions.js?v=<?php echo time(); ?>"></script>

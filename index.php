@@ -627,8 +627,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <!-- Template Javascript -->
     <script src="js/main.js?v=<?php echo time(); ?>"></script>
 
-    <!-- Header Functions (Componente reutilizável) -->
-    <script src="js/header-functions.js?v=<?php echo time(); ?>"></script>
+    <!-- Header Functions incluído via footer.php -->
 
     </body>
 </html>

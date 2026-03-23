@@ -426,7 +426,6 @@ $apresentacao_header_image = 'gestao/assets/uploads/files/close-up-scales-justic
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
 
-    <!-- Header Functions (Componente reutilizável) -->
-    <script src="js/header-functions.js"></script>
+    <!-- Header Functions incluído via footer.php -->
 </body>
 </html>
