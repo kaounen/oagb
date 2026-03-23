@@ -241,9 +241,9 @@ a.linkSublinhado:hover {
         padding-top: 0rem !important;
     }
 
-    /* Usar margin negativo para forçar secção Artigos a subir LIGEIRAMENTE */
+    /* Usar margin positivo para dar respiro na mobile/tablet */
     .container-fluid.section-noticias {
-        margin-top: -1.5rem !important; /* Antes -4.25rem (esmagado), agora -1.5rem */
+        margin-top: 1rem !important; /* Antes -4.25rem ou -1.5rem, agora 1rem para dar respiro no mobile */
     }
 
     /* Reduzir margin-bottom da última fact-card se existir */
