@@ -31,65 +31,84 @@ function sharePage() {
 }
 
 /**
- * Translate page using Google Translate
+ * Initialize Google Translate
+ */
+window.googleTranslateElementInit = function() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'pt',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+    }, 'google_translate_element');
+};
+
+/**
+ * Changes the site language using Google Translate
+ * @param {string} langCode - The ISO code of the language (en, fr, es, etc.)
+ */
+function changeLanguage(langCode) {
+    // If it's portuguese, we want to clear translation
+    if (langCode === 'pt') {
+        const clearBtn = document.querySelector('.goog-close-link');
+        if (clearBtn) {
+            clearBtn.click();
+        } else {
+            // Fallback: clear cookie and reload
+            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + location.hostname;
+            location.reload();
+        }
+        return;
+    }
+
+    // Try to find the google translate combo box
+    const selectElement = document.querySelector('select.goog-te-combo');
+    if (selectElement) {
+        selectElement.value = langCode;
+        selectElement.dispatchEvent(new Event('change'));
+    } else {
+        // If script not loaded, load it and then try to translate
+        if (!document.getElementById('google-translate-script')) {
+            const script = document.createElement('script');
+            script.id = 'google-translate-script';
+            script.type = 'text/javascript';
+            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            document.head.appendChild(script);
+            
+            // Create hidden container if needed
+            if (!document.getElementById('google_translate_element')) {
+                const div = document.createElement('div');
+                div.id = 'google_translate_element';
+                div.style.display = 'none';
+                document.body.appendChild(div);
+            }
+
+            // Wait for script to load and then try again
+            setTimeout(() => changeLanguage(langCode), 1000);
+        } else {
+            // Script is there but maybe widget not ready
+            document.cookie = "googtrans=/pt/" + langCode + "; path=/";
+            location.reload();
+        }
+    }
+}
+
+/**
+ * Legacy support for translate toggle
  */
 function translatePage() {
-    const googleTranslateScript = document.getElementById('google-translate-script');
-
-    if (!googleTranslateScript) {
-        // Add Google Translate script
-        const script = document.createElement('script');
-        script.id = 'google-translate-script';
-        script.type = 'text/javascript';
-        script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-        script.onerror = function() {
-            console.error('Erro ao carregar Google Translate');
-            alert('Desculpe, não conseguimos carregar a ferramenta de tradução. Por favor, tente novamente.');
-        };
-        document.head.appendChild(script);
-
-        // Initialize Google Translate
-        window.googleTranslateElementInit = function() {
-            try {
-                if (window.google && window.google.translate) {
-                    const translateElement = document.getElementById('google_translate_element');
-                    if (!translateElement) {
-                        console.error('Elemento de tradução não encontrado');
-                        return;
-                    }
-
-                    new google.translate.TranslateElement({
-                        pageLanguage: 'pt',
-                        includedLanguages: 'en,fr,es,pt,es',
-                        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-                    }, 'google_translate_element');
-                }
-            } catch (e) {
-                console.error('Erro ao inicializar Google Translate:', e);
-            }
-        };
-
-        // Create translate element container if it doesn't exist
-        if (!document.getElementById('google_translate_element')) {
-            const translateDiv = document.createElement('div');
-            translateDiv.id = 'google_translate_element';
-            translateDiv.style.position = 'fixed';
-            translateDiv.style.top = '60px';
-            translateDiv.style.right = '20px';
-            translateDiv.style.zIndex = '9999';
-            translateDiv.style.backgroundColor = 'white';
-            translateDiv.style.padding = '15px';
-            translateDiv.style.borderRadius = '8px';
-            translateDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-            translateDiv.style.border = '1px solid #ddd';
-            document.body.appendChild(translateDiv);
-        }
+    const translateElement = document.getElementById('google_translate_element');
+    if (translateElement) {
+        translateElement.style.display = translateElement.style.display === 'none' ? 'block' : 'none';
+        translateElement.style.position = 'fixed';
+        translateElement.style.top = '80px';
+        translateElement.style.right = '20px';
+        translateElement.style.zIndex = '10000';
+        translateElement.style.background = 'white';
+        translateElement.style.padding = '10px';
+        translateElement.style.borderRadius = '5px';
+        translateElement.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
     } else {
-        // Toggle translate element visibility
-        const translateElement = document.getElementById('google_translate_element');
-        if (translateElement) {
-            translateElement.style.display = translateElement.style.display === 'none' ? 'block' : 'none';
-        }
+        changeLanguage('en'); // Default to English if toggled and not exists
     }
 }
 
