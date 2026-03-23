@@ -463,8 +463,8 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <!-- Blog Start -->
     <?php if (!empty($noticias_destaque)): ?>
     <div class="container-fluid section-noticias">
-        <div class="container py-4">
-            <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+        <div class="container pt-5 pb-2"> <!-- Reduzido pb para aproximar a Agenda das Notícias -->
+            <div class="section-title text-center position-relative pb-2 mb-4 mx-auto" style="max-width: 600px;"> <!-- Reduzido pb e mb para aproximar título dos cartões -->
                 <h5 class="text-primary text-uppercase" style="font-family: 'Open Sans', sans-serif; font-weight: 400;">Artigos recentes</h5>
                 <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">Últimas notícias</h1>
             </div>
@@ -515,14 +515,14 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <!-- Blog End -->
 
     <!-- Agenda Start -->
-    <div class="container-fluid py-5" style="background: white; position: relative; overflow: hidden;">
+    <div class="container-fluid pt-3 pb-3" style="background: white; position: relative; overflow: hidden;"> <!-- Reduzido py-5 maciço para pt-3 pb-3 para encurtar secção toda -->
         <!-- Ícone de agenda no fundo -->
         <div class="agenda-background-icon">
             <i class="far fa-calendar-alt"></i>
         </div>
         
-        <div class="container py-4" style="position: relative; z-index: 2;">
-            <div class="section-title text-center position-relative pb-3 mb-4 mx-auto" style="max-width: 600px;">
+        <div class="container pt-2 pb-4" style="position: relative; z-index: 2;"> <!-- Reduzido radicalmente padding top para ligar Noticias à Agenda -->
+            <div class="section-title text-center position-relative pb-2 mb-3 mx-auto" style="max-width: 600px;"> <!-- Redução massiva de mb-4 pb-3 para mt-2 mb-3 -->
                 <h5 class="text-primary text-uppercase" style="font-family: 'Open Sans', sans-serif; font-weight: 400;">Próximos Eventos</h5>
                 <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">Agenda</h1>
             </div>

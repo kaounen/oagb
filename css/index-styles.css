@@ -241,9 +241,9 @@ a.linkSublinhado:hover {
         padding-top: 0rem !important;
     }
 
-    /* Usar margin negativo para forçar secção Artigos a subir */
+    /* Usar margin negativo para forçar secção Artigos a subir LIGEIRAMENTE */
     .container-fluid.section-noticias {
-        margin-top: -4.25rem !important;
+        margin-top: -1.5rem !important; /* Antes -4.25rem (esmagado), agora -1.5rem */
     }
 
     /* Reduzir margin-bottom da última fact-card se existir */
@@ -251,8 +251,12 @@ a.linkSublinhado:hover {
         margin-bottom: 0 !important;
     }
 
-    /* Reduzir espaço entre final dos artigos e início da secção Eventos */
+    /* Reduzir brutalmente espaço entre final dos artigos e início da secção Eventos */
     .container-fluid.section-noticias .container {
+        padding-bottom: 0rem !important;
+    }
+    
+    .container-fluid.section-noticias {
         padding-bottom: 0rem !important;
     }
 

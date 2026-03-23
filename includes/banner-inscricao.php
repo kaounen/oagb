@@ -1,4 +1,4 @@
-<section class="banner-inscricao mt-5">
+<section class="banner-inscricao mt-2">
     <!-- Círculos decorativos à esquerda -->
     <div class="banner-circle circle-1"></div>
     <div class="banner-circle circle-2"></div>
