@@ -236,14 +236,20 @@ a.linkSublinhado:hover {
         padding-bottom: 0rem !important;
     }
 
-    /* Reduzir espaço no topo da secção Artigos recentes / Últimas notícias */
-    .container-fluid.section-noticias .container {
-        padding-top: 0rem !important;
+    /* Dar respiro na mobile/tablet para Notícias */
+    .section-noticias-index {
+        margin-top: 4rem !important; 
+        padding-top: 2rem !important;
     }
 
-    /* Usar margin positivo para dar respiro na mobile/tablet */
-    .container-fluid.section-noticias {
-        margin-top: 1rem !important; /* Antes -4.25rem ou -1.5rem, agora 1rem para dar respiro no mobile */
+    /* Dar respiro na mobile/tablet para Agenda */
+    .section-agenda-index {
+        margin-top: 3rem !important;
+        padding-top: 3rem !important;
+    }
+
+    .section-noticias-index .container {
+        padding-top: 1rem !important;
     }
 
     /* Reduzir margin-bottom da última fact-card se existir */

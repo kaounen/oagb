@@ -462,13 +462,13 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
 
     <!-- Blog Start -->
     <?php if (!empty($noticias_destaque)): ?>
-    <div class="container-fluid section-noticias">
-        <div class="container pt-3 pb-2"> <!-- Desktop: Reduzido de pt-5 para pt-3 -->
-            <div class="section-title text-center position-relative pb-2 mb-5 mx-auto" style="max-width: 600px;"> <!-- Aumentado mb-4 para mb-5 para afastar artigos do título -->
+    <div class="container-fluid section-noticias section-noticias-index"> <!-- Adicionada classe utilitária -->
+        <div class="container pt-1 pb-2"> <!-- Desktop: Reduzido de pt-3 para pt-1 para aproximar das caixas de cores -->
+            <div class="section-title text-center position-relative pb-4 mb-5 mx-auto" style="max-width: 600px;"> <!-- Aumentado pb-4 para afastar artigos do título e sua linha cor-de-laranja -->
                 <h5 class="text-primary text-uppercase" style="font-family: 'Open Sans', sans-serif; font-weight: 400;">Artigos recentes</h5>
                 <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">Últimas notícias</h1>
             </div>
-            <div class="row g-5">
+            <div class="row g-4"> <!-- Reduzido g-5 para g-4 para cartões mais coesos -->
                 <?php foreach ($noticias_destaque as $noticia): ?>
                 <div class="col-lg-4">
                     <div class="blog-item bg-light rounded overflow-hidden h-100 d-flex flex-column">
@@ -515,14 +515,14 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <!-- Blog End -->
 
     <!-- Agenda Start -->
-    <div class="container-fluid pt-5 pb-3" style="background: white; position: relative; overflow: hidden;"> <!-- Aumentado pt-3 para pt-5 para Mobile/Desktop ganhar respiro em relação às Notícias -->
+    <div class="container-fluid pt-1 pb-3 section-agenda-index" style="background: white; position: relative; overflow: hidden;"> <!-- pt-1 para unir à secção de Notícias acima (Desktop) -->
         <!-- Ícone de agenda no fundo -->
         <div class="agenda-background-icon">
             <i class="far fa-calendar-alt"></i>
         </div>
         
-        <div class="container pt-2 pb-4" style="position: relative; z-index: 2;"> <!-- Reduzido radicalmente padding top para ligar Noticias à Agenda -->
-            <div class="section-title text-center position-relative pb-2 mb-4 mx-auto" style="max-width: 600px;"> <!-- mb-3 para mb-4 para afastar eventos do título -->
+        <div class="container pt-1 pb-4" style="position: relative; z-index: 2;"> <!-- pt-1 para compactar -->
+            <div class="section-title text-center position-relative pb-4 mb-5 mx-auto" style="max-width: 600px;"> <!-- Aumentado pb-4 mb-5 para afastar eventos do título -->
                 <h5 class="text-primary text-uppercase" style="font-family: 'Open Sans', sans-serif; font-weight: 400;">Próximos Eventos</h5>
                 <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">Agenda</h1>
             </div>
@@ -545,7 +545,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                     ];
                     $mes_pt = $meses_pt[$mes] ?? $mes;
                 ?>
-                <div class="col-lg-10 col-xl-9 col-12 mb-2"> <!-- Reduzido mb-4 para mb-2 para aproximar eventos -->
+                <div class="col-lg-10 col-xl-9 col-12 mb-1"> <!-- mb-1 para diminuir distância entre blocos de eventos -->
                     <div class="agenda-evento-novo row align-items-center" style="padding: 2rem; min-height: 180px;">
                         <!-- Data à esquerda -->
                         <div class="col-lg-3 col-md-4 text-center agenda-data-container">
