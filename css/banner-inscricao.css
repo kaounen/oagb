@@ -149,8 +149,8 @@
     
     .text-section {
         padding-left: 15px;
-        padding-right: 15px;
-        text-align: center;
+        padding-right: 25px;
+        text-align: right; /* Alinha o texto à direita para fugir aos circulos à esquerda */
     }
     
     .titulo-inscricao {
@@ -159,12 +159,13 @@
     
     .texto-conteudo {
         max-width: 100%;
-        margin: 0 auto 30px auto;
+        margin: 0 0 30px auto; /* Mantém à direita */
         font-size: 1rem;
     }
     
-    .circle-1 { left: 50%; top: -600px; transform: translateX(-50%); width: 1000px; height: 1000px; }
-    .circle-2 { left: 50%; top: -450px; transform: translateX(-50%); width: 800px; height: 800px; }
-    .circle-3 { left: 50%; top: -300px; transform: translateX(-50%); width: 550px; height: 550px; }
-    .circle-4 { left: 50%; top: -150px; transform: translateX(-50%); width: 300px; height: 300px; }
+    /* Manter o EFEITO HORIZONTAL no mobile, escalado para não tapar o texto todo */
+    .circle-1 { left: -400px; top: 50%; transform: translateY(-50%); width: 700px; height: 700px; }
+    .circle-2 { left: -300px; top: 50%; transform: translateY(-50%); width: 500px; height: 500px; }
+    .circle-3 { left: -200px; top: 50%; transform: translateY(-50%); width: 350px; height: 350px; }
+    .circle-4 { left: -100px; top: 50%; transform: translateY(-50%); width: 180px; height: 180px; }
 }
