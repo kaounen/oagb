@@ -43,7 +43,11 @@
     left: -400px;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(91, 70, 63, 0.05); /* Tons Castanhos OAGB super transparentes */
+    background-image: linear-gradient(rgba(50, 30, 25, 0.7), rgba(91, 70, 63, 0.85)), url('../gestao/assets/uploads/files/professional-businessman-working-with-documents-his-modern-office.jpg');
+    background-size: cover;
+    background-position: center right;
+    background-repeat: no-repeat;
+    /* A imagem entra como fundo do círculo fundindo-se com as cores da OAGB */
 }
 
 .circle-2 {
