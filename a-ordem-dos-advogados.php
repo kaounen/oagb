@@ -331,19 +331,19 @@ $header_image = 'gestao/assets/uploads/files/close-up-scales-justice-original-az
                         <!-- O título foi removido a pedido do utilizador para esta página mobile -->
                     </div>
                     <!-- Mobile Breadcrumbs (over image) -->
-                    <div class="mobile-breadcrumb-bar">
-                        <div class="container d-flex align-items-center justify-content-between py-1">
+                    <div class="header-overlay-bar mobile-breadcrumb-bar">
+                        <div class="container d-flex align-items-center justify-content-between">
                             <div>
-                                <a href="index.php">Início</a>
-                                <span class="bc-sep"></span>
-                                <a href="a-ordem-dos-advogados.php">A Ordem</a>
-                                <span class="bc-sep"></span>
-                                <span class="bc-active">Apresentação</span>
+                                <span>Início</span>
+                                <span class="dot-sep" style="width: 4px; height: 4px; background: rgba(255,255,255,0.7); display: inline-block; border-radius: 50%; margin: 0 10px; vertical-align: middle;"></span>
+                                <span>A Ordem</span>
+                                <span class="dot-sep" style="width: 4px; height: 4px; background: rgba(255,255,255,0.7); display: inline-block; border-radius: 50%; margin: 0 10px; vertical-align: middle;"></span>
+                                <span class="bc-active" style="color: #fff; font-weight: 500;">Apresentação</span>
                             </div>
-                            <div class="quick-links d-flex gap-1">
-                                <a href="javascript:history.back()" title="Voltar"><i class="fas fa-arrow-left"></i></a>
-                                <a href="javascript:window.print()" title="Imprimir"><i class="fas fa-print"></i></a>
-                                <a href="#" onclick="sharePage(); return false;" title="Partilhar"><i class="fas fa-share-alt"></i></a>
+                            <div class="header-circles d-flex align-items-center">
+                                <a href="javascript:history.back()" title="Voltar" style="width: 35px; height: 35px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; margin-left: 8px;"><i class="fas fa-arrow-left" style="font-size:0.8rem;"></i></a>
+                                <a href="javascript:window.print()" title="Imprimir" style="width: 35px; height: 35px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; margin-left: 8px;"><i class="fas fa-print" style="font-size:0.8rem;"></i></a>
+                                <a href="#" onclick="sharePage(); return false;" title="Partilhar" style="width: 35px; height: 35px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; margin-left: 8px;"><i class="fas fa-share-alt" style="font-size:0.8rem;"></i></a>
                             </div>
                         </div>
                     </div>

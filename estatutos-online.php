@@ -117,18 +117,32 @@ $has_header_image = !empty($header_image);
             .ordem-mobile-caption { bottom: 55px !important; padding: 0 1rem !important; }
         }
 
-        /* Search Form Premium */
-        .search-container { position: relative; width: 100%; margin-bottom: 25px; }
-        .search-wrapper { position: relative; max-width: 500px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-radius: 30px; overflow: hidden; background: #fff; }
-        .search-wrapper input { border-radius: 30px; padding: 15px 50px 15px 25px; border: 1px solid #eee; font-size: 1rem; width: 100%; transition: .3s; }
-        .search-wrapper input:focus { border-color: var(--primary-gold); outline: none; box-shadow: 0 0 0 4px rgba(177, 162, 118, 0.1); }
-        #clearSearch { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #ccc; display: none; transition: .3s; z-index: 5; }
+        /* Search Form Premium (Anexo 2) */
+        .search-container { position: relative; width: 100%; margin-bottom: 20px; }
+        .search-wrapper { position: relative; width: 100%; border-radius: 50px; border: 1px solid var(--primary-gold); background: #fff; display: flex; align-items: center; padding: 5px 25px; transition: .3s; }
+        .search-wrapper:focus-within { box-shadow: 0 0 0 4px rgba(177, 162, 118, 0.15); }
+        .search-wrapper input { border: none; padding: 12px 10px; font-size: 1.05rem; width: 100%; color: #333; outline: none; background: transparent; }
+        .search-wrapper input::placeholder { color: #888; }
+        #clearSearch { cursor: pointer; color: #ccc; transition: .3s; display: none; margin-left: 10px; font-size: 1.2rem; }
+        #clearSearch:hover { color: var(--primary-maroon); }
 
-        .section-label { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; color: var(--primary-gold); display: block; margin-bottom: 12px; }
-        .section-heading { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 2.2rem; line-height: 1.3; margin-bottom: 20px; }
-        .sidebar-link { display: flex; align-items: center; gap: 15px; padding: 12px 15px; border-radius: 12px; color: #555; text-decoration: none; transition: .3s; margin-bottom: 5px; font-size: 0.9rem; }
-        .sidebar-link:hover, .sidebar-link.active { background: rgba(177,162,118,0.08); color: var(--primary-maroon); font-weight: 600; }
-        .artigo-block { background: #fff; padding: 35px; border-radius: 20px; border: 1px solid #f0ece4; margin-bottom: 25px; transition: .3s; }
+        /* Sidebar Anexo 2 */
+        .sidebar-link { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; border-radius: 12px; color: #555; text-decoration: none; transition: .3s; margin-bottom: 5px; font-size: 0.9rem; border-left: 4px solid transparent; }
+        .sidebar-link:hover, .sidebar-link.active { background: rgba(177,162,118,0.1); color: var(--primary-maroon); font-weight: 600; border-left-color: var(--primary-gold); border-radius: 0 12px 12px 0; }
+        .sidebar-badge { background: #fdfbf7; color: var(--primary-maroon); font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; border: 1px solid rgba(177,162,118,0.3); }
+        .sidebar-link.active .sidebar-badge { background: #fff; border-color: var(--primary-gold); }
+        
+        .artigo-block { background: transparent; padding: 0 0 25px 0; border: none; border-bottom: 1px dashed #e0dcd2; margin-bottom: 25px; }
+        .artigo-title { font-family: 'Libre Baskerville', serif; font-size: 1.3rem; color: var(--primary-maroon); font-weight: 700; margin-bottom: 10px; }
+        .texto-conteudo { font-family: 'Open Sans', sans-serif; font-size: 0.95rem; line-height: 1.8; color: #444; text-align: justify; }
+        
+        @media (max-width: 991px) {
+            .mobile-sidebar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 30px; }
+            .sidebar-link { font-size: 0.78rem; padding: 8px; border-radius: 8px; border-left: none; border-bottom: 3px solid transparent; flex-direction: column; text-align: center; gap: 5px; justify-content: center; }
+            .sidebar-link:hover, .sidebar-link.active { border-left-color: transparent; border-bottom-color: var(--primary-gold); border-radius: 8px 8px 0 0; }
+            .sidebar-link i { display: none; } /* Hide icon on mobile grid to save space */
+        }
+
     </style>
 </head>
 <body>
@@ -141,11 +155,11 @@ $has_header_image = !empty($header_image);
             <div class="subpage-breadcrumb-bar">
                 <div class="container d-flex align-items-center justify-content-between">
                     <div>
-                        <a href="index.php">Início</a>
-                        <span class="bc-sep"></span>
-                        <a href="a-ordem-dos-advogados.php">A Ordem</a>
-                        <span class="bc-sep"></span>
-                        <span class="bc-active">Estatutos Online</span>
+                        <span>Início</span>
+                        <span class="dot-sep" style="width: 4px; height: 4px; background: rgba(255,255,255,0.7); display: inline-block; border-radius: 50%; margin: 0 10px; vertical-align: middle;"></span>
+                        <span>A Ordem</span>
+                        <span class="dot-sep" style="width: 4px; height: 4px; background: rgba(255,255,255,0.7); display: inline-block; border-radius: 50%; margin: 0 10px; vertical-align: middle;"></span>
+                        <span class="bc-active" style="color: #fff; font-weight: 500;">Estatutos</span>
                     </div>
                     <div class="quick-links d-flex gap-2">
                         <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
@@ -202,17 +216,19 @@ $has_header_image = !empty($header_image);
                         <?php include 'includes/navbar.php'; ?>
                     </div>
 
-                    <div class="mobile-breadcrumb-bar">
-                        <div class="container d-flex align-items-center justify-content-between py-1">
+                    <div class="header-overlay-bar mobile-breadcrumb-bar">
+                        <div class="container d-flex align-items-center justify-content-between">
                             <div>
-                                <a href="index.php">Início</a>
-                                <span class="bc-sep" style="width:4px; height:4px; margin:0 6px;"></span>
-                                <span class="bc-active">Estatutos</span>
+                                <span>Início</span>
+                                <span class="dot-sep" style="width: 4px; height: 4px; background: rgba(255,255,255,0.7); display: inline-block; border-radius: 50%; margin: 0 10px; vertical-align: middle;"></span>
+                                <span>A Ordem</span>
+                                <span class="dot-sep" style="width: 4px; height: 4px; background: rgba(255,255,255,0.7); display: inline-block; border-radius: 50%; margin: 0 10px; vertical-align: middle;"></span>
+                                <span class="bc-active" style="color: #fff; font-weight: 500;">Estatutos</span>
                             </div>
-                            <div class="quick-links d-flex gap-2">
-                                <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
-                                <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
-                                <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
+                            <div class="header-circles d-flex align-items-center">
+                                <a href="javascript:history.back()" title="Voltar" style="width: 35px; height: 35px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; margin-left: 8px;"><i class="fas fa-arrow-left" style="font-size:0.8rem;"></i></a>
+                                <a href="javascript:window.print()" title="Imprimir" style="width: 35px; height: 35px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; margin-left: 8px;"><i class="fas fa-print" style="font-size:0.8rem;"></i></a>
+                                <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});} else {sharePage(); return false;}" title="Partilhar" style="width: 35px; height: 35px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; margin-left: 8px;"><i class="fas fa-share-alt" style="font-size:0.8rem;"></i></a>
                             </div>
                         </div>
                     </div>
@@ -223,60 +239,67 @@ $has_header_image = !empty($header_image);
 
     <!-- Content Area -->
     <section class="py-5">
-        <div class="container">
-            <div class="text-center mx-auto mb-5 wow fadeInUp">
-                <span class="section-label">Legislação e Normas</span>
-                <h2 class="section-heading">Estatutos da Ordem</h2>
-            </div>
-            
-            <div class="search-container mb-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container pb-lg-5">
+            <!-- Full Width Search Container as in Anexo 2 -->
+            <div class="search-container wow fadeInUp" data-wow-delay="0.1s">
                 <div class="search-wrapper">
-                    <input type="text" id="searchEstatutos" placeholder="Pesquisar por palavra-chave ou nº artigo...">
+                    <i class="fa fa-search text-muted me-2" style="font-size: 1.2rem; opacity: 0.5;"></i>
+                    <input type="text" id="searchEstatutos" placeholder="Pesquisar estatutos (ex: Inscrição, Disciplina...)">
                     <i class="fas fa-times" id="clearSearch"></i>
                 </div>
             </div>
 
             <div class="row g-5">
-                <div class="col-lg-4 d-none d-lg-block">
+                <!-- Temas Filter Sidebar -->
+                <div class="col-lg-3">
                     <div class="sticky-top" style="top: 100px; z-index: 10;">
-                        <h5 class="mb-4" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; border-bottom: 2px solid var(--primary-gold); padding-bottom: 10px;">Temas Principais</h5>
-                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                        <div class="nav flex-column nav-pills mobile-sidebar-grid" id="v-pills-tab" role="tablist">
+                            <a class="sidebar-link active" href="#" data-filter="all">
+                                <span><i class="fas fa-list me-2" style="color: #ccc;"></i> Todos os Artigos</span>
+                                <span class="sidebar-badge"><?php echo $total_artigos; ?></span>
+                            </a>
                             <?php foreach ($temas as $tema_nome => $tema_info): ?>
-                            <a class="sidebar-link" href="#<?php echo $tema_info['slug']; ?>">
-                                <i class="<?php echo $tema_info['icon']; ?> text-primary" style="width: 20px;"></i>
-                                <?php echo htmlspecialchars(oagb_fix_encoding($tema_nome)); ?>
+                            <a class="sidebar-link" href="#" data-filter="<?php echo htmlspecialchars($tema_nome); ?>">
+                                <span><i class="<?php echo $tema_info['icon']; ?> me-2" style="color: var(--primary-gold);"></i> <?php echo htmlspecialchars(oagb_fix_encoding($tema_nome)); ?></span>
+                                <span class="sidebar-badge"><?php echo count($tema_info['artigos']); ?></span>
                             </a>
                             <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-8">
-                    <?php if (empty($temas)): ?>
-                        <div class="alert alert-info py-4 text-center">Nenhum artigo encontrado.</div>
-                    <?php else: ?>
-                        <?php foreach ($temas as $tema_nome => $tema_info): ?>
-                        <div id="<?php echo $tema_info['slug']; ?>" class="tema-section mb-5">
-                            <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
-                                <span class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="<?php echo $tema_info['icon']; ?>"></i>
-                                </span>
-                                <h3 class="m-0" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif;"><?php echo htmlspecialchars(oagb_fix_encoding($tema_nome)); ?></h3>
-                            </div>
+                <!-- Articles Content Area -->
+                <div class="col-lg-9">
+                    <!-- Title and DOC Button -->
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start border-bottom pb-4 mb-4">
+                        <div class="mb-3 mb-md-0">
+                            <h2 style="font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 1.8rem; margin-bottom: 5px;">Estatutos da Ordem dos Advogados da Guiné-Bissau</h2>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">Aprovado na Assembleia Geral de 28 de Julho de 2018 • <strong id="artigoCounter" style="color: var(--primary-gold);"><?php echo $total_artigos; ?></strong> Artigos</p>
+                        </div>
+                        <a href="docsoagb/oagb_estatutos.pdf" target="_blank" class="btn btn-sm d-flex align-items-center" style="background: var(--primary-maroon); color: #fff; border-radius: 50px; padding: 8px 20px; font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; flex-shrink: 0;">
+                            <i class="fas fa-download me-2"></i> DOC
+                        </a>
+                    </div>
+                    
+                    <div id="noResultsMsg" class="text-center py-5 my-5" style="display: none;">
+                        <i class="fa fa-search fa-3x mb-3 text-muted" style="opacity: 0.2;"></i>
+                        <h5 class="text-muted" style="font-family: 'Libre Baskerville', serif;">Nenhum artigo encontrado para a sua pesquisa.</h5>
+                    </div>
 
+                    <div id="artigosContainer">
+                        <?php foreach ($temas as $tema_nome => $tema_info): ?>
                             <?php foreach ($tema_info['artigos'] as $artigo): ?>
                             <div class="artigo-block wow fadeInUp" data-artigo-num="<?php echo $artigo['numero_artigo']; ?>" data-tema="<?php echo htmlspecialchars($tema_nome); ?>">
-                                <h5 class="mb-3" style="color: var(--primary-maroon); font-weight: 700; border-left: 4px solid var(--primary-gold); padding-left: 15px;">
+                                <h4 class="artigo-title">
                                     Artigo <?php echo $artigo['numero_artigo']; ?>º (<?php echo htmlspecialchars(oagb_fix_encoding($artigo['titulo_artigo'])); ?>)
-                                </h5>
-                                <div class="artigo-content" style="line-height: 1.8; color: #444; font-size: 0.95rem; text-align: justify;">
+                                </h4>
+                                <div class="texto-conteudo">
                                     <?php echo oagb_fix_encoding($artigo['conteudo']); ?>
                                 </div>
                             </div>
                             <?php endforeach; ?>
-                        </div>
                         <?php endforeach; ?>
-                    <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -299,11 +322,15 @@ $has_header_image = !empty($header_image);
             const $searchInput = $('#searchEstatutos');
             const $clearSearch = $('#clearSearch');
             const $artigos = $('.artigo-block');
-            const $temas = $('.tema-section');
+            const $sidebarLinks = $('.sidebar-link');
+            const $counter = $('#artigoCounter');
+            const $noResults = $('#noResultsMsg');
+            let currentFilter = 'all';
 
-            function performSearch() {
+            function updateDisplay() {
                 const rawValue = $searchInput.val();
                 const searchTerm = normalizeString(rawValue);
+                let visibleCount = 0;
 
                 if (rawValue.length > 0) {
                     $clearSearch.fadeIn();
@@ -313,8 +340,9 @@ $has_header_image = !empty($header_image);
 
                 $artigos.each(function() {
                     const $artigo = $(this);
-                    const $content = $artigo.find('.artigo-content');
-                    const $title = $artigo.find('h5');
+                    const $content = $artigo.find('.texto-conteudo');
+                    const $title = $artigo.find('.artigo-title');
+                    const artigoTema = $artigo.data('tema');
                     
                     // Reset highlights first
                     if ($artigo.data('original-content')) {
@@ -326,8 +354,16 @@ $has_header_image = !empty($header_image);
                         $artigo.data('original-title', $title.html());
                     }
 
+                    // Check Theme Filter
+                    if (currentFilter !== 'all' && currentFilter !== artigoTema) {
+                        $artigo.hide();
+                        return;
+                    }
+
+                    // Check Search
                     if (!searchTerm) {
                         $artigo.show();
+                        visibleCount++;
                         return;
                     }
 
@@ -336,20 +372,20 @@ $has_header_image = !empty($header_image);
 
                     if (isMatch) {
                         $artigo.show();
-                        
-                        // Highlight logic
                         highlightMatch($title, rawValue);
                         highlightMatch($content, rawValue);
+                        visibleCount++;
                     } else {
                         $artigo.hide();
                     }
                 });
 
-                // Show/Hide sections
-                $temas.each(function() {
-                    const visibleCount = $(this).find('.artigo-block:visible').length;
-                    $(this).toggle(visibleCount > 0);
-                });
+                $counter.text(visibleCount);
+                if (visibleCount === 0) {
+                    $noResults.show();
+                } else {
+                    $noResults.hide();
+                }
             }
 
             function highlightMatch($element, term) {
@@ -364,37 +400,29 @@ $has_header_image = !empty($header_image);
                 }
             }
 
-            $searchInput.on('keyup', performSearch);
-            $clearSearch.on('click', function() {
-                $searchInput.val('');
-                performSearch();
+            // Click Themes
+            $sidebarLinks.on('click', function(e) {
+                e.preventDefault();
+                $sidebarLinks.removeClass('active');
+                $(this).addClass('active');
+                currentFilter = $(this).data('filter');
+                updateDisplay();
+                
+                // Scroll up automatically on mobile
+                if($(window).width() < 991) {
+                    const offset = 140; 
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = document.querySelector('#artigosContainer').getBoundingClientRect().top;
+                    window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
+                }
             });
 
-            // Handle sidebar thematic jump
-            $('.sidebar-link').on('click', function(e) {
-                e.preventDefault();
-                const target = $(this).attr('href');
-                
-                // Clear search if navigating themes
-                if ($searchInput.val()) {
-                    $searchInput.val('');
-                    performSearch();
-                }
+            // Input Searching
+            $searchInput.on('keyup', updateDisplay);
 
-                const offset = 140; // Desktop offset for fixed header
-                const bodyRect = document.body.getBoundingClientRect().top;
-                const elementRect = document.querySelector(target).getBoundingClientRect().top;
-                const elementPosition = elementRect - bodyRect;
-                const offsetPosition = elementPosition - offset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-
-                // Update active link
-                $('.sidebar-link').removeClass('active');
-                $(this).addClass('active');
+            $clearSearch.on('click', function() {
+                $searchInput.val('');
+                updateDisplay();
             });
         });
     </script>
