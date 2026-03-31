@@ -256,7 +256,7 @@ $header_image = 'gestao/assets/uploads/files/close-up-scales-justice-original-az
 
     <!-- Desktop Header + Breadcrumbs over image -->
     <div class="container-fluid position-relative p-0 d-none d-lg-block">
-        <?php include 'includes/navbar.php'; ?>
+        <?php include 'includes/navbar_modern.php'; ?>
         <div class="container-fluid bg-primary bg-header d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: linear-gradient(rgba(17, 25, 35, 0.1), rgba(17, 25, 35, 0.45)), url('<?php echo $header_image; ?>') center center no-repeat; background-size: cover;">
             <!-- Breadcrumbs overlaid on bottom of header image, fully transparent -->
             <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 10px;">
@@ -316,14 +316,14 @@ $header_image = 'gestao/assets/uploads/files/close-up-scales-justice-original-az
                                 </div>
                                 
                                 <a href="portal/login.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center mobile-pill-btn">
-                                    <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Área Reservada
+                                    <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Portal
                                 </a>
                             </div>
                         </div>
                     </div>
 
                     <div class="mobile-navbar-wrapper container-fluid position-relative p-0">
-                        <?php include 'includes/navbar.php'; ?>
+                        <?php include 'includes/navbar_modern.php'; ?>
                     </div>
 
                     <!-- Slide Content (mobile spacer) -->

@@ -18,7 +18,7 @@ try {
 
 $page_title = "O Bastonário";
 $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bissau.";
-$header_image = ''; 
+$header_image = ''; // Propositadamente vazio conforme pedido
 $has_header_image = !empty($header_image);
 ?>
 <!DOCTYPE html>
@@ -80,20 +80,18 @@ $has_header_image = !empty($header_image);
             <?php endif; ?>
         }
 
-        /* === MOBILE HEADER SYNC WITH APRESENTAÇÃO === */
+        /* === MOBILE HEADER SYNC === */
         @media (max-width: 991px) {
             .mobile-header-contacts i { color: <?php echo $has_header_image ? '#fff' : 'var(--primary-maroon)'; ?> !important; opacity: 0.85; }
             .mobile-header-contacts small { color: <?php echo $has_header_image ? '#fff' : '#333'; ?> !important; font-size: 0.70rem !important; }
             .mobile-pill-btn { border-radius: 50px !important; border: 1px solid <?php echo $has_header_image ? 'rgba(255,255,255,0.4)' : 'var(--primary-maroon)'; ?> !important; color: <?php echo $has_header_image ? '#fff' : '#333'; ?> !important; background: <?php echo $has_header_image ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.03)'; ?> !important; }
             
-            /* Navbar on mobile MUST be white/transparent on transparent but white on collapse toggle */
             .mobile-navbar-wrapper .navbar-toggler { border-color: var(--primary-gold) !important; }
             
             .mobile-breadcrumb-bar { background: transparent; padding: 10px 0; position: absolute; bottom: 0; left: 0; right: 0; z-index: 999 !important; pointer-events: auto !important; }
             .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar .bc-active { font-size: 0.7rem; color: <?php echo $has_header_image ? 'rgba(255,255,255,0.73)' : '#666'; ?>; text-shadow: <?php echo $has_header_image ? '0 1px 3px rgba(0,0,0,0.6)' : 'none'; ?>; pointer-events: auto !important; }
             .mobile-breadcrumb-bar .bc-active { color: <?php echo $has_header_image ? '#fff' : 'var(--primary-maroon)'; ?>; font-weight: 600; }
             
-            /* Círculos dos botões mobile */
             .mobile-breadcrumb-bar .quick-links a { 
                 width: 32px; height: 32px; font-size: 0.7rem; 
                 color: <?php echo $has_header_image ? 'rgba(255,255,255,0.7)' : 'var(--primary-maroon)'; ?>; 
@@ -103,19 +101,17 @@ $has_header_image = !empty($header_image);
             .ordem-mobile-caption { bottom: 55px !important; padding: 0 1rem !important; }
         }
 
-        /* Titles */
         .section-label { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; color: var(--primary-gold); display: block; margin-bottom: 12px; }
-        .section-heading { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 2.2rem; line-height: 1.3; margin-bottom: 20px; }
-        .section-heading::after { content: ''; display: block; width: 50px; height: 3px; background: var(--primary-gold); margin-top: 15px; }
-        .text-center .section-heading::after { margin-left: auto; margin-right: auto; }
+        .section-heading { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 2.2rem; line-height: 1.3; margin-bottom: 10px; }
     </style>
 </head>
+
 <body>
     <?php include 'includes/topbar.php'; ?>
 
     <!-- Desktop Header -->
     <div class="container-fluid position-relative p-0 d-none d-lg-block">
-        <?php include 'includes/navbar.php'; ?>
+        <?php include 'includes/navbar_modern.php'; ?>
         <div class="container-fluid bg-header-custom">
             <div class="subpage-breadcrumb-bar">
                 <div class="container d-flex align-items-center justify-content-between">
@@ -142,7 +138,7 @@ $has_header_image = !empty($header_image);
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <?php if ($has_header_image): ?>
-                        <img class="w-100" src="<?php echo htmlspecialchars($header_image); ?>" alt="OAGB">
+                        <img class="w-100" src="<?php echo htmlspecialchars($header_image); ?>" alt="O Bastonário">
                     <?php endif; ?>
 
                     <div class="mobile-header-contacts container-fluid px-1 pt-3 pb-1">
@@ -178,10 +174,7 @@ $has_header_image = !empty($header_image);
                     </div>
 
                     <div class="mobile-navbar-wrapper container-fluid position-relative p-0" style="margin-top: <?php echo $has_header_image ? '0' : '5px'; ?>;">
-                        <?php include 'includes/navbar.php'; ?>
-                    </div>
-
-                    <div class="carousel-caption ordem-mobile-caption d-flex flex-column align-items-center justify-content-end">
+                        <?php include 'includes/navbar_modern.php'; ?>
                     </div>
 
                     <div class="mobile-breadcrumb-bar">
@@ -203,8 +196,8 @@ $has_header_image = !empty($header_image);
         </div>
     </div>
 
-    <!-- Content Area (Shared background color var(--light-grey-bg)) -->
-    <div class="container-xxl py-5 mt-lg-2">
+    <!-- Content Area -->
+    <section class="py-5">
         <div class="container">
             <div class="text-center mx-auto mb-5 wow fadeInUp">
                 <span class="section-label">Liderança e Visão</span>
@@ -252,10 +245,11 @@ $has_header_image = !empty($header_image);
                 <?php endforeach; ?>
             </div>
         </div>
-    </div>
+    </section>
 
     <?php include 'includes/banner-inscricao.php'; ?>
     <?php include 'includes/footer.php'; ?>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/main.js"></script>
