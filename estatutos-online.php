@@ -143,6 +143,37 @@ $has_header_image = !empty($header_image);
             .sidebar-link i { display: none; } /* Hide icon on mobile grid to save space */
         }
 
+        /* === SUBPAGE MOBILE HEADER ISOLATION === */
+        /* This ID is unique to internal pages - never conflicts with index.php */
+        #sp-carousel-mobile .carousel-item {
+            position: relative;
+            overflow: hidden;
+            min-height: auto !important;
+        }
+        #sp-carousel-mobile .carousel-item img {
+            position: relative !important;
+            width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            object-fit: unset !important;
+            inset: unset !important;
+        }
+        #sp-carousel-mobile .mobile-header-contacts {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 2001;
+        }
+        #sp-carousel-mobile .mobile-navbar-wrapper {
+            position: absolute !important;
+            top: 58px; left: 0; right: 0;
+            z-index: 1999;
+        }
+        #sp-carousel-mobile .mobile-breadcrumb-bar {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            z-index: 1998;
+        }
+
     </style>
 </head>
 <body>
@@ -171,9 +202,9 @@ $has_header_image = !empty($header_image);
         </div>
     </div>
 
-    <!-- Mobile Header -->
+    <!-- Mobile Header (subpage - isolated from index carousel CSS) -->
     <div class="d-block d-lg-none">
-        <div id="header-carousel-mobile" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-touch="true" style="position: relative; <?php echo !$has_header_image ? 'background: var(--light-grey-bg); min-height: 250px;' : ''; ?>">
+        <div id="sp-carousel-mobile" style="position: relative; <?php echo !$has_header_image ? 'background: var(--light-grey-bg); min-height: 250px;' : ''; ?>">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <?php if ($has_header_image): ?>

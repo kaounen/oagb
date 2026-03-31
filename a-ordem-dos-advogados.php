@@ -241,8 +241,38 @@ $header_image = 'gestao/assets/uploads/files/close-up-scales-justice-original-az
             .section-heading { font-size: 1.6rem; }
             .info-card { padding: 25px; }
             .container { padding-left: 20px; padding-right: 20px; }
-            /* Ordem page: push mobile title closer to breadcrumbs but avoid overlap */
-            #header-carousel-mobile .carousel-caption.ordem-mobile-caption {
+            /* === SUBPAGE MOBILE HEADER ISOLATION === */
+            /* This ID is unique to internal pages - never used by index.php */
+            #sp-carousel-mobile .carousel-item {
+                position: relative;
+                overflow: hidden;
+                min-height: auto !important; /* NOT 110vh - image sets the height naturally */
+            }
+            #sp-carousel-mobile .carousel-item img {
+                position: relative !important; /* image flows normally, sets container height */
+                width: 100% !important;
+                height: auto !important;
+                display: block !important;
+                object-fit: unset !important;
+                inset: unset !important;
+            }
+            #sp-carousel-mobile .mobile-header-contacts {
+                position: absolute;
+                top: 0; left: 0; right: 0;
+                z-index: 2001;
+            }
+            #sp-carousel-mobile .mobile-navbar-wrapper {
+                position: absolute !important;
+                top: 58px; left: 0; right: 0;
+                z-index: 1999;
+            }
+            #sp-carousel-mobile .mobile-breadcrumb-bar {
+                position: absolute;
+                bottom: 0; left: 0; right: 0;
+                z-index: 1998;
+            }
+            #sp-carousel-mobile .carousel-caption.ordem-mobile-caption {
+                position: absolute;
                 bottom: 55px !important;
                 padding: 0 1rem !important;
             }
@@ -278,9 +308,9 @@ $header_image = 'gestao/assets/uploads/files/close-up-scales-justice-original-az
         </div>
     </div>
 
-    <!-- Mobile Header (identical to index.php) -->
+    <!-- Mobile Header (subpage - isolated from index carousel CSS) -->
     <div class="d-block d-lg-none">
-        <div id="header-carousel-mobile" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-touch="true" style="position: relative;">
+        <div id="sp-carousel-mobile" style="position: relative; overflow: hidden;">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img class="w-100" src="<?php echo htmlspecialchars($header_image, ENT_QUOTES, 'UTF-8'); ?>" alt="OAGB">
