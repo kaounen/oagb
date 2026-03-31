@@ -111,7 +111,7 @@ $has_header_image = !empty($header_image);
 
     <!-- Desktop Header -->
     <div class="container-fluid position-relative p-0 d-none d-lg-block">
-        <?php include 'includes/navbar_modern.php'; ?>
+        <?php include 'includes/navbar.php'; ?>
         <div class="container-fluid bg-header-custom">
             <div class="subpage-breadcrumb-bar">
                 <div class="container d-flex align-items-center justify-content-between">
@@ -174,7 +174,7 @@ $has_header_image = !empty($header_image);
                     </div>
 
                     <div class="mobile-navbar-wrapper container-fluid position-relative p-0" style="margin-top: <?php echo $has_header_image ? '0' : '5px'; ?>;">
-                        <?php include 'includes/navbar_modern.php'; ?>
+                        <?php include 'includes/navbar.php'; ?>
                     </div>
 
                     <div class="mobile-breadcrumb-bar">

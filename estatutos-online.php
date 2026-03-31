@@ -136,7 +136,7 @@ $has_header_image = !empty($header_image);
 
     <!-- Desktop Header -->
     <div class="container-fluid position-relative p-0 d-none d-lg-block">
-        <?php include 'includes/navbar_modern.php'; ?>
+        <?php include 'includes/navbar.php'; ?>
         <div class="container-fluid bg-header-custom">
             <div class="subpage-breadcrumb-bar">
                 <div class="container d-flex align-items-center justify-content-between">
@@ -199,7 +199,7 @@ $has_header_image = !empty($header_image);
                     </div>
 
                     <div class="mobile-navbar-wrapper container-fluid position-relative p-0" style="margin-top: <?php echo $has_header_image ? '0' : '5px'; ?>;">
-                        <?php include 'includes/navbar_modern.php'; ?>
+                        <?php include 'includes/navbar.php'; ?>
                     </div>
 
                     <div class="mobile-breadcrumb-bar">
@@ -270,7 +270,7 @@ $has_header_image = !empty($header_image);
                                     Artigo <?php echo $artigo['numero_artigo']; ?>º (<?php echo htmlspecialchars(oagb_fix_encoding($artigo['titulo_artigo'])); ?>)
                                 </h5>
                                 <div class="artigo-content" style="line-height: 1.8; color: #444; font-size: 0.95rem; text-align: justify;">
-                                    <?php echo oagb_fix_encoding($artigo['conteudo_artigo']); ?>
+                                    <?php echo oagb_fix_encoding($artigo['conteudo']); ?>
                                 </div>
                             </div>
                             <?php endforeach; ?>
@@ -284,7 +284,6 @@ $has_header_image = !empty($header_image);
 
     <?php include 'includes/banner-inscricao.php'; ?>
     <?php include 'includes/footer.php'; ?>
-
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/main.js"></script>
