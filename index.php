@@ -463,7 +463,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <!-- Blog Start -->
     <?php if (!empty($noticias_destaque)): ?>
     <div class="container-fluid section-noticias section-noticias-index">
-        <div class="container pt-4 pb-0"> <!-- Restaurado pt-4 para dar um pouco de respiro em relação ao topo (Desktop) -->
+        <div class="container pt-2 pb-0"> <!-- Restaurado pt-4 para dar um pouco de respiro em relação ao topo (Desktop) -->
             <div class="section-title text-center position-relative pb-4 mb-5 mx-auto" style="max-width: 600px;"> <!-- Aumentado pb-4 para afastar artigos do título e sua linha cor-de-laranja -->
                 <h5 class="text-primary text-uppercase" style="font-family: 'Open Sans', sans-serif; font-weight: 400;">Artigos recentes</h5>
                 <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">Últimas notícias</h1>

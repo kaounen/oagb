@@ -176,6 +176,12 @@
             </div>
         <?php endif; ?>
 
+        <?php if(isset($_GET['reset_success'])): ?>
+            <div class="alert alert-success border-0 bg-success-subtle text-success small mb-4 text-center">
+                <i class="fas fa-check-circle me-1"></i> Palavra-passe atualizada com sucesso! Pode entrar.
+            </div>
+        <?php endif; ?>
+
         <form action="auth/login_process.php" method="POST">
             <div class="mb-4">
                 <label class="form-label">Email ou Utilizador</label>
@@ -198,7 +204,7 @@
                     <input class="form-check-input" type="checkbox" id="remember" style="background-color: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
                     <label class="form-check-label text-secondary" for="remember" style="font-size: 0.8rem;">Lembrar-me</label>
                 </div>
-                <a href="#" class="text-decoration-none" style="font-size: 0.8rem; color: var(--primary-gold);">Esqueci-me?</a>
+                <a href="auth/forgot_password.php" class="text-decoration-none" style="font-size: 0.8rem; color: var(--primary-gold);">Esqueci-me?</a>
             </div>
 
             <button type="submit" class="btn btn-login">

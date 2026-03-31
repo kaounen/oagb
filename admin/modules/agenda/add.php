@@ -4,14 +4,19 @@ require_once __DIR__ . '/../../includes/header.php';
 
 // Form Handling
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $titulo = $_POST['titulo'];
-    $data_ev = $_POST['data_evento'] ?: date('Y-m-d');
-    $hora_ev = $_POST['hora_evento'] ?? '';
+    $data_inicio = $_POST['data_evento'] ?: date('Y-m-d');
+    $hora_inicio = $_POST['hora_inicio'] ?? '00:00';
+    $data_fim = $_POST['data_fim'] ?: $data_inicio;
+    $hora_fim = $_POST['hora_fim'] ?? '00:00';
+    
+    $start_dt = $data_inicio . ' ' . $hora_inicio . ':00';
+    $end_dt = $data_fim . ' ' . $hora_fim . ':00';
+
     $local_ev = $_POST['local_evento'] ?? '';
     $desc = $_POST['descricao'] ?? '';
     $ativo = isset($_POST['ativo']) ? 1 : 0;
     
-    // Image handling
+    // Image handling omitted for brevity, but stays same...
     $imagem = '';
     if (isset($_FILES['imagem_destaque']) && $_FILES['imagem_destaque']['error'] === UPLOAD_ERR_OK) {
         $upload_dir = __DIR__ . '/../../../../gestao/assets/uploads/files/';
@@ -26,8 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO agenda (titulo, data_evento, hora_evento, local_evento, descricao, imagem_destaque, ativo) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$titulo, $data_ev, $hora_ev, $local_ev, $desc, $imagem, $ativo]);
+        $stmt = $pdo->prepare("INSERT INTO agenda (titulo, data_evento, data_fim_evento, hora_inicio, hora_fim, local_evento, descricao, imagem_destaque, ativo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$titulo, $start_dt, $end_dt, $hora_inicio, $hora_fim, $local_ev, $desc, $imagem, $ativo]);
+        $new_id = $pdo->lastInsertId();
+
+        // Handle Multiple Attachments
+        require_once __DIR__ . '/../../includes/AttachmentHelper.php';
+        if (isset($_FILES['attachments'])) {
+            AttachmentHelper::save($pdo, 'evento', $new_id, $_FILES['attachments']);
+        }
         
         header("Location: index.php?success=1");
         exit;
@@ -69,13 +81,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="col-lg-4">
                     <div class="card bg-light border-0 p-4">
-                        <div class="mb-4">
-                            <label class="form-label text-uppercase fw-bold text-muted small">Data do Evento</label>
-                            <input type="date" name="data_evento" class="form-control border-0" value="<?php echo date('Y-m-d'); ?>" required>
+                        <div class="row g-2 mb-4">
+                            <div class="col-7">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Data Início</label>
+                                <input type="date" name="data_evento" class="form-control border-0" value="<?php echo date('Y-m-d'); ?>" required>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Hora</label>
+                                <input type="time" name="hora_inicio" class="form-control border-0" value="09:00">
+                            </div>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label text-uppercase fw-bold text-muted small">Hora de Iinicio</label>
-                            <input type="time" name="hora_evento" class="form-control border-0">
+                        
+                        <div class="row g-2 mb-4">
+                            <div class="col-7">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Data Término</label>
+                                <input type="date" name="data_fim" class="form-control border-0" value="<?php echo date('Y-m-d'); ?>">
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Hora</label>
+                                <input type="time" name="hora_fim" class="form-control border-0" value="18:00">
+                            </div>
                         </div>
                         
                         <div class="mb-4">
@@ -95,6 +120,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <img id="preview" class="img-fluid mt-3 rounded shadow-sm d-none">
                         </div>
+
+                        <!-- Gallery & Attachments -->
+                        <?php 
+                        $entity_type = 'evento';
+                        $entity_id = 0;
+                        require __DIR__ . '/../../includes/partials/attachments_form.php'; 
+                        ?>
 
                         <hr class="my-4">
 

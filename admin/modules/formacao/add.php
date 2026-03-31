@@ -5,12 +5,13 @@ require_once __DIR__ . '/../../includes/header.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'];
     $desc = $_POST['descricao'];
-    $data = $_POST['data_inicio'];
+    $data_inicio = $_POST['data_inicio'];
+    $data_fim = $_POST['data_fim'] ?: $data_inicio;
     $vagas = $_POST['vagas'];
     $preco = $_POST['preco'];
     
-    $stmt = $pdo->prepare("INSERT INTO gestao_cursos (titulo, descricao, data_inicio, vagas, preco) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$titulo, $desc, $data, $vagas, $preco]);
+    $stmt = $pdo->prepare("INSERT INTO gestao_cursos (titulo, descricao, data_inicio, data_fim, vagas, preco) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$titulo, $desc, $data_inicio, $data_fim, $vagas, $preco]);
     
     header("Location: index.php?success=created"); exit;
 }
@@ -34,8 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="date" name="data_inicio" class="form-control border-0 bg-light p-3 fs-5" required value="<?php echo date('Y-m-d'); ?>">
             </div>
             <div class="col-md-4">
+                <label class="form-label small fw-bold text-muted">Data de Término</label>
+                <input type="date" name="data_fim" class="form-control border-0 bg-light p-3 fs-5" placeholder="Opcional">
+            </div>
+            <div class="col-md-4">
                 <label class="form-label small fw-bold text-muted">Vagas Disponíveis</label>
-                <input type="number" name="vagas" class="form-control border-0 bg-light p-3" value="50" required>
+                <input type="number" name="vagas" class="form-control border-0 bg-light p-3 fs-5" value="50" required>
             </div>
             <div class="col-md-4">
                 <label class="form-label small fw-bold text-muted">Preço Unitário (CFA)</label>

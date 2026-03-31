@@ -4,6 +4,15 @@ require_once __DIR__ . '/../../includes/header.php';
 
 $id = $_GET['id'] ?? 0;
 
+require_once __DIR__ . '/../../includes/AttachmentHelper.php';
+
+// Handle Attachment Deletion
+if (isset($_GET['delete_attachment'])) {
+    AttachmentHelper::delete($pdo, $_GET['delete_attachment']);
+    header("Location: edit.php?id=" . $id . "&att_deleted=1");
+    exit;
+}
+
 // Fetch Existing News
 try {
     $stmt = $pdo->prepare("SELECT * FROM noticias WHERE id = ?");
@@ -14,6 +23,8 @@ try {
         header("Location: index.php");
         exit;
     }
+
+    $attachments = AttachmentHelper::get($pdo, 'noticia', $id);
 } catch (PDOException $e) {
     header("Location: index.php");
     exit;
@@ -22,11 +33,12 @@ try {
 // Process Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'] ?? '';
-    $data = $_POST['data'] ?? date('Y-m-d');
-    $corpo = $_POST['corpo'] ?? '';
-    $legendaFoto1 = $_POST['legendaFoto1'] ?? '';
+    $data_pub = $_POST['data'] . ' ' . date('H:i:s');
+    $conteudo = $_POST['corpo'] ?? '';
+    $legenda = $_POST['legendaFoto1'] ?? '';
+    $cat_tipo = $_POST['categoria_tipo'] ?? 'Notícia';
     
-    $foto1 = $noticia['foto1']; // Keep old photo by default
+    $imagem = $noticia['imagem_destaque'];
     
     // Photo upload handling
     if (isset($_FILES['foto1']) && $_FILES['foto1']['error'] === UPLOAD_ERR_OK) {
@@ -38,18 +50,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if (move_uploaded_file($_FILES['foto1']['tmp_name'], $upload_dir . $new_filename)) {
             // Delete old file if exists
-            if (!empty($noticia['foto1']) && file_exists($upload_dir . $noticia['foto1'])) {
-                unlink($upload_dir . $noticia['foto1']);
+            if (!empty($noticia['imagem_destaque']) && file_exists($upload_dir . $noticia['imagem_destaque'])) {
+                unlink($upload_dir . $noticia['imagem_destaque']);
             }
-            $foto1 = $new_filename;
+            $imagem = $new_filename;
         }
     }
 
+    $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo)));
+
     try {
-        $stmt = $pdo->prepare("UPDATE noticias SET titulo = ?, data = ?, corpo = ?, foto1 = ?, legendaFoto1 = ? WHERE id = ?");
-        $stmt->execute([$titulo, $data, $corpo, $foto1, $legendaFoto1, $id]);
+        $stmt = $pdo->prepare("UPDATE noticias SET titulo = ?, data_publicacao = ?, conteudo = ?, imagem_destaque = ?, resumo = ?, categoria_tipo = ?, slug = ? WHERE id = ?");
+        $stmt->execute([$titulo, $data_pub, $conteudo, $imagem, $legenda, $cat_tipo, $slug, $id]);
         
-        // Refresh data
+        // Handle Multiple Attachments
+        if (isset($_FILES['attachments'])) {
+            AttachmentHelper::save($pdo, 'noticia', $id, $_FILES['attachments']);
+        }
+
         header("Location: index.php?updated=1");
         exit;
     } catch (PDOException $e) {
@@ -81,16 +99,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="mb-4">
                         <label class="form-label text-uppercase fw-bold text-muted small">Corpo do Artigo / Texto Completo</label>
-                        <textarea name="corpo" id="editor" class="form-control bg-light border-0" rows="15"><?php echo $noticia['corpo']; ?></textarea>
+                        <textarea name="corpo" id="editor" class="form-control bg-light border-0" rows="15"><?php echo $noticia['conteudo']; ?></textarea>
                     </div>
                 </div>
 
                 <div class="col-lg-4">
                     <div class="card bg-light border-0">
                         <div class="card-body p-4">
+                             <div class="mb-4">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Tipo de Conteúdo</label>
+                                <select name="categoria_tipo" class="form-select border-0 shadow-sm py-2">
+                                    <option value="Notícia" <?php echo $noticia['categoria_tipo'] == 'Notícia' ? 'selected' : ''; ?>>Notícia / Artigo</option>
+                                    <option value="Anúncio" <?php echo $noticia['categoria_tipo'] == 'Anúncio' ? 'selected' : ''; ?>>Anúncio Oficial</option>
+                                    <option value="Aviso" <?php echo $noticia['categoria_tipo'] == 'Aviso' ? 'selected' : ''; ?>>Aviso / Nota</option>
+                                    <option value="Edital" <?php echo $noticia['categoria_tipo'] == 'Edital' ? 'selected' : ''; ?>>Edital / Concurso</option>
+                                </select>
+                            </div>
+
                             <div class="mb-4">
                                 <label class="form-label text-uppercase fw-bold text-muted small">Data de Publicação</label>
-                                <input type="date" name="data" class="form-control border-0" value="<?php echo $noticia['data']; ?>" required>
+                                <input type="date" name="data" class="form-control border-0" value="<?php echo date('Y-m-d', strtotime($noticia['data_publicacao'])); ?>" required>
                             </div>
 
                             <div class="mb-4">
@@ -100,13 +128,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="small text-muted">Trocar imagem atual</div>
                                     <input type="file" name="foto1" id="foto1_input" class="d-none" accept="image/*">
                                 </div>
-                                <img id="preview" src="/oagb/gestao/assets/uploads/files/<?php echo $noticia['foto1']; ?>" class="img-fluid mt-3 rounded shadow-sm <?php echo empty($noticia['foto1']) ? 'd-none' : ''; ?>">
+                                <img id="preview" src="/oagb/gestao/assets/uploads/files/<?php echo $noticia['imagem_destaque']; ?>" class="img-fluid mt-3 rounded shadow-sm <?php echo empty($noticia['imagem_destaque']) ? 'd-none' : ''; ?>">
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label text-uppercase fw-bold text-muted small">Legenda da Imagem</label>
-                                <input type="text" name="legendaFoto1" class="form-control border-0" value="<?php echo htmlspecialchars($noticia['legendaFoto1']); ?>">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Legenda da Imagem / Resumo</label>
+                                <input type="text" name="legendaFoto1" class="form-control border-0" value="<?php echo htmlspecialchars($noticia['resumo']); ?>">
                             </div>
+
+                            <!-- Múltiplos Anexos Component -->
+                            <?php 
+                            $entity_type = 'noticia';
+                            $entity_id = $id;
+                            require __DIR__ . '/../../includes/partials/attachments_form.php'; 
+                            ?>
 
                             <hr class="my-4">
 

@@ -2,20 +2,37 @@
 require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/header.php';
 
+require_once __DIR__ . '/../../includes/AttachmentHelper.php';
+
 $id = $_GET['id'] ?? 0;
+
+// Handle Attachment Deletion
+if (isset($_GET['delete_attachment'])) {
+    AttachmentHelper::delete($pdo, $_GET['delete_attachment']);
+    header("Location: edit.php?id=" . $id . "&att_deleted=1");
+    exit;
+}
 
 try {
     $stmt = $pdo->prepare("SELECT * FROM agenda WHERE id = ?");
     $stmt->execute([$id]);
     $event = $stmt->fetch();
     if(!$event) { header("Location: index.php"); exit; }
+    
+    $attachments = AttachmentHelper::get($pdo, 'evento', $id);
 } catch (PDOException $e) { header("Location: index.php"); exit; }
 
 // Process Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'];
-    $data_ev = $_POST['data_evento'] ?: date('Y-m-d');
-    $hora_ev = $_POST['hora_evento'] ?? '';
+    $data_inicio = $_POST['data_evento'] ?: date('Y-m-d');
+    $hora_inicio = $_POST['hora_inicio'] ?? '00:00';
+    $data_fim = $_POST['data_fim'] ?: $data_inicio;
+    $hora_fim = $_POST['hora_fim'] ?? '00:00';
+    
+    $start_dt = $data_inicio . ' ' . $hora_inicio . ':00';
+    $end_dt = $data_fim . ' ' . $hora_fim . ':00';
+
     $local_ev = $_POST['local_evento'] ?? '';
     $desc = $_POST['descricao'] ?? '';
     $ativo = isset($_POST['ativo']) ? 1 : 0;
@@ -25,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $upload_dir = __DIR__ . '/../../../../gestao/assets/uploads/files/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
-        $file_ext = pathinfo($_FILES['imagem_destaque']['name'], INFO_EXTENSION);
+        $file_ext = pathinfo($_FILES['imagem_destaque']['name'], PATHINFO_EXTENSION);
         $new_filename = 'event_' . time() . '.' . $file_ext;
         
         if (move_uploaded_file($_FILES['imagem_destaque']['tmp_name'], $upload_dir . $new_filename)) {
@@ -38,13 +55,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $pdo->prepare("UPDATE agenda SET titulo = ?, data_evento = ?, hora_evento = ?, local_evento = ?, descricao = ?, imagem_destaque = ?, ativo = ? WHERE id = ?");
-        $stmt->execute([$titulo, $data_ev, $hora_ev, $local_ev, $desc, $imagem, $ativo, $id]);
+        $stmt = $pdo->prepare("UPDATE agenda SET titulo = ?, data_evento = ?, data_fim_evento = ?, hora_inicio = ?, hora_fim = ?, local_evento = ?, descricao = ?, imagem_destaque = ?, ativo = ? WHERE id = ?");
+        $stmt->execute([$titulo, $start_dt, $end_dt, $hora_inicio, $hora_fim, $local_ev, $desc, $imagem, $ativo, $id]);
         
+        // Handle Multiple Attachments
+        if (isset($_FILES['attachments'])) {
+            AttachmentHelper::save($pdo, 'evento', $id, $_FILES['attachments']);
+        }
+
         header("Location: index.php?updated=1");
         exit;
     } catch (PDOException $e) { $error = "Erro ao atualizar: " . $e->getMessage(); }
 }
+
+// Split datetime for UI
+$d_ini = date('Y-m-d', strtotime($event['data_evento']));
+$h_ini = date('H:i', strtotime($event['data_evento']));
+$d_fim = $event['data_fim_evento'] ? date('Y-m-d', strtotime($event['data_fim_evento'])) : $d_ini;
+$h_fim = $event['data_fim_evento'] ? date('H:i', strtotime($event['data_fim_evento'])) : '18:00';
 ?>
 
 <div class="row mb-5 align-items-center">
@@ -72,13 +100,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="col-lg-4">
                     <div class="card bg-light border-0 p-4">
-                        <div class="mb-4">
-                            <label class="form-label text-uppercase fw-bold text-muted small">Data do Evento</label>
-                            <input type="date" name="data_evento" class="form-control border-0" value="<?php echo $event['data_evento']; ?>" required>
+                        <div class="row g-2 mb-4">
+                            <div class="col-7">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Data Início</label>
+                                <input type="date" name="data_evento" class="form-control border-0" value="<?php echo $d_ini; ?>" required>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Hora</label>
+                                <input type="time" name="hora_inicio" class="form-control border-0" value="<?php echo $h_ini; ?>">
+                            </div>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label text-uppercase fw-bold text-muted small">Hora de Iinicio</label>
-                            <input type="time" name="hora_evento" class="form-control border-0" value="<?php echo $event['hora_evento']; ?>">
+
+                        <div class="row g-2 mb-4">
+                            <div class="col-7">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Data Término</label>
+                                <input type="date" name="data_fim" class="form-control border-0" value="<?php echo $d_fim; ?>">
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Hora</label>
+                                <input type="time" name="hora_fim" class="form-control border-0" value="<?php echo $h_fim; ?>">
+                            </div>
                         </div>
                         <div class="mb-4">
                             <label class="form-label text-uppercase fw-bold text-muted small">Local / Sala</label>
@@ -102,6 +143,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="file" name="imagem_destaque" id="img_input" class="d-none" accept="image/*">
                             </div>
                         </div>
+
+                        <!-- Gallery & Attachments -->
+                        <?php 
+                        $entity_type = 'evento';
+                        $entity_id = $id;
+                        require __DIR__ . '/../../includes/partials/attachments_form.php'; 
+                        ?>
 
                         <hr class="my-4">
 

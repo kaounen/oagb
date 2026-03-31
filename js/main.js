@@ -18,11 +18,11 @@
 
     $(window).scroll(function () {
         if ($(this).scrollTop() > 40) {
-            $('#topbar').addClass('is-scrolled');
-            $('.navbar-dark').addClass('is-scrolled shadow-sm');
+            $('#topbar').addClass('is-scrolled topbar-scrolled');
+            $('.navbar-dark').addClass('is-scrolled navbar-scrolled shadow-sm');
         } else {
-            $('#topbar').removeClass('is-scrolled');
-            $('.navbar-dark').removeClass('is-scrolled shadow-sm');
+            $('#topbar').removeClass('is-scrolled topbar-scrolled');
+            $('.navbar-dark').removeClass('is-scrolled navbar-scrolled shadow-sm');
         }
     });
     // Dispara o evento de scroll imediatamente para corrigir refreshes a meio da página

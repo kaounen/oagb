@@ -1,0 +1,170 @@
+/* Banner Inscrição na Ordem - Modern Dark Radial Design com Imagem */
+.banner-inscricao {
+    position: relative;
+    width: 100%;
+    min-height: 480px;
+    background-color: #111;
+    background-image: url('../img/low-key-filter-law-bookshelf-with-wooden-judge-s-gavel-golden-scale-3d-rendering.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Parallax opcional para efeito premium */
+    overflow: hidden;
+    padding: 80px 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Camada Escura Transparente GERAL para não ofuscar o texto escurecendo a imagem de fundo */
+.banner-inscricao::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Opacidade super forte no fundo antigo */
+    z-index: 1;
+}
+
+/* Círculos Glassmorphism Inspirados na imagem FIDA */
+.banner-circle {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 2; /* Acima do overlay escuro, abaixo do texto */
+    pointer-events: none;
+    /* Sombras precisas para definir explicitamente as arestas do circulo - imitando os círculos concêntricos e sólidos da imagem de inspiração branca/cinzenta */
+    box-shadow: 20px 0px 50px rgba(0, 0, 0, 0.2); 
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.circle-1 {
+    width: 1200px;
+    height: 1200px;
+    left: -400px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.03); /* Círculo extremo maior e mais ténue */
+}
+
+.circle-2 {
+    width: 900px;
+    height: 900px;
+    left: -350px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(200, 200, 200, 0.05);
+}
+
+.circle-3 {
+    width: 600px;
+    height: 600px;
+    left: -280px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.circle-4 {
+    width: 350px;
+    height: 350px;
+    left: -150px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.15); /* Círculo mais branco e próximo do centro */
+}
+
+.container-content {
+    position: relative;
+    z-index: 3;
+}
+
+.text-section {
+    color: #ffffff;
+    padding-left: 2rem;
+}
+
+.titulo-inscricao {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 3.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+    letter-spacing: -1.5px;
+    color: #ffffff !important;
+}
+
+.titulo-inscricao br {
+    display: block;
+}
+
+.texto-conteudo {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    line-height: 1.7;
+    max-width: 500px;
+}
+
+/* Botão Moderno de acordo com os Header/Mobile Buttons OAGB */
+.banner-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: transparent !important;
+    color: #B1A276 !important;
+    padding: 10px 25px;
+    border: 2px solid #B1A276 !important;
+    border-radius: 20px !important;
+    text-decoration: none !important;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    position: relative;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.banner-pill-btn:hover {
+    background-color: #B1A276 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(177, 162, 118, 0.4);
+}
+
+.banner-pill-btn .btn-text {
+    margin-right: 15px; /* Espaço para separar do eventual ícone à direita */
+}
+
+/* Esconder orbe extra para este novo modelo de botao */
+.banner-pill-btn .btn-orb {
+    display: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 991px) {
+    .banner-inscricao {
+        padding: 50px 0;
+        min-height: auto;
+    }
+    
+    .text-section {
+        padding-left: 15px;
+        padding-right: 15px;
+        text-align: center;
+    }
+    
+    .titulo-inscricao {
+        font-size: 2.5rem;
+    }
+    
+    .texto-conteudo {
+        max-width: 100%;
+        margin: 0 auto 30px auto;
+        font-size: 1rem;
+    }
+    
+    .circle-1 { left: 50%; top: -600px; transform: translateX(-50%); width: 1000px; height: 1000px; }
+    .circle-2 { left: 50%; top: -450px; transform: translateX(-50%); width: 800px; height: 800px; }
+    .circle-3 { left: 50%; top: -300px; transform: translateX(-50%); width: 550px; height: 550px; }
+    .circle-4 { left: 50%; top: -150px; transform: translateX(-50%); width: 300px; height: 300px; }
+}

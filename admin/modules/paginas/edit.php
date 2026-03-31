@@ -3,9 +3,32 @@ require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/header.php';
 
 $id = $_GET['id'] ?? 0;
-$stmt = $pdo->prepare("SELECT * FROM paginas_ordem WHERE id = ?");
-$stmt->execute([$id]);
-$p = $stmt->fetch(PDO::FETCH_ASSOC);
+$slug_get = $_GET['slug'] ?? '';
+
+if ($slug_get) {
+    $stmt = $pdo->prepare("SELECT * FROM paginas_ordem WHERE slug = ?");
+    $stmt->execute([$slug_get]);
+    $p = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$p) {
+        // Auto-create missing page
+        $stmt = $pdo->prepare("INSERT INTO paginas_ordem (titulo, slug, conteudo) VALUES (?, ?, ?)");
+        $stmt->execute([ucfirst($slug_get), $slug_get, 'Conteúdo a ser definido...']);
+        $id = $pdo->lastInsertId();
+        
+        $stmt = $pdo->prepare("SELECT * FROM paginas_ordem WHERE id = ?");
+        $stmt->execute([$id]);
+        $p = $stmt->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $id = $p['id'];
+    }
+} else {
+    $stmt = $pdo->prepare("SELECT * FROM paginas_ordem WHERE id = ?");
+    $stmt->execute([$id]);
+    $p = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+if(!$p) { header("Location: index.php"); exit; }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'];

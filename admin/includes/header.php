@@ -153,80 +153,94 @@ require_once __DIR__ . '/auth_check.php';
             </div>
             
             <div class="list-group list-group-flush list-unstyled custom-scrollbar" style="overflow-y: auto; height: calc(100vh - var(--header-height));">
-                <a href="/oagb/admin/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/admin/index.php') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/admin/index.php') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-chart-line"></i> Dashboard
                 </a>
-                <a href="/oagb/admin/modules/estatisticas/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/estatisticas/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/estatisticas/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/estatisticas/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-chart-pie"></i> Inteligência & Dados
                 </a>
                 
-                <div class="sidebar-section-title">Conteúdo Institucional</div>
-                <a href="/oagb/admin/modules/paginas/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/paginas/') !== false ? 'active' : ''; ?>">
-                    <i class="fas fa-file-invoice"></i> Páginas (OAGB/História)
+                <div class="sidebar-section-title">A Ordem (Institucional)</div>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/paginas/edit.php?slug=apresentacao" class="list-group-item <?php echo (strpos($_SERVER['QUERY_STRING'] ?? '', 'slug=apresentacao') !== false) ? 'active' : ''; ?>">
+                    <i class="fas fa-info-circle"></i> Apresentação
                 </a>
-                <a href="/oagb/admin/modules/noticias/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/noticias/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/paginas/edit.php?slug=historia" class="list-group-item <?php echo (strpos($_SERVER['QUERY_STRING'] ?? '', 'slug=historia') !== false) ? 'active' : ''; ?>">
+                    <i class="fas fa-history"></i> História
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/bastonarios/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/bastonarios/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-user-graduate"></i> Galeria Bastonários
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/timeline/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/timeline/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-history"></i> Linha do Tempo
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/cooperacao/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/cooperacao/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-handshake"></i> Cooperação Internacional
+                </a>
+                
+                <div class="sidebar-section-title">Comunicação & Conteúdo</div>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/noticias/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/noticias/') !== false ? 'active' : ''; ?>">
                     <i class="far fa-newspaper"></i> Notícias & Artigos
                 </a>
-                <a href="/oagb/admin/modules/agenda/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/agenda/') !== false ? 'active' : ''; ?>">
-                    <i class="far fa-calendar-alt"></i> Agenda & Eventos
+                <a href="<?php echo ADMIN_PATH; ?>/modules/agenda/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/agenda/') !== false ? 'active' : ''; ?>">
+                    <i class="far fa-calendar-alt"></i> Agenda de Eventos
                 </a>
-                <a href="/oagb/admin/modules/comunicados/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/comunicados/') !== false ? 'active' : ''; ?>">
-                    <i class="fas fa-bullhorn"></i> Comunicados
+                <a href="<?php echo ADMIN_PATH; ?>/modules/contactos/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/contactos/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-envelope-open-text"></i> Mensagens & Contactos
                 </a>
-                <a href="/oagb/admin/modules/carousel/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/carousel/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/carousel/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/carousel/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-images"></i> Banners (Slider)
                 </a>
                 
-                <div class="sidebar-section-title">Membros & Pedidos</div>
-                <a href="/oagb/admin/modules/advogados/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/advogados/') !== false ? 'active' : ''; ?>">
-                    <i class="fas fa-user-tie"></i> Advogados Ativos
+                <div class="sidebar-section-title">Membros & Advocacia</div>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/advogados/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/advogados/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-user-tie"></i> Quadro de Advogados
                 </a>
-                <a href="/oagb/admin/modules/estagiarios/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/estagiarios/') !== false ? 'active' : ''; ?>">
-                    <i class="fas fa-user-graduate"></i> Estagiários
+                <a href="<?php echo ADMIN_PATH; ?>/modules/estagiarios/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/estagiarios/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-user-clock"></i> Estagiários
                 </a>
-                <a href="/oagb/admin/modules/inscricoes/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/inscricoes/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/solicitacoes/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/solicitacoes/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-balance-scale"></i> Pedidos de Advogado
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/inscricoes/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/inscricoes/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-file-signature"></i> Novas Inscrições
                 </a>
-                <a href="/oagb/admin/modules/comissoes/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/comissoes/') !== false ? 'active' : ''; ?>">
-                    <i class="fas fa-users-cog"></i> Comissões & Órgãos
+                <a href="<?php echo ADMIN_PATH; ?>/modules/orgaos-sociais/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/orgaos-sociais/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-sitemap"></i> Órgãos Sociais
                 </a>
-                <a href="/oagb/admin/modules/actas/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/actas/') !== false ? 'active' : ''; ?>">
-                    <i class="fas fa-file-signature"></i> Livro de Actas
+                <a href="<?php echo ADMIN_PATH; ?>/modules/comissoes/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/comissoes/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-users-cog"></i> Comissões & Grupos
                 </a>
-                <a href="/oagb/admin/modules/formacao/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/formacao/') !== false ? 'active' : ''; ?>">
-                    <i class="fas fa-graduation-cap"></i> Formação Contínua
-                </a>
-                <a href="/oagb/admin/modules/disciplinar/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/disciplinar/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/disciplinar/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/disciplinar/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-gavel"></i> Ética & Disciplina
                 </a>
 
-                <div class="sidebar-section-title">Arquivo & Decisões</div>
-                <a href="/oagb/admin/modules/documentos/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/documentos/') !== false ? 'active' : ''; ?>">
+                <div class="sidebar-section-title">Atos e Documentação</div>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/documentos/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/documentos/') !== false ? 'active' : ''; ?>">
                     <i class="far fa-file-pdf"></i> Repositório Público
                 </a>
-                <a href="/oagb/admin/modules/pareceres/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/pareceres/') !== false ? 'active' : ''; ?>">
-                    <i class="fas fa-balance-scale"></i> Pareceres & Juris
+                <a href="<?php echo ADMIN_PATH; ?>/modules/pareceres/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/pareceres/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-stamp"></i> Atos Oficiais (Comunicados, etc.)
                 </a>
 
                 <div class="sidebar-section-title">Gestão Operacional</div>
-                <a href="/oagb/admin/modules/financeiro/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/financeiro/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/financeiro/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/financeiro/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-wallet"></i> Tesouraria & Quotas
                 </a>
-                <a href="/oagb/admin/modules/eleicoes/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/eleicoes/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/eleicoes/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/eleicoes/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-vote-yea"></i> Atos Eleitorais
                 </a>
-                <a href="/oagb/admin/modules/newsletter/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/newsletter/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/newsletter/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/newsletter/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-mail-bulk"></i> Newsletter & Envio
                 </a>
                 
                 <div class="sidebar-section-title">Administração</div>
-                <a href="/oagb/admin/modules/utilizadores/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/utilizadores/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/utilizadores/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/utilizadores/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-user-shield"></i> Equipa (Staff)
                 </a>
-                <a href="/oagb/admin/modules/configuracoes/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/configuracoes/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-cog"></i> Configurações Site
                 </a>
-                <a href="/oagb/admin/modules/logs/" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/logs/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/logs/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/logs/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-history"></i> Logs de Auditoria
                 </a>
                 

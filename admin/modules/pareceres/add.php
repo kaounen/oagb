@@ -38,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="row mb-5 align-items-center">
     <div class="col-md-6">
-        <h2 class="page-title"><a href="index.php" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-2"></i></a> Novo Parecer / Deliberação</h2>
-        <div class="text-muted small">Adicione uma nova peca jurídica ao acervo oficial.</div>
+        <h2 class="page-title"><a href="index.php" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-2"></i></a> Novo Ato / Comunicado Oficial</h2>
+        <div class="text-muted small">Adicione um novo documento ao acervo oficial da Ordem.</div>
     </div>
 </div>
 
@@ -73,9 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="mb-4">
                             <label class="form-label text-uppercase fw-bold text-muted small">Tipo de Documento</label>
                             <select name="tipo" class="form-select border-0 shadow-sm py-2">
-                                <option value="parecer">Parecer</option>
-                                <option value="deliberacao">Deliberação</option>
-                                <option value="informativo">Informativo Jurídico</option>
+                                <option value="comunicado">Comunicado</option>
+                                <option value="parecer">Parecer Jurídico</option>
+                                <option value="deliberacao">Deliberação Oficial</option>
+                                <option value="anuncio">Anúncio / Aviso</option>
+                                <option value="edital">Edital Público</option>
                             </select>
                         </div>
                         

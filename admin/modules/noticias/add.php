@@ -5,34 +5,39 @@ require_once __DIR__ . '/../../includes/header.php';
 // Process Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'] ?? '';
-    $data = $_POST['data'] ?? date('Y-m-d');
-    $corpo = $_POST['corpo'] ?? '';
-    $legendaFoto1 = $_POST['legendaFoto1'] ?? '';
+    $data_pub = $_POST['data'] . ' ' . date('H:i:s');
+    $conteudo = $_POST['corpo'] ?? '';
+    $legenda = $_POST['legendaFoto1'] ?? '';
+    $cat_tipo = $_POST['categoria_tipo'] ?? 'Notícia';
     
-    // Simple photo upload handling for the first image
-    $foto1 = '';
+    // Image handling
+    $imagem = '';
     if (isset($_FILES['foto1']) && $_FILES['foto1']['error'] === UPLOAD_ERR_OK) {
         $upload_dir = __DIR__ . '/../../../../gestao/assets/uploads/files/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['foto1']['name'], PATHINFO_EXTENSION);
         $new_filename = uniqid('news_') . '.' . $file_ext;
-        
 
         if (move_uploaded_file($_FILES['foto1']['tmp_name'], $upload_dir . $new_filename)) {
             $imagem = $new_filename;
         }
     }
 
-    // Default values for new fields not present in the form
     $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo)));
-    $autor = $_SESSION['user_id'] ?? 1; // Assuming user_id is available in session, default to 1
-    $status = 'publicado'; // Default status
+    $autor = $_SESSION['admin_name'] ?? 'Admin';
+    $status = 1; // Ativo
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO noticias (titulo, conteudo, data_publicacao, data_criacao, imagem, legenda_imagem, slug, autor, status) VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ?)");
-        $stmt->execute([$titulo, $conteudo, $data_pub, $imagem, $legenda, $slug, $autor, $status]);
+        $stmt = $pdo->prepare("INSERT INTO noticias (titulo, conteudo, data_publicacao, imagem_destaque, resumo, categoria_tipo, slug, autor, ativo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$titulo, $conteudo, $data_pub, $imagem, $legenda, $cat_tipo, $slug, $autor, $status]);
         $new_id = $pdo->lastInsertId();
+
+        // Handle Multiple Attachments
+        require_once __DIR__ . '/../../includes/AttachmentHelper.php';
+        if (isset($_FILES['attachments'])) {
+            AttachmentHelper::save($pdo, 'noticia', $new_id, $_FILES['attachments']);
+        }
 
         // LOG ACTION
         require_once __DIR__ . '/../../includes/LogHelper.php';
@@ -79,6 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="card bg-light border-0">
                         <div class="card-body p-4">
                             <div class="mb-4">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Tipo de Conteúdo</label>
+                                <select name="categoria_tipo" class="form-select border-0 shadow-sm py-2">
+                                    <option value="Notícia">Notícia / Artigo</option>
+                                    <option value="Anúncio">Anúncio Oficial</option>
+                                    <option value="Aviso">Aviso / Nota</option>
+                                    <option value="Edital">Edital / Concurso</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
                                 <label class="form-label text-uppercase fw-bold text-muted small">Data de Publicação</label>
                                 <input type="date" name="data" class="form-control border-0" value="<?php echo date('Y-m-d'); ?>" required>
                             </div>
@@ -97,6 +112,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label class="form-label text-uppercase fw-bold text-muted small">Legenda da Imagem</label>
                                 <input type="text" name="legendaFoto1" class="form-control border-0" placeholder="Opcional...">
                             </div>
+
+                            <!-- Múltiplos Anexos Component -->
+                            <?php 
+                            $entity_type = 'noticia';
+                            $entity_id = 0;
+                            require __DIR__ . '/../../includes/partials/attachments_form.php'; 
+                            ?>
 
                             <hr class="my-4">
 

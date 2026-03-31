@@ -3,7 +3,7 @@
 // Already includes session_start via connect.php which is required by db.php
 
 if (!isset($_SESSION['admin_id'])) {
-    header("Location: /oagb/admin/login.php");
+    header("Location: " . ADMIN_PATH . "/login.php");
     exit;
 }
 

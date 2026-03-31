@@ -23,6 +23,15 @@ if (isset($pdo) && $pdo instanceof PDO) {
 }
 
 // Global path constants
-if (!defined('ADMIN_PATH')) define('ADMIN_PATH', '/oagb/admin');
-if (!defined('UPLOADS_PATH')) define('UPLOADS_PATH', '/oagb/gestao/assets/uploads/files/');
+if (!defined('ADMIN_PATH')) {
+    $script_name = str_replace('\\', '/', $_SERVER['SCRIPT_NAME']);
+    $admin_pos = strpos($script_name, '/admin');
+    if ($admin_pos !== false) {
+        define('ADMIN_PATH', substr($script_name, 0, $admin_pos + 6));
+    } else {
+        define('ADMIN_PATH', '/admin');
+    }
+}
+if (!defined('ROOT_URL')) define('ROOT_URL', str_replace('/admin', '', ADMIN_PATH));
+if (!defined('UPLOADS_PATH')) define('UPLOADS_PATH', ROOT_URL . '/gestao/assets/uploads/files/');
 ?>

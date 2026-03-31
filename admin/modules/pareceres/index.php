@@ -11,11 +11,11 @@ try {
 
 <div class="row mb-5 align-items-center">
     <div class="col-md-6">
-        <h2 class="page-title">Pareceres & Deliberações</h2>
-        <div class="text-muted small">Gestão de opiniões legais e decisões oficiais dos órgãos da Ordem.</div>
+        <h2 class="page-title">Atos Oficiais & Arquivo</h2>
+        <div class="text-muted small">Gestão centralizada de Comunicados, Pareceres, Deliberações e Avisos.</div>
     </div>
     <div class="col-md-6 text-md-end">
-        <a href="add.php" class="btn btn-login w-auto px-4"><i class="fas fa-file-medical me-2"></i> Novo Parecer</a>
+        <a href="add.php" class="btn btn-login w-auto px-4"><i class="fas fa-file-medical me-2"></i> Adicionar Novo Documento</a>
     </div>
 </div>
 

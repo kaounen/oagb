@@ -101,10 +101,10 @@
     display: block;
 }
 
-.texto-conteudo {
+.banner-inscricao .texto-conteudo {
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
-    color: #e0e0e0;
+    color: #e0e0e0 !important;
     line-height: 1.6;
     max-width: 450px;
 }
@@ -161,10 +161,11 @@
         font-size: 2.5rem;
     }
     
-    .texto-conteudo {
+    .banner-inscricao .texto-conteudo {
         max-width: 100%;
         margin: 0 0 30px auto; /* Mantém à direita */
         font-size: 1rem;
+        color: #e0e0e0 !important;
     }
     
     /* Manter o EFEITO HORIZONTAL no mobile, escalado para não tapar o texto todo */

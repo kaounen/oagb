@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../includes/header.php';
 
 // Fetch News
 try {
-    $stmt = $pdo->query("SELECT * FROM noticias ORDER BY data DESC, id DESC");
+    $stmt = $pdo->query("SELECT * FROM noticias ORDER BY data_publicacao DESC, id DESC");
     $noticias = $stmt->fetchAll();
 } catch (PDOException $e) {
     $noticias = [];
@@ -42,15 +42,15 @@ try {
                                 <td class="ps-4"><span class="badge bg-light text-muted border">#<?php echo $item['id']; ?></span></td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <?php if(!empty($item['foto1'])): ?>
-                                            <img src="/oagb/gestao/assets/uploads/files/<?php echo $item['foto1']; ?>" class="rounded me-3 border" style="width: 45px; height: 45px; object-fit: cover;">
+                                        <?php if(!empty($item['imagem_destaque'])): ?>
+                                            <img src="/oagb/gestao/assets/uploads/files/<?php echo $item['imagem_destaque']; ?>" class="rounded me-3 border" style="width: 45px; height: 45px; object-fit: cover;">
                                         <?php else: ?>
                                             <div class="rounded me-3 border bg-light d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="far fa-image text-muted opacity-25"></i></div>
                                         <?php endif; ?>
                                         <div class="fw-bold small"><?php echo $item['titulo']; ?></div>
                                     </div>
                                 </td>
-                                <td class="small"><?php echo date('d/m/Y', strtotime($item['data'])); ?></td>
+                                <td class="small"><?php echo !empty($item['data_publicacao']) ? date('d/m/Y', strtotime($item['data_publicacao'])) : '--/--/----'; ?></td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <a href="edit.php?id=<?php echo $item['id']; ?>" class="btn btn-sm btn-outline-secondary p-2 me-1" title="Editar"><i class="far fa-edit"></i></a>
