@@ -133,7 +133,9 @@ $has_header_image = !empty($header_image);
             .sidebar-link:hover, .sidebar-link.active { border-left-color: var(--primary-gold); border-radius: 8px; }
             .sidebar-badge { margin-left: auto; }
             .container { padding-left: 20px; padding-right: 20px; }
-            .mobile-quick-filters { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); z-index: 2100; width: 95%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-radius: 50px; padding: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex !important; align-items: center; justify-content: center; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid rgba(255,255,255,0.4); scrollbar-width: none; }
+            .mobile-quick-filters { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(30px); z-index: 2100; width: 95%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-radius: 50px; padding: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex !important; align-items: center; justify-content: center; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid rgba(255,255,255,0.4); scrollbar-width: none; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); pointer-events: none; }
+            .mobile-quick-filters.active-bar { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+            body:has(.navbar-collapse.show) .mobile-quick-filters { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transform: translateX(-50%) translateY(30px) !important; }
             .mobile-quick-filters::-webkit-scrollbar { display: none; }
             .filter-bubble { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(0,0,0,0.05); color: var(--primary-maroon); opacity: 0.5; transition: .3s; text-decoration: none; margin-right: 4px; -webkit-tap-highlight-color: transparent; outline: none; }
             .filter-bubble:last-child { margin-right: 0; }
@@ -472,6 +474,13 @@ $has_header_image = !empty($header_image);
                         currentId = $(spyTargets[i]).attr('id');
                         break;
                     }
+                }
+                
+                const $bar = $('.mobile-quick-filters');
+                if (scrollPos > 400 && window.innerWidth < 992) {
+                    $bar.addClass('active-bar');
+                } else {
+                    $bar.removeClass('active-bar');
                 }
                 
                 $sidebarLinks.removeClass('active');
