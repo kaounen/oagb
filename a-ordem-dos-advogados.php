@@ -46,7 +46,6 @@ try {
 $page_title = "A Ordem"; 
 $meta_description = "Conheça a história, missão e valores da Ordem dos Advogados da Guiné-Bissau";
 $header_image = 'gestao/assets/uploads/files/close-up-scales-justice-original-azul.jpg';
-$has_header_image = !empty($header_image);
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -76,10 +75,10 @@ $has_header_image = !empty($header_image);
         .bg-header { background-attachment: scroll !important; }
 
         /* === SUBPAGE BREADCRUMB BAR === */
-        .subpage-breadcrumb-bar { padding: 10px 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 10px; }
-        .subpage-breadcrumb-bar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.5px; transition: .3s; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+        .subpage-breadcrumb-bar { padding: 10px 0 0 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 20px; }
+        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: rgba(255,255,255,0.85) !important; text-decoration: none !important; font-size: 0.8rem; letter-spacing: 0.5px; transition: .3s; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
         .subpage-breadcrumb-bar a:hover { color: #fff; }
-        .subpage-breadcrumb-bar .bc-active { color: #fff; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.5px; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+        .subpage-breadcrumb-bar .bc-active { color: #fff; font-weight: 600; font-size: 0.8rem !important; opacity: 1 !important; }
         .bc-sep { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--primary-gold); margin: 0 10px; vertical-align: middle; opacity: 0.6; }
 
         .quick-links a {
@@ -95,13 +94,14 @@ $has_header_image = !empty($header_image);
                 background: transparent; padding: 10px 0; position: absolute; bottom: 0; left: 0; right: 0; 
                 z-index: 1045 !important; pointer-events: auto !important; 
             }
-            .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar .bc-active { 
+            .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span { 
                 font-size: 0.72rem; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
             }
-            .mobile-breadcrumb-bar .bc-active { font-weight: 500; }
+            .mobile-breadcrumb-bar .bc-active { font-weight: 500; font-size: 0.72rem !important; }
             .mobile-breadcrumb-bar .quick-links a { 
                 border-color: rgba(255,255,255,0.4); color: #fff; width: 28px; height: 28px; font-size: 0.65rem; 
             }
+            #header-carousel-mobile .carousel-item { min-height: 62vh !important; }
         }
 
         /* === PREMIUM TITLES === */
@@ -175,7 +175,7 @@ $has_header_image = !empty($header_image);
             font-size: 1.1rem;
         }
         .mvv-card .mvv-text {
-            color: #111923; font-weight: 600; font-size: 0.9rem; line-height: 1.7; margin: 0;
+            color: #111923; font-weight: 500; font-size: 0.85rem; line-height: 1.7; margin: 0;
         }
 
         .btn-descarregar { border-color: var(--primary-maroon) !important; color: var(--primary-maroon) !important; }
@@ -200,16 +200,16 @@ $has_header_image = !empty($header_image);
     <div class="container-fluid position-relative p-0 d-none d-lg-block">
         <?php include 'includes/navbar.php'; ?>
         <div class="container-fluid bg-primary bg-header d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: linear-gradient(rgba(17, 25, 35, 0.1), rgba(17, 25, 35, 0.45)), url('<?php echo $header_image; ?>') center center no-repeat; background-size: cover;">
-            <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 10px;">
-                <div class="container d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <span>Início</span>
+            <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 25px;">
+                <div class="container d-flex justify-content-between">
+                    <div class="d-flex align-items-center" style="margin-top: 12px;">
+                        <a href="index.php">Início</a>
                         <span class="bc-sep"></span>
-                        <span>A Ordem</span>
+                        <a href="a-ordem-dos-advogados.php">A Ordem</a>
                         <span class="bc-sep"></span>
                         <span class="bc-active">Apresentação</span>
                     </div>
-                    <div class="quick-links d-flex gap-2">
+                    <div class="quick-links d-flex align-items-center gap-2">
                         <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
                         <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
                         <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
@@ -221,7 +221,7 @@ $has_header_image = !empty($header_image);
 
     <!-- Mobile Header (Identical to Index in structure and size) -->
     <div class="d-block d-lg-none">
-        <div id="header-carousel-mobile" class="carousel slide" data-bs-ride="false" style="position: relative; overflow: visible;">
+        <div id="header-carousel-mobile" class="carousel slide" data-bs-ride="false" style="position: relative; overflow: hidden;">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img class="w-100" src="<?php echo htmlspecialchars($header_image); ?>" alt="OAGB Mobile Header">
@@ -246,12 +246,17 @@ $has_header_image = !empty($header_image);
                                         <i class="fa fa-globe" style="font-size: 1rem;"></i>
                                     </button>
                                     <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2050; margin-top: 10px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: absolute; left: 50%; transform: translateX(-50%); right: auto;">
-                                        <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1" style="font-size: 0.8rem;"><span class="me-2">🇵🇹</span> Português</a>
-                                        <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1" style="font-size: 0.8rem;"><span class="me-2">🇺🇸</span> English</a>
+                                        <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
+                                        <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
+                                        <a href="#" onclick="changeLanguage('fr'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
+                                        <a href="#" onclick="changeLanguage('es'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
+                                        <a href="#" onclick="changeLanguage('ar'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
+                                        <a href="#" onclick="changeLanguage('zh-CN'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
+                                        <a href="#" onclick="changeLanguage('ru'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
                                     </div>
                                 </div>
                                 <a href="portal/login.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center mobile-pill-btn">
-                                    <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Portal
+                                    <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Área Reservada
                                 </a>
                             </div>
                         </div>
@@ -266,10 +271,10 @@ $has_header_image = !empty($header_image);
                     <div class="mobile-breadcrumb-bar">
                         <div class="container d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center">
-                                <span class="text-white opacity-75">Início</span>
-                                <span class="dot-sep" style="width: 4px; height: 4px; background: #B1A276; display: inline-block; border-radius: 50%; margin: 0 8px; vertical-align: middle;"></span>
-                                <span class="text-white opacity-75">A Ordem</span>
-                                <span class="dot-sep" style="width: 4px; height: 4px; background: #B1A276; display: inline-block; border-radius: 50%; margin: 0 8px; vertical-align: middle;"></span>
+                                <a href="index.php" class="text-white opacity-75">Início</a>
+                                <span class="dot-sep" style="width: 4px; height: 4px; background: #B1A276; display: inline-block; border-radius: 50%; margin: 0 10px; vertical-align: middle;"></span>
+                                <a href="a-ordem-dos-advogados.php" class="text-white opacity-75">A Ordem</a>
+                                <span class="dot-sep" style="width: 4px; height: 4px; background: #B1A276; display: inline-block; border-radius: 50%; margin: 0 10px; vertical-align: middle;"></span>
                                 <span class="bc-active">Apresentação</span>
                             </div>
                             <div class="quick-links d-flex gap-1">
@@ -284,19 +289,21 @@ $has_header_image = !empty($header_image);
         </div>
     </div>
 
-    <!-- Introduction Section -->
-    <section class="py-5" style="background: #f7f5f0;">
+    <!-- ======= MAIN CONTENT ======= -->
+
+    <!-- 1. Introduction Section -->
+    <section class="py-4" style="background: #f7f5f0;">
         <div class="container py-lg-3">
-            <div class="texto-conteudo" style="font-size: 0.85rem; line-height: 1.7; text-align: justify; font-weight: 600; color: #111923 !important;">
+            <div class="texto-conteudo" style="font-size: 0.85rem; line-height: 1.7; text-align: justify;">
                 <?php echo oagb_fix_encoding($pagina->conteudo ?? $inst_info->historia ?? ''); ?>
             </div>
         </div>
     </section>
 
-    <!-- Missão, Visão e Valores -->
-    <section class="pt-2 pb-5" style="background: #f7f5f0;">
+    <!-- 2. Missão, Visão e Valores -->
+    <section class="pt-2 pb-4" style="background: #f7f5f0;">
         <div class="container">
-            <div class="text-center mb-5">
+            <div class="text-center mb-4">
                 <span class="section-label">Pilares Institucionais</span>
                 <h2 class="section-heading" style="font-size: 1.3rem;">Missão, Visão e Valores</h2>
             </div>
@@ -308,7 +315,9 @@ $has_header_image = !empty($header_image);
                         </div>
                         <div>
                             <h6 class="mb-2 fw-bold" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1rem;">Missão</h6>
-                            <p class="mvv-text mb-0"><?php echo oagb_fix_encoding($inst_info->missao ?? 'Defender os direitos, liberdades e garantias dos cidadãos.'); ?></p>
+                            <p class="mvv-text mb-0" style="font-size: 0.85rem; font-weight: 500;">
+                                <?php echo oagb_fix_encoding($inst_info->missao ?? 'Defender os direitos, liberdades e garantias dos cidadãos.'); ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -319,7 +328,9 @@ $has_header_image = !empty($header_image);
                         </div>
                         <div>
                             <h6 class="mb-2 fw-bold" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1rem;">Visão</h6>
-                            <p class="mvv-text mb-0"><?php echo oagb_fix_encoding($inst_info->visao ?? 'Ser referência na defesa da legalidade democrática.'); ?></p>
+                            <p class="mvv-text mb-0" style="font-size: 0.85rem; font-weight: 500;">
+                                <?php echo oagb_fix_encoding($inst_info->visao ?? 'Ser referência na defesa da legalidade democrática.'); ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -330,7 +341,9 @@ $has_header_image = !empty($header_image);
                         </div>
                         <div>
                             <h6 class="mb-2 fw-bold" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1rem;">Valores</h6>
-                            <p class="mvv-text mb-0"><?php echo oagb_fix_encoding($inst_info->valores ?? 'Independência, Isenção, Sigilo Profissional.'); ?></p>
+                            <p class="mvv-text mb-0" style="font-size: 0.85rem; font-weight: 500;">
+                                <?php echo oagb_fix_encoding($inst_info->valores ?? 'Independência, Isenção, Sigilo Profissional.'); ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -338,28 +351,30 @@ $has_header_image = !empty($header_image);
             <!-- Stats -->
             <div class="row g-3 mt-4 justify-content-center">
                 <div class="col-6 col-lg-3">
-                    <div class="info-card text-center py-4 px-2">
-                        <span style="font-size: 2.2rem; font-weight: 800; color: var(--primary-maroon); font-family: 'Libre Baskerville', serif;"><?php echo $total_advogados ?: '60+'; ?></span>
-                        <small class="d-block text-muted mt-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Advogados Inscritos</small>
+                    <div class="info-card text-center py-3 px-2">
+                        <span style="font-size: 2rem; font-weight: 800; color: var(--primary-maroon); font-family: 'Libre Baskerville', serif;"><?php echo $total_advogados ?: '60+'; ?></span>
+                        <small class="d-block text-muted mt-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px;">Advogados Inscritos</small>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
-                    <div class="info-card text-center py-4 px-2">
-                        <span style="font-size: 2.2rem; font-weight: 800; color: var(--primary-gold); font-family: 'Libre Baskerville', serif;"><?php echo $total_estagiarios ?: '15+'; ?></span>
-                        <small class="d-block text-muted mt-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Estagiários Ativos</small>
+                    <div class="info-card text-center py-3 px-2">
+                        <span style="font-size: 2rem; font-weight: 800; color: var(--primary-gold); font-family: 'Libre Baskerville', serif;"><?php echo $total_estagiarios ?: '15+'; ?></span>
+                        <small class="d-block text-muted mt-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px;">Estagiários Ativos</small>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Timeline -->
-    <section class="py-5" style="background: #fafafa;">
-        <div class="container">
+
+    <!-- 3. Timeline -->
+    <section class="pt-3 pb-3" style="background: #f7f5f0;">
+        <div class="container py-lg-3">
             <div class="text-center mb-5">
                 <span class="section-label">Jornada Institucional</span>
-                <h2 class="section-heading">Marcos Históricos</h2>
+                <h2 class="section-heading" style="font-size: 1.3rem;">Marcos Históricos</h2>
             </div>
+            
             <div class="tl-container">
                 <div class="tl-line"></div>
                 <?php if (!empty($timeline)): ?>
@@ -368,31 +383,74 @@ $has_header_image = !empty($header_image);
                             <div class="tl-dot"></div>
                             <div class="tl-year"><?php echo htmlspecialchars($marco->ano); ?></div>
                             <div class="tl-title"><?php echo oagb_fix_encoding($marco->titulo); ?></div>
-                            <p class="tl-desc" style="font-weight:600; color:#111923;"><?php echo oagb_fix_encoding($marco->descricao); ?></p>
+                            <p class="tl-desc"><?php echo oagb_fix_encoding($marco->descricao); ?></p>
                         </div>
                     <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="text-center py-5">
+                        <p class="text-muted">A preparar os marcos históricos…</p>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
     </section>
 
-    <!-- Estatutos CTA -->
-    <section class="py-5" style="background: #f7f5f0;">
-        <div class="container text-center">
-            <span class="section-label">Base Legal</span>
-            <h2 class="section-heading">Estatutos da OAGB</h2>
-            <p class="texto-conteudo mb-4 mx-auto" style="max-width: 600px; font-weight:600; color:#111923;">
-                Definem a organização e os direitos dos advogados. Consulte o documento integral.
-            </p>
-            <a href="estatutos-online.php" class="btn rounded-pill px-5 py-3 shadow-sm me-2" style="background: var(--primary-maroon); color: #fff; font-weight: 600;">Consultar Online</a>
-            <a href="docsoagb/ESTATUTOS-DA-OAGB.doc" class="btn btn-descarregar rounded-pill px-4 py-3" download>Descarregar</a>
+    <!-- 4. Estatutos CTA -->
+    <section class="pb-4" style="background: #f7f5f0;">
+        <div class="container py-2">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <span class="section-label">Base Legal</span>
+                    <h2 class="section-heading" style="font-size: 1.3rem;">Estatutos da OAGB</h2>
+                    <p class="texto-conteudo mb-4" style="max-width: 600px; margin: 0 auto; font-size: 0.85rem; line-height: 1.7;">
+                        Os Estatutos definem a organização, os deveres e os direitos dos advogados inscritos na Ordem. Consulte o documento integral aprovado em Assembleia Geral.
+                    </p>
+                    <a href="estatutos-online.php" class="btn rounded-pill px-5 py-3 shadow-sm me-2" style="background: var(--primary-maroon); color: #fff; font-weight: 600;">
+                        <i class="fas fa-book-open me-2"></i>Consultar Online
+                    </a>
+                    <a href="docsoagb/ESTATUTOS-DA-OAGB.doc" class="btn btn-descarregar rounded-pill px-4 py-3" download>
+                        <i class="fas fa-download me-2"></i>Descarregar
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
 
     <?php include 'includes/banner-inscricao.php'; ?>
     <?php include 'includes/footer.php'; ?>
+    
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top shadow-lg" style="background-color: var(--primary-maroon); border-color: var(--primary-maroon);"><i class="bi bi-arrow-up text-white"></i></a>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/main.js?v=<?php echo time(); ?>"></script>
+    <script>
+        function sharePage() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'OAGB - A Ordem',
+                    text: 'Conheça a Ordem dos Advogados da Guiné-Bissau',
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Ligação copiada!');
+            }
+        }
+        // Set timeline line height to match last entry
+        document.addEventListener('DOMContentLoaded', function() {
+            var entries = document.querySelectorAll('.tl-entry');
+            var line = document.querySelector('.tl-line');
+            if (entries.length && line) {
+                var last = entries[entries.length - 1];
+                var container = line.parentElement;
+                line.style.height = (last.offsetTop + 20) + 'px';
+            }
+        });
+    </script>
 </body>
 </html>

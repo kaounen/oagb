@@ -54,6 +54,7 @@ $has_header_image = !empty($header_image);
     <link href="css/banner-inscricao.css?v=<?php echo time(); ?>" rel="stylesheet">
     <link href="css/index-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
     <style>
+        html, body { overflow-x: hidden !important; width: 100%; position: relative; scroll-behavior: smooth; }
         :root {
             --primary-gold: #B1A276;
             --primary-maroon: #4D1C21;
@@ -69,14 +70,15 @@ $has_header_image = !empty($header_image);
             background: <?php echo $has_header_image ? "linear-gradient(rgba(17, 25, 35, 0.1), rgba(17, 25, 35, 0.45)), url('$header_image') center center / cover" : "var(--light-grey-bg)"; ?>;
             border-bottom: <?php echo $has_header_image ? 'none' : '1px solid #eee'; ?>;
         }
-        .subpage-breadcrumb-bar { padding: 10px 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 10px; }
-        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar .bc-active {
-            font-size: 0.8rem; letter-spacing: 0.5px; transition: .3s;
-            color: <?php echo $has_header_image ? 'rgba(255,255,255,0.85)' : '#777'; ?>;
+        .subpage-breadcrumb-bar { padding: 10px 0 0 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 20px; }
+        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span, .subpage-breadcrumb-bar .bc-active {
+            font-size: 0.8rem !important; letter-spacing: 0.5px; transition: .3s;
+            color: <?php echo $has_header_image ? 'rgba(255,255,255,0.85)' : '#777'; ?> !important;
+            text-decoration: none !important;
             <?php if($has_header_image): ?> text-shadow: 0 1px 4px rgba(0,0,0,0.6); <?php endif; ?>
         }
         .subpage-breadcrumb-bar a:hover { color: <?php echo $has_header_image ? '#fff' : 'var(--primary-gold)'; ?>; }
-        .subpage-breadcrumb-bar .bc-active { color: <?php echo $has_header_image ? '#fff' : 'var(--primary-maroon)'; ?>; font-weight: 600; }
+        .subpage-breadcrumb-bar .bc-active { color: <?php echo $has_header_image ? '#fff' : 'var(--primary-maroon)'; ?>; font-weight: 600; opacity: 1 !important; font-size: 0.8rem !important; }
         .bc-sep { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--primary-gold); margin: 0 10px; vertical-align: middle; opacity: 0.6; }
 
         .quick-links a {
@@ -93,13 +95,14 @@ $has_header_image = !empty($header_image);
                 background: transparent; padding: 10px 0; position: absolute; bottom: 0; left: 0; right: 0; 
                 z-index: 1045 !important; pointer-events: auto !important; 
             }
-            .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar .bc-active { 
-                font-size: 0.72rem; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span, .mobile-breadcrumb-bar .bc-active { 
+                font-size: 0.72rem !important; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
             }
-            .mobile-breadcrumb-bar .bc-active { font-weight: 500; }
+            .mobile-breadcrumb-bar .bc-active { font-weight: 500; opacity: 1 !important; }
             .mobile-breadcrumb-bar .quick-links a { 
                 border-color: rgba(255,255,255,0.4); color: #fff; width: 28px; height: 28px; font-size: 0.65rem; 
             }
+            #header-carousel-mobile .carousel-item { min-height: 62vh !important; }
         }
 
         /* Search Form Premium (Anexo 2) */
@@ -118,17 +121,18 @@ $has_header_image = !empty($header_image);
         .sidebar-link.active .sidebar-badge { background: #fff; border-color: var(--primary-gold); }
         
         .artigo-block { background: transparent; padding: 0 0 20px 0; border: none; border-bottom: 1px dashed #e0dcd2; margin-bottom: 20px; }
-        .artigo-title { font-family: 'Open Sans', sans-serif; font-size: 1rem !important; color: #B1A276; font-weight: 500 !important; margin-bottom: 8px; }
+        .artigo-title { font-family: 'Open Sans', sans-serif; font-size: 1rem !important; color: #B1A276; font-weight: 600 !important; margin-bottom: 8px; }
         .texto-conteudo { font-family: 'Open Sans', sans-serif; font-size: 0.85rem !important; line-height: 1.7; color: #111923 !important; text-align: justify; font-weight: 600; }
         
         /* Thematic section dividers */
-        .tema-section-title { font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 500; font-size: 1.4rem; padding-bottom: 10px; border-bottom: 1px solid rgba(77, 28, 33, 0.2); margin-top: 40px; margin-bottom: 25px; scroll-margin-top: 140px; }
+        .tema-section-title { font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 600; font-size: 1.3rem; padding-bottom: 10px; border-bottom: 1px solid rgba(77, 28, 33, 0.2); margin-top: 40px; margin-bottom: 25px; scroll-margin-top: 140px; }
         
         @media (max-width: 991px) {
             .mobile-sidebar-grid { display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; }
             .sidebar-link { font-size: 0.85rem; padding: 10px 12px; border-radius: 8px; border-left: 3px solid transparent; flex-direction: row; text-align: left; gap: 10px; justify-content: flex-start; align-items: center; }
             .sidebar-link:hover, .sidebar-link.active { border-left-color: var(--primary-gold); border-radius: 8px; }
             .sidebar-badge { margin-left: auto; }
+            .container { padding-left: 20px; padding-right: 20px; }
         }
     </style>
 </head>
@@ -140,15 +144,15 @@ $has_header_image = !empty($header_image);
         <?php include 'includes/navbar.php'; ?>
         <div class="container-fluid bg-header-custom">
             <div class="subpage-breadcrumb-bar">
-                <div class="container d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <small style="color: rgba(255,255,255,0.85);">Início</small>
+                <div class="container d-flex justify-content-between">
+                    <div class="d-flex align-items-center" style="margin-top: 12px;">
+                        <a href="index.php">Início</a>
                         <span class="bc-sep"></span>
-                        <small style="color: rgba(255,255,255,0.85);">A Ordem</small>
+                        <a href="a-ordem-dos-advogados.php">A Ordem</a>
                         <span class="bc-sep"></span>
                         <span class="bc-active">Estatutos</span>
                     </div>
-                    <div class="quick-links d-flex gap-2">
+                    <div class="quick-links d-flex align-items-center gap-2">
                         <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
                         <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
                         <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
@@ -159,8 +163,8 @@ $has_header_image = !empty($header_image);
     </div>
 
     <!-- Mobile Header (Identical to Index in structure and size) -->
-    <div class="d-block d-lg-none">
-        <div id="header-carousel-mobile" class="carousel slide" data-bs-ride="false" style="position: relative; overflow: visible;">
+    <div class="d-block d-lg-none" style="overflow: hidden !important; width: 100vw; position: relative;">
+        <div id="header-carousel-mobile" class="carousel slide" data-bs-ride="false" style="position: relative; overflow: hidden !important;">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img class="w-100" src="<?php echo htmlspecialchars($header_image); ?>" alt="OAGB Mobile Header">
@@ -185,12 +189,17 @@ $has_header_image = !empty($header_image);
                                         <i class="fa fa-globe" style="font-size: 1rem;"></i>
                                     </button>
                                     <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2050; margin-top: 10px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: absolute; left: 50%; transform: translateX(-50%); right: auto;">
-                                        <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1" style="font-size: 0.8rem;"><span class="me-2">🇵🇹</span> Português</a>
-                                        <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1" style="font-size: 0.8rem;"><span class="me-2">🇺🇸</span> English</a>
+                                        <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
+                                        <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
+                                        <a href="#" onclick="changeLanguage('fr'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
+                                        <a href="#" onclick="changeLanguage('es'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
+                                        <a href="#" onclick="changeLanguage('ar'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
+                                        <a href="#" onclick="changeLanguage('zh-CN'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
+                                        <a href="#" onclick="changeLanguage('ru'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
                                     </div>
                                 </div>
                                 <a href="portal/login.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center mobile-pill-btn">
-                                    <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Portal
+                                    <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Área Reservada
                                 </a>
                             </div>
                         </div>
@@ -205,9 +214,9 @@ $has_header_image = !empty($header_image);
                     <div class="mobile-breadcrumb-bar">
                         <div class="container d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center">
-                                <span class="text-white opacity-75">Início</span>
+                                <a href="index.php" class="text-white opacity-75">Início</a>
                                 <span class="dot-sep" style="width: 4px; height: 4px; background: #B1A276; display: inline-block; border-radius: 50%; margin: 0 8px; vertical-align: middle;"></span>
-                                <span class="text-white opacity-75">A Ordem</span>
+                                <a href="a-ordem-dos-advogados.php" class="text-white opacity-75">A Ordem</a>
                                 <span class="dot-sep" style="width: 4px; height: 4px; background: #B1A276; display: inline-block; border-radius: 50%; margin: 0 8px; vertical-align: middle;"></span>
                                 <span class="bc-active">Estatutos</span>
                             </div>
@@ -248,19 +257,20 @@ $has_header_image = !empty($header_image);
                 <!-- Articles Content Area -->
                 <div class="col-lg-9" id="containerTop">
                     <!-- Title, Search, and DOC Button -->
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end border-bottom pb-3 mb-3">
-                        <div class="mb-3 mb-md-0" style="flex: 1; padding-right: 15px;">
-                            <h2 style="font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 600; font-size: 1.4rem; margin-bottom: 3px;">Estatutos da Ordem dos Advogados da Guiné-Bissau</h2>
+                    <!-- Title, Search, and DOC Button -->
+                    <div class="border-bottom pb-4 mb-4">
+                        <div class="mb-4">
+                            <h2 style="font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 600; font-size: 1.3rem; margin-bottom: 5px;">Estatutos da Ordem dos Advogados da Guiné-Bissau</h2>
                             <p class="text-muted mb-0" style="font-size: 0.8rem;">Aprovado na Assembleia Geral de 28 de Julho de 2018 • <strong id="artigoCounter" style="color: var(--primary-gold);"><?php echo $total_artigos; ?></strong> Artigos</p>
                         </div>
-                        <div class="d-flex align-items-center mt-3 mt-md-0 w-100 justify-content-md-end" style="gap: 10px; max-width: 350px;">
-                            <div class="search-wrapper flex-grow-1" style="border-radius: 8px; background: #fff; border: 1px solid rgba(177,162,118,0.4); display: flex; align-items: center; padding: 0 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); height: 38px;">
-                                <i class="fa fa-search text-muted me-2" style="font-size: 0.95rem; opacity: 0.6;"></i>
-                                <input type="text" id="searchEstatutos" placeholder="Pesquisar..." style="border: none; background: transparent; width: 100%; font-size: 0.9rem; outline: none; color: #333; padding: 0;">
-                                <i class="fas fa-times" id="clearSearch" style="cursor: pointer; color: #ccc; display: none; margin-left: 5px; font-size: 1rem;"></i>
+                        <div class="d-flex align-items-center w-100" style="gap: 12px;">
+                            <div class="search-wrapper flex-grow-1" style="border-radius: 50px; background: #fff; border: 1px solid rgba(177,162,118,0.4); display: flex; align-items: center; padding: 0 15px; box-shadow: 0 3px 15px rgba(0,0,0,0.05); height: 46px;">
+                                <i class="fa fa-search text-muted me-2" style="font-size: 1rem; opacity: 0.6;"></i>
+                                <input type="text" id="searchEstatutos" placeholder="Pesquisar nos estatutos..." style="border: none; background: transparent; width: 100%; font-size: 0.95rem; outline: none; color: #333; padding: 0;">
+                                <i class="fas fa-times" id="clearSearch" style="cursor: pointer; color: #ccc !important; display: none !important; margin-left: 8px; font-size: 1rem;"></i>
                             </div>
-                            <a href="docsoagb/oagb_estatutos.pdf" target="_blank" class="btn btn-sm d-flex align-items-center justify-content-center flex-shrink-0" style="background: var(--primary-maroon); color: #fff; border-radius: 8px; padding: 0 16px; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.5px; white-space: nowrap; height: 38px;">
-                                <i class="fas fa-download me-1"></i> DOC
+                            <a href="docsoagb/oagb_estatutos.pdf" target="_blank" class="btn d-flex align-items-center justify-content-center flex-shrink-0 rounded-circle shadow-sm" style="background: var(--primary-maroon); color: #fff; width: 46px; height: 46px; transition: .3s; border: none;" title="Descarregar Estatutos">
+                                <i class="fas fa-download" style="font-size: 1.1rem;"></i>
                             </a>
                         </div>
                     </div>
