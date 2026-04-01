@@ -133,12 +133,14 @@ $has_header_image = !empty($header_image);
             .sidebar-link:hover, .sidebar-link.active { border-left-color: var(--primary-gold); border-radius: 8px; }
             .sidebar-badge { margin-left: auto; }
             .container { padding-left: 20px; padding-right: 20px; }
-            .mobile-quick-filters { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); z-index: 2100; width: 90%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-radius: 50px; padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex !important; align-items: center; justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid rgba(255,255,255,0.4); scrollbar-width: none; }
+            .mobile-quick-filters { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); z-index: 2100; width: 95%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-radius: 50px; padding: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex !important; align-items: center; justify-content: center; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid rgba(255,255,255,0.4); scrollbar-width: none; }
             .mobile-quick-filters::-webkit-scrollbar { display: none; }
-            .filter-bubble { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(0,0,0,0.05); color: var(--primary-maroon); opacity: 0.5; transition: .3s; text-decoration: none; margin-right: 6px; }
+            .filter-bubble { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(0,0,0,0.05); color: var(--primary-maroon); opacity: 0.5; transition: .3s; text-decoration: none; margin-right: 4px; -webkit-tap-highlight-color: transparent; outline: none; }
             .filter-bubble:last-child { margin-right: 0; }
-            .filter-bubble.active { opacity: 1; background: var(--primary-maroon); color: #fff; transform: scale(1.1); box-shadow: 0 4px 10px rgba(77,28,33,0.3); }
+            .filter-bubble.active { opacity: 1; background: var(--primary-maroon); color: #fff; transform: scale(1.15); box-shadow: 0 4px 10px rgba(77,28,33,0.3); }
+            .filter-bubble:active, .filter-bubble:focus { background: rgba(77, 28, 33, 0.15); color: var(--primary-maroon); outline: none; box-shadow: none; }
             .filter-bubble:hover { opacity: 0.95; transform: scale(1.05); }
+            .filter-bubble i { font-size: 0.8rem !important; }
         }
     </style>
 </head>
