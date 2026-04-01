@@ -133,6 +133,12 @@ $has_header_image = !empty($header_image);
             .sidebar-link:hover, .sidebar-link.active { border-left-color: var(--primary-gold); border-radius: 8px; }
             .sidebar-badge { margin-left: auto; }
             .container { padding-left: 20px; padding-right: 20px; }
+            .mobile-quick-filters { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); z-index: 2100; width: 90%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-radius: 50px; padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex !important; align-items: center; justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid rgba(255,255,255,0.4); scrollbar-width: none; }
+            .mobile-quick-filters::-webkit-scrollbar { display: none; }
+            .filter-bubble { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(0,0,0,0.05); color: var(--primary-maroon); opacity: 0.5; transition: .3s; text-decoration: none; margin-right: 6px; }
+            .filter-bubble:last-child { margin-right: 0; }
+            .filter-bubble.active { opacity: 1; background: var(--primary-maroon); color: #fff; transform: scale(1.1); box-shadow: 0 4px 10px rgba(77,28,33,0.3); }
+            .filter-bubble:hover { opacity: 0.95; transform: scale(1.05); }
         }
     </style>
 </head>
@@ -252,6 +258,18 @@ $has_header_image = !empty($header_image);
                             <?php endforeach; ?>
                         </div>
                     </div>
+                </div>
+
+                <!-- Floating Mobile Filters -->
+                <div class="d-lg-none mobile-quick-filters">
+                    <a href="#containerTop" class="filter-bubble active p-0" title="Topo">
+                        <i class="fas fa-arrow-up" style="font-size: 0.9rem;"></i>
+                    </a>
+                    <?php foreach ($temas as $tema_nome => $tema_info): ?>
+                    <a href="#<?php echo $tema_info['slug']; ?>" class="filter-bubble p-0" title="<?php echo htmlspecialchars($tema_nome); ?>">
+                        <i class="<?php echo $tema_info['icon']; ?>" style="font-size: 0.9rem;"></i>
+                    </a>
+                    <?php endforeach; ?>
                 </div>
 
                 <!-- Articles Content Area -->
@@ -408,9 +426,11 @@ $has_header_image = !empty($header_image);
             }
 
             // Click Themes -> Scroll (No filtering)
-            $sidebarLinks.on('click', function(e) {
+            const $mobileBubbles = $('.filter-bubble');
+            
+            $sidebarLinks.add($mobileBubbles).on('click', function(e) {
                 e.preventDefault();
-                const targetId = $(this).data('target');
+                const targetId = $(this).attr('href').substring(1) || $(this).data('target');
                 const $targetElement = $('#' + targetId);
                 
                 if($targetElement.length) {
@@ -453,7 +473,18 @@ $has_header_image = !empty($header_image);
                 }
                 
                 $sidebarLinks.removeClass('active');
+                $mobileBubbles.removeClass('active');
+
                 $('[data-target="' + currentId + '"]').addClass('active');
+                $mobileBubbles.filter('[href="#' + currentId + '"]').addClass('active');
+                
+                // Auto-scroll the filter bar to keep the active bubble visible
+                const $activeBubble = $mobileBubbles.filter('.active');
+                if ($activeBubble.length && window.innerWidth < 992) {
+                    const $bar = $('.mobile-quick-filters');
+                    const scrollLeft = $activeBubble.position().left + $bar.scrollLeft() - ($bar.width() / 2) + ($activeBubble.width() / 2);
+                    $bar.stop().animate({ scrollLeft: scrollLeft }, 200);
+                }
             });
         });
     </script>

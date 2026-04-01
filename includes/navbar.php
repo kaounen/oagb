@@ -3,7 +3,7 @@
 $pagina_atual = basename($_SERVER['PHP_SELF']);
 
 // Páginas do menu ORDEM
-$ordem_pages = ['apresentacao-historia.php', 'bastonario-ordem.php', 'orgaos-sociais.php', 'comissoes-especializadas.php', 'cooperacao-institucional.php'];
+$ordem_pages = ['a-ordem-dos-advogados.php', 'bastonario-ordem.php', 'orgaos-sociais.php', 'comissoes-especializadas.php', 'cooperacao-institucional.php'];
 
 // Páginas do menu ADVOGADOS
 $advogados_pages = ['pesquisa-advogados.php', 'advogados-inscritos.php', 'pesquisa-estagiarios.php', 'estagiarios-inscritos.php', 'solicitacao-advogados.php', 'inscricao-ordem.php'];
@@ -35,7 +35,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle <?php echo $ordem_ativo ? 'active' : ''; ?>" data-bs-toggle="dropdown">ORDEM</a>
                 <div class="dropdown-menu m-0">
-                    <a href="apresentacao-historia.php" class="dropdown-item">Apresentação e História</a>
+                    <a href="a-ordem-dos-advogados.php" class="dropdown-item">Apresentação e História</a>
 					<a href="bastonario-ordem.php" class="dropdown-item">O Bastonário</a>
                     <a href="orgaos-sociais.php" class="dropdown-item">Órgãos Sociais</a>
                     <a href="comissoes-especializadas.php" class="dropdown-item">Comissões Especializadas</a>
@@ -86,6 +86,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
 </nav>
 
 <style>
+
 /* Correção para menu mobile */
 @media (max-width: 991.98px) {
     .navbar {

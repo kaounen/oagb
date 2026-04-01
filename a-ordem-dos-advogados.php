@@ -200,7 +200,7 @@ $header_image = 'gestao/assets/uploads/files/close-up-scales-justice-original-az
     <div class="container-fluid position-relative p-0 d-none d-lg-block">
         <?php include 'includes/navbar.php'; ?>
         <div class="container-fluid bg-primary bg-header d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: linear-gradient(rgba(17, 25, 35, 0.1), rgba(17, 25, 35, 0.45)), url('<?php echo $header_image; ?>') center center no-repeat; background-size: cover;">
-            <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 25px;">
+            <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 20px;">
                 <div class="container d-flex justify-content-between">
                     <div class="d-flex align-items-center" style="margin-top: 12px;">
                         <a href="index.php">Início</a>
