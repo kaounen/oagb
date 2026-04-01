@@ -198,23 +198,27 @@ a.linkSublinhado:hover {
 /* Mobile navbar - corrigir layout do botão menu */
 @media (max-width: 991.98px) {
     #header-carousel-mobile .carousel-item {
-        min-height: 110vh;
+        min-height: 85vh; /* Ajustado para equilíbrio entre 75vh e 100vh */
     }
 
     #header-carousel-mobile .carousel-caption {
-        bottom: 10% !important;
+        top: 72% !important; /* Posição inicial preferida */
+        bottom: auto !important;
         padding: 0 3.5rem;
+        z-index: 1040;
+    }
+
+    /* LÓGICA DINÂMICA: Descer as setas apenas quando o menu está aberto */
+    #header-carousel-mobile:has(.navbar-collapse.show) .carousel-control-prev,
+    #header-carousel-mobile:has(.navbar-collapse.show) .carousel-control-next {
+        top: 85% !important; /* Desloca as setas para acompanhar a expansão do menu */
+        transition: top 0.3s ease;
     }
 
     /* Corrigir z-index do botão para aparecer acima do conteúdo e fact-cards */
     #header-carousel-mobile .carousel-caption .btn {
         position: relative;
         z-index: 1050;
-    }
-
-    /* Garantir que o carousel-caption tenha prioridade sobre fact-cards */
-    #header-carousel-mobile .carousel-caption {
-        z-index: 1040;
     }
 
     /* Garantir que a secção Facts não interfira with o carousel */
@@ -225,6 +229,7 @@ a.linkSublinhado:hover {
 
     /* Reduzir padding-bottom da secção Facts para diminuir espaço até Artigos */
     .container-fluid.facts {
+        padding-top: 2rem !important;
         padding-bottom: 0rem !important;
     }
 

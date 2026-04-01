@@ -379,10 +379,11 @@
     /* Ajustar posição das setas do slider no mobile para ficarem alinhadas ao texto */
     #header-carousel-mobile .carousel-control-prev,
     #header-carousel-mobile .carousel-control-next {
-        top: auto !important;
-        bottom: 18% !important;
-        height: 150px !important;
-        width: 15% !important; /* Limit arrow coverage on sides */
+        top: 72% !important; /* Posição estável preferida pelo utilizador */
+        bottom: auto !important;
+        height: 60px !important;
+        width: 15% !important;
+        z-index: 1070 !important; /* Visibilidade prioritária */
     }
 
     .mobile-navbar-wrapper .navbar {
