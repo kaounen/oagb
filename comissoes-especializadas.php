@@ -1,63 +1,25 @@
 <?php
-// Iniciar sessão e incluir ficheiros necessários
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'includes/functions.php';
 require_once 'connect.php';
 
-// Buscar comissões da base de dados
-try {
-    $stmt = $pdo->prepare("
-        SELECT * FROM comissoes 
-        WHERE ativo = 1 
-        ORDER BY ordem_exibicao ASC, nome ASC
-    ");
-    $stmt->execute();
-    $comissoes = $stmt->fetchAll();
-    
-    // Se não houver comissões na BD, usar dados exemplo
-    if (empty($comissoes)) {
-        $comissoes = [
-            (object)[
-                'nome' => 'Comissão de Direitos Humanos',
-                'descricao' => 'Responsável pela defesa e promoção dos direitos humanos, acompanhamento de casos de violação e elaboração de pareceres.',
-                'presidente' => 'Dr. João Silva',
-                'membros' => 'Dra. Maria Santos, Dr. Pedro Costa, Dra. Ana Gomes',
-                'area_atuacao' => 'Direitos Humanos'
-            ],
-            (object)[
-                'nome' => 'Comissão de Formação e Estágio',
-                'descricao' => 'Coordena os programas de formação contínua, estágios profissionais e avaliação de candidatos.',
-                'presidente' => 'Dra. Isabel Mendes',
-                'membros' => 'Dr. Carlos Fernandes, Dra. Sofia Rodrigues, Dr. Manuel Pereira',
-                'area_atuacao' => 'Formação'
-            ],
-            (object)[
-                'nome' => 'Comissão de Ética e Deontologia',
-                'descricao' => 'Zela pelo cumprimento do código de ética profissional e emite pareceres sobre questões deontológicas.',
-                'presidente' => 'Dr. António Martins',
-                'membros' => 'Dra. Teresa Oliveira, Dr. Francisco Sousa, Dra. Catarina Lima',
-                'area_atuacao' => 'Ética'
-            ],
-            (object)[
-                'nome' => 'Comissão de Legislação',
-                'descricao' => 'Analisa propostas legislativas, elabora pareceres técnicos e propõe alterações legislativas.',
-                'presidente' => 'Dr. Ricardo Alves',
-                'membros' => 'Dra. Beatriz Ferreira, Dr. Luís Cardoso, Dra. Helena Pinto',
-                'area_atuacao' => 'Legislação'
-            ],
-            (object)[
-                'nome' => 'Comissão de Apoio Judiciário',
-                'descricao' => 'Coordena o sistema de apoio judiciário, garantindo o acesso à justiça aos cidadãos carenciados.',
-                'presidente' => 'Dra. Marta Ribeiro',
-                'membros' => 'Dr. José Tavares, Dra. Sandra Correia, Dr. Paulo Nunes',
-                'area_atuacao' => 'Apoio Judiciário'
-            ]
-        ];
+if (!function_exists('oagb_fix_encoding')) {
+    function oagb_fix_encoding($text) {
+        if (empty($text)) return '';
+        $search  = ['þÒ', 'þ', 'Ú', 'Ò', 'Ý', 'ß', '¾', 'experiância', 'C¾digo', 'Bancßrio', 'jurÝdico', 'BasÝlio', 'Janußrio', 'Bastonßrio', 'paÝs', 'JurÝdico', 'Direitos Humanos', 'ComissÒo'];
+        $replace = ['ção', 'ç', 'é', 'ã', 'í', 'á', 'ó', 'experiência', 'Código', 'Bancário', 'jurídico', 'Basílio', 'Januário', 'Bastonário', 'país', 'Jurídico', 'Direitos Humanos', 'Comissão'];
+        $fixed = str_replace($search, $replace, $text);
+        
+        $bin_search = ["\xDF", "\xDD", "\xBE", "\xDA", "Ã¡", "Ã-", "Ã³", "Ã©", "Ã§", "Ã£"];
+        $bin_replace = ["á", "í", "ó", "é", "á", "í", "ó", "é", "ç", "ã"];
+        return str_replace($bin_search, $bin_replace, $fixed);
     }
-    
+}
+
+try {
+    $stmt = $pdo->prepare("SELECT * FROM comissoes WHERE ativo = 1 ORDER BY nome ASC");
+    $stmt->execute();
+    $comissoes = $stmt->fetchAll(PDO::FETCH_OBJ);
 } catch (Exception $e) {
     error_log("Erro ao buscar comissões: " . $e->getMessage());
     $comissoes = [];
@@ -65,266 +27,156 @@ try {
 
 $page_title = "Comissões Especializadas";
 $meta_description = "Conheça as Comissões Especializadas da Ordem dos Advogados da Guiné-Bissau";
+$header_image = 'uploads/justice-symbol-legal-law.jpg';
 ?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <?php include 'includes/meta_tags_include.php'; ?>
-    
-    <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
     <link href="lib/animate/animate.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/header-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/footer-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/banner-inscricao.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/index-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
 
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
-    
     <style>
-        .commission-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            transition: all 0.3s ease;
+        :root {
+            --primary-gold: #B1A276;
+            --primary-maroon: #4D1C21;
+            --dark-navy: #111923;
         }
-        
-        .commission-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        body { font-family: 'Open Sans', sans-serif; background-color: #fafafa; }
+        .bg-header { background-attachment: scroll !important; }
+
+        /* === SUBPAGE BREADCRUMB BAR === */
+        .subpage-breadcrumb-bar { padding: 10px 0 0 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 20px; }
+        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: rgba(255,255,255,0.85) !important; text-decoration: none !important; font-size: 0.8rem; letter-spacing: 0.5px; transition: .3s; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+        .subpage-breadcrumb-bar a:hover { color: #fff; }
+        .subpage-breadcrumb-bar .bc-active { color: #fff; font-weight: 600; font-size: 0.8rem !important; opacity: 1 !important; }
+        .bc-sep { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--primary-gold); margin: 0 10px; vertical-align: middle; opacity: 0.6; }
+
+        .quick-links a {
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3);
+            display: inline-flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.9); transition: .3s; font-size: 0.8rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            line-height: 1; vertical-align: middle;
         }
-        
-        .commission-header {
-            background: linear-gradient(135deg, #c18046 0%, #a5684e 100%);
-            color: white;
-            padding: 30px;
-            position: relative;
-        }
-        
-        .commission-header::after {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: white;
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .commission-icon {
-            width: 70px;
-            height: 70px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-        
-        .commission-body {
-            padding: 40px 30px 30px;
-        }
-        
-        .commission-name {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .commission-area {
-            display: inline-block;
-            padding: 5px 15px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        
-        .commission-description {
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-        
-        .commission-info {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .commission-info h5 {
-            font-family: 'Libre Baskerville', serif;
-            color: #4D1C21;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        
-        .commission-info p {
-            margin-bottom: 5px;
-            color: #666;
-        }
-        
-        .member-list {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .member-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .member-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .member-list li::before {
-            content: '▸';
-            color: #c18046;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .intro-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 50px;
-        }
-        
-        .intro-section h2 {
-            font-family: 'Libre Baskerville', serif;
-            color: #4D1C21;
-            margin-bottom: 20px;
-        }
-        
-        .stats-section {
-            margin: 50px 0;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-        
-        .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #c18046;
-            margin-bottom: 10px;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-size: 1.1rem;
-        }
-        
-        .contact-cta {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            margin-top: 50px;
-        }
-        
-        .contact-cta h3 {
-            color: white;
-            font-family: 'Libre Baskerville', serif;
-            margin-bottom: 20px;
-        }
-        
-        @media (max-width: 768px) {
-            .commission-header {
-                padding: 20px;
+        .quick-links a:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: var(--primary-gold); }
+
+        /* Mobile specific breadcrumbs overlaid on bottom of header */
+        @media (max-width: 991px) {
+            .mobile-breadcrumb-bar { 
+                background: transparent; padding: 10px 0; position: absolute; bottom: 0; left: 0; right: 0; 
+                z-index: 1045 !important; pointer-events: auto !important; 
             }
-            
-            .commission-body {
-                padding: 30px 20px 20px;
+            .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span { 
+                font-size: 0.72rem; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
             }
-            
-            .intro-section {
-                padding: 30px 20px;
+            .mobile-breadcrumb-bar .bc-active { font-weight: 500; font-size: 0.72rem !important; }
+            .mobile-breadcrumb-bar .quick-links a { 
+                border-color: rgba(255,255,255,0.4); color: #fff; width: 28px; height: 28px; font-size: 0.65rem; 
             }
+            #header-carousel-mobile .carousel-item { min-height: 62vh !important; }
         }
+
+        /* === PREMIUM TITLES === */
+        .section-label { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; color: var(--primary-gold); display: block; margin-bottom: 12px; }
+        .section-heading { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 2.2rem; line-height: 1.3; margin-bottom: 20px; }
+        .section-heading::after { content: ''; display: block; width: 50px; height: 3px; background: var(--primary-gold); margin-top: 15px; }
+        .text-center .section-heading::after { margin-left: auto; margin-right: auto; }
+
+        /* === COMISSÕES CARDS === */
+        .commission-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; transition: all 0.3s ease; border: 1px solid #f0ece4; }
+        .commission-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(177, 162, 118, 0.15); }
+        .commission-header { background: linear-gradient(135deg, var(--primary-maroon) 0%, #7d2e38 100%); color: white; padding: 40px 30px; position: relative; }
+        .commission-icon { width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 20px; backdrop-filter: blur(5px); color: white; }
+        .commission-name { font-family: 'Libre Baskerville', serif; font-size: 1.3rem; margin-bottom: 15px; font-weight: 700; color: #fff !important; }
+        .commission-area { display: inline-block; padding: 4px 14px; background: rgba(255, 255, 255, 0.15); color: #fff; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2); }
+        .commission-body { padding: 40px 30px 40px; }
+        .commission-description { color: #666; line-height: 1.8; margin-bottom: 30px; font-size: 0.95rem; }
+        .commission-info { background: #fdfbf7; border-radius: 16px; padding: 25px; margin-bottom: 20px; border: 1px solid #f9f6f0; }
+        .commission-info h5 { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-size: 1rem; margin-bottom: 12px; font-weight: 700; border-bottom: 1px solid rgba(177, 162, 118, 0.2); padding-bottom: 8px; }
+        .commission-info p { margin-bottom: 5px; color: #444; font-weight: 600; font-size: 0.9rem; }
+        .member-list { list-style: none; padding: 0; margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
+        .member-list li { background: #fff; border: 1px solid #eee; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; color: #666; }
+        
+        .intro-section { background: #fff; border-radius: 24px; padding: 50px; margin-bottom: 60px; border: 1px solid #f0ece4; box-shadow: 0 15px 45px rgba(0,0,0,0.03); }
+        .intro-section h2 { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; }
+        
+        .stat-card { background: #fff; border-radius: 20px; padding: 40px; text-align: center; border: 1px solid #f0ece4; transition: .3s; }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(177, 162, 118, 0.1); }
+        .stat-number { font-size: 3rem; font-weight: 800; color: var(--primary-gold); margin-bottom: 10px; font-family: 'Libre Baskerville', serif; }
+        .stat-label { color: #888; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        .btn-cta-gold { background: var(--primary-gold); color: #fff; border-radius: 50px; padding: 12px 30px; font-weight: 700; transition: .3s; border: none; }
+        .btn-cta-gold:hover { background: var(--primary-maroon); color: #fff; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
     </style>
 </head>
 
 <body>
-    <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner"></div>
-    </div>
-    <!-- Spinner End -->
 
-        <?php include 'includes/topbar.php'; ?>
+    <?php include 'includes/topbar.php'; ?>
 
-    <!-- Navbar Start -->
-    <div class="container-fluid position-relative p-0">
+    <!-- Desktop Header -->
+    <div class="container-fluid position-relative p-0 d-none d-lg-block">
         <?php include 'includes/navbar.php'; ?>
-
-        <div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
-            <div class="row py-5">
-                <div class="col-12 pt-lg-5 mt-lg-5 text-center">
-                    <h1 class="display-4 text-white animated zoomIn">Comissões Especializadas</h1>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a href="index.php" class="text-white">Início</a></li>
-                            <li class="breadcrumb-item"><a href="#" class="text-white">Ordem</a></li>
-                            <li class="breadcrumb-item text-white active" aria-current="page">Comissões Especializadas</li>
-                        </ol>
-                    </nav>
+        <div class="container-fluid bg-primary bg-header d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: linear-gradient(rgba(17, 25, 35, 0.1), rgba(17, 25, 35, 0.45)), url('<?php echo $header_image; ?>') center center no-repeat; background-size: cover;">
+            <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 20px;">
+                <div class="container d-flex justify-content-between">
+                    <div class="d-flex align-items-center" style="margin-top: 12px;">
+                        <a href="index.php">Início</a>
+                        <span class="bc-sep"></span>
+                        <a href="ordem-dos-advogados.php">A Ordem</a>
+                        <span class="bc-sep"></span>
+                        <span class="bc-active">Comissões Especializadas</span>
+                    </div>
+                    <div class="quick-links d-flex align-items-center gap-2">
+                        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+                        <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Navbar End -->
 
-    <!-- Content Start -->
-    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <!-- Introdução -->
+    <!-- Mobile Header -->
+    <?php 
+    $mobile_breadcrumbs = [
+        ['label' => 'Início', 'url' => 'index.php'],
+        ['label' => 'A Ordem', 'url' => 'ordem-dos-advogados.php'],
+        ['label' => 'Comissões Especializadas', 'active' => true]
+    ];
+    include 'includes/mobile-header-subpage.php'; 
+    ?>
+
+
+    <!-- ======= MAIN CONTENT ======= -->
+    <section class="py-5" style="background: #f7f5f0;">
+        <div class="container py-lg-3">
+            
             <div class="intro-section">
                 <div class="row align-items-center">
                     <div class="col-lg-8">
-                        <h2>Trabalho Especializado para Melhor Servir</h2>
-                        <p class="lead">
-                            As Comissões Especializadas da OAGB são órgãos técnicos consultivos que desenvolvem 
-                            trabalho especializado em diversas áreas do Direito, contribuindo para a excelência 
-                            da advocacia e para o desenvolvimento jurídico na Guiné-Bissau.
+                        <span class="section-label">Órgãos Técnicos</span>
+                        <h2 class="section-heading">Especialização e Excelência</h2>
+                        <p class="lead mb-4">
+                            As Comissões Especializadas da OAGB são órgãos técnicos consultivos que desenvolvem trabalho altamente especializado, contribuindo para a modernização da justiça e defesa da classe.
                         </p>
-                        <p>
-                            Cada comissão é composta por advogados com reconhecida competência e experiência 
-                            nas respetivas áreas, trabalhando de forma voluntária para o benefício da classe 
-                            e da sociedade.
+                        <p class="text-muted mb-0">
+                            Compostas por advogados de mérito em diversas áreas do Direito, estas comissões garantem que a Ordem esteja presente nos grandes debates jurídicos nacionais e internacionais.
                         </p>
                     </div>
-                    <div class="col-lg-4 text-center">
-                        <div class="stat-card">
-                            <div class="stat-number"><?php echo count($comissoes); ?></div>
+                    <div class="col-lg-4 mt-4 mt-lg-0">
+                        <div class="stat-card shadow-sm">
+                            <div class="stat-number" data-toggle="counter-up"><?php echo count($comissoes); ?></div>
                             <div class="stat-label">Comissões Ativas</div>
                         </div>
                     </div>
@@ -333,48 +185,48 @@ $meta_description = "Conheça as Comissões Especializadas da Ordem dos Advogado
 
             <!-- Lista de Comissões -->
             <div class="row">
-                <?php foreach ($comissoes as $comissao): ?>
-                <div class="col-lg-6 mb-4">
+                <?php if (!empty($comissoes)): foreach ($comissoes as $c): ?>
+                <div class="col-lg-6 mb-4 wow fadeInUp">
                     <div class="commission-card">
                         <div class="commission-header">
                             <div class="commission-icon">
                                 <?php
-                                // Ícone baseado na área
                                 $icon = 'fa-gavel';
-                                if (stripos($comissao->area_atuacao, 'humanos') !== false) $icon = 'fa-hand-holding-heart';
-                                elseif (stripos($comissao->area_atuacao, 'formação') !== false) $icon = 'fa-graduation-cap';
-                                elseif (stripos($comissao->area_atuacao, 'ética') !== false) $icon = 'fa-balance-scale';
-                                elseif (stripos($comissao->area_atuacao, 'legislação') !== false) $icon = 'fa-book';
-                                elseif (stripos($comissao->area_atuacao, 'apoio') !== false) $icon = 'fa-hands-helping';
+                                $area = strtolower($c->area_atuacao ?? '');
+                                if (strpos($area, 'humanos') !== false) $icon = 'fa-user-shield';
+                                elseif (strpos($area, 'formação') !== false || strpos($area, 'estágio') !== false) $icon = 'fa-graduation-cap';
+                                elseif (strpos($area, 'ética') !== false || strpos($area, 'deontologia') !== false) $icon = 'fa-balance-scale';
+                                elseif (strpos($area, 'legislação') !== false) $icon = 'fa-book-reader';
+                                elseif (strpos($area, 'apoio') !== false) $icon = 'fa-hands-helping';
                                 ?>
                                 <i class="fas <?php echo $icon; ?>"></i>
                             </div>
-                            <h4 class="commission-name"><?php echo htmlspecialchars($comissao->nome); ?></h4>
-                            <?php if (!empty($comissao->area_atuacao)): ?>
-                            <span class="commission-area"><?php echo htmlspecialchars($comissao->area_atuacao); ?></span>
+                            <h4 class="commission-name"><?php echo oagb_fix_encoding($c->nome); ?></h4>
+                            <?php if (!empty($c->area_atuacao)): ?>
+                                <span class="commission-area"><?php echo oagb_fix_encoding($c->area_atuacao); ?></span>
                             <?php endif; ?>
                         </div>
                         <div class="commission-body">
                             <p class="commission-description">
-                                <?php echo htmlspecialchars($comissao->descricao); ?>
+                                <?php echo oagb_fix_encoding($c->descricao); ?>
                             </p>
                             
-                            <?php if (!empty($comissao->presidente)): ?>
-                            <div class="commission-info">
-                                <h5><i class="fas fa-user-tie me-2"></i>Presidência</h5>
-                                <p><strong><?php echo htmlspecialchars($comissao->presidente); ?></strong></p>
+                            <?php if (!empty($c->presidente)): ?>
+                            <div class="commission-info border-start border-4" style="border-color: var(--primary-gold) !important;">
+                                <h5>Presidência</h5>
+                                <p><?php echo oagb_fix_encoding($c->presidente); ?></p>
                             </div>
                             <?php endif; ?>
                             
-                            <?php if (!empty($comissao->membros)): ?>
+                            <?php if (!empty($c->membros)): ?>
                             <div class="commission-info">
-                                <h5><i class="fas fa-users me-2"></i>Membros</h5>
+                                <h5>Membros da Comissão</h5>
                                 <ul class="member-list">
                                     <?php 
-                                    $membros = explode(',', $comissao->membros);
-                                    foreach ($membros as $membro):
+                                    $membros = explode(',', $c->membros);
+                                    foreach ($membros as $m):
                                     ?>
-                                    <li><?php echo htmlspecialchars(trim($membro)); ?></li>
+                                    <li><?php echo trim(oagb_fix_encoding($m)); ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
@@ -382,73 +234,35 @@ $meta_description = "Conheça as Comissões Especializadas da Ordem dos Advogado
                         </div>
                     </div>
                 </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Estatísticas -->
-            <div class="stats-section">
-                <h3 class="text-center mb-5" style="font-family: 'Libre Baskerville', serif; color: #4D1C21;">
-                    Impacto do Nosso Trabalho
-                </h3>
-                <div class="row g-4">
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-number" data-toggle="counter-up">150+</div>
-                            <div class="stat-label">Pareceres Emitidos</div>
-                        </div>
+                <?php endforeach; else: ?>
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted">Nenhuma comissão ativa encontrada.</p>
                     </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-number" data-toggle="counter-up">50+</div>
-                            <div class="stat-label">Formações Realizadas</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-number" data-toggle="counter-up">200+</div>
-                            <div class="stat-label">Casos Analisados</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-number" data-toggle="counter-up">30+</div>
-                            <div class="stat-label">Membros Ativos</div>
-                        </div>
-                    </div>
-                </div>
+                <?php endif; ?>
             </div>
 
             <!-- CTA -->
-            <div class="contact-cta">
-                <h3>Quer Fazer Parte de uma Comissão?</h3>
-                <p class="mb-4">
-                    Se é advogado inscrito na OAGB e tem interesse em contribuir com o seu conhecimento 
-                    e experiência numa das nossas comissões, entre em contacto connosco.
-                </p>
-                <a href="contacto.php" class="btn btn-light btn-lg">
-                    <i class="fas fa-envelope me-2"></i>Contactar-nos
-                </a>
+            <div class="bg-white p-5 rounded-4 shadow-sm border text-center mt-5">
+                <h3 class="section-heading" style="font-size: 1.3rem;">Deseja participar?</h3>
+                <p class="mx-auto mb-4" style="max-width: 600px;">Se é advogado inscrito e deseja contribuir com o seu conhecimento técnico, contacte-nos para saber como integrar uma das nossas comissões.</p>
+                <a href="contacto.php" class="btn btn-cta-gold btn-lg px-5">Contactar Relações Externas</a>
             </div>
+
         </div>
-    </div>
-    <!-- Content End -->
+    </section>
 
-    <!-- Footer Start -->
+    <?php include 'includes/banner-inscricao.php'; ?>
     <?php include 'includes/footer.php'; ?>
-    <!-- Footer End -->
+    
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top shadow-lg" style="background-color: var(--primary-maroon); border-color: var(--primary-maroon);"><i class="bi bi-arrow-up text-white"></i></a>
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>
-
-    <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/wow/wow.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/counterup/counterup.min.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
+

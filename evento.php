@@ -47,8 +47,8 @@ try {
 // Configurar meta tags
 $meta_title = !empty($evento->meta_title) ? $evento->meta_title : $evento->titulo . " - OAGB";
 $meta_description = !empty($evento->meta_description) ? $evento->meta_description : $evento->descricao;
-$meta_image = !empty($evento->og_image) ? "gestao/assets/uploads/files/" . $evento->og_image : 
-              (!empty($evento->imagem_destaque) ? "gestao/assets/uploads/files/" . $evento->imagem_destaque : "img/logo3.png");
+$meta_image = !empty($evento->og_image) ? "uploads/" . $evento->og_image : 
+              (!empty($evento->imagem_destaque) ? "uploads/" . $evento->imagem_destaque : "img/logo3.png");
 $meta_url = "https://oagb.gw/evento.php?id=" . $evento->id;
 $meta_type = "event";
 
@@ -67,7 +67,7 @@ $page_title = "Agenda";
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
@@ -76,208 +76,143 @@ $page_title = "Agenda";
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/header-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/footer-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/banner-inscricao.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/index-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
     
     <style>
-        .texto-conteudo {
-            color: #111923;
-            font-family: 'Open Sans', sans-serif;
-            font-weight: 600;
+        :root {
+            --primary-gold: #B1A276;
+            --primary-maroon: #4D1C21;
+            --dark-navy: #111923;
         }
-        
-        .titulo-evento {
-            color: #4D1C21;
-            font-family: 'Libre Baskerville', serif;
-            font-size: 2.2rem;
-            font-weight: 400;
-            margin-bottom: 1rem !important;
+        body { font-family: 'Open Sans', sans-serif; background-color: #fafafa; }
+
+        /* === SUBPAGE BREADCRUMB BAR (fundo creme — cores escuras) === */
+        .subpage-breadcrumb-bar { padding: 10px 0 0 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 20px; }
+        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: #666 !important; text-decoration: none !important; font-size: 0.85rem; transition: .3s; }
+        .subpage-breadcrumb-bar a:hover { color: var(--primary-maroon) !important; }
+        .subpage-breadcrumb-bar .bc-active { color: var(--primary-maroon) !important; font-weight: 600; }
+        .bc-sep { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--primary-gold); margin: 0 10px; vertical-align: middle; }
+
+        .quick-links a {
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--primary-maroon);
+            display: inline-flex; align-items: center; justify-content: center;
+            color: var(--primary-maroon) !important; transition: .3s; font-size: 0.8rem;
         }
-        
-        .bg-color-1 { background-color: #c18046; }
-        .bg-color-2 { background-color: #f37263; }
-        .bg-color-3 { background-color: #a5684e; }
-        .bg-color-4 { background-color: #a98c78; }
-        
-        /* Botões arrow corrigidos */
-        .btn-arrow-only {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-            border-bottom: 1px solid #111923;
-            padding-top: 20px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .btn-arrow-only i {
-            position: absolute;
-            right: 0;
-            top: 0;
-            color: #111923;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-arrow-only:hover {
-            transform: translateX(5px);
-        }
-        
-        .btn-arrow-only:hover i {
-            transform: translateX(5px);
-        }
-        
-        /* Links com underline no hover */
-        a.linkSublinhado:hover,
-        a.text-decoration-none:hover {
-            text-decoration: underline !important;
-        }
-        
-        /* Header PADRÃO DESKTOP E MOBILE */
-        .bg-header {
-            background: linear-gradient(rgba(9, 30, 62, .7), rgba(9, 30, 62, .7)), url(img/brass-scales-justice-close-up-view.jpg) center center no-repeat;
-            background-size: cover;
-            margin-bottom: 30px !important; /* Reduzido */
-        }
-        
-        /* Ajustes responsivos */
-        @media (max-width: 768px) {
-            .navbar-brand img {
-                width: 150px !important;
-                max-width: 60% !important;
+        .quick-links a:hover { background: rgba(77,28,33,0.08); color: var(--primary-gold) !important; border-color: var(--primary-gold); }
+        .quick-links a:hover i { color: var(--primary-gold) !important; }
+
+        /* Mobile breadcrumbs & header (fundo creme) */
+        @media (max-width: 991px) {
+            .mobile-breadcrumb-bar {
+                background: #fafafa !important; padding: 10px 0;
+                border-bottom: 1px solid #e0dcd2;
             }
+            .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span {
+                font-size: 0.72rem; color: #666 !important;
+            }
+            .mobile-breadcrumb-bar .bc-active { color: var(--primary-maroon) !important; font-weight: 600; font-size: 0.72rem !important; }
+            .mobile-breadcrumb-bar .quick-links a {
+                border-color: var(--primary-maroon) !important; color: var(--primary-maroon) !important; width: 28px; height: 28px; font-size: 0.65rem;
+            }
+            .mobile-breadcrumb-bar .quick-links a:hover {
+                background: rgba(77,28,33,0.08) !important; border-color: var(--primary-gold) !important;
+            }
+            #mobile-header-simple { background: #fafafa !important; padding-bottom: 10px; width: 100%; overflow: hidden; }
+            #mobile-header-simple .mobile-header-contacts { background: #fafafa !important; }
+            #mobile-header-simple .mobile-header-contacts small { color: var(--primary-maroon) !important; font-size: 0.70rem; }
+            #mobile-header-simple .mobile-header-contacts i { color: var(--primary-maroon) !important; }
+            #mobile-header-simple .mobile-pill-btn { color: var(--primary-maroon) !important; border-color: var(--primary-maroon) !important; background: transparent !important; }
+            #mobile-header-simple .mobile-pill-btn i { color: var(--primary-maroon) !important; }
+            #mobile-header-simple .mobile-pill-btn:hover,
+            #mobile-header-simple .mobile-pill-btn:active,
+            #mobile-header-simple .mobile-pill-btn:focus {
+                background: rgba(77,28,33,0.08) !important; border-color: var(--primary-gold) !important;
+            }
+            #mobile-header-simple .navbar-toggler,
+            #mobile-header-simple .navbar-toggler *,
+            #mobile-header-simple .navbar-toggler i { color: var(--primary-gold) !important; border-color: var(--primary-gold) !important; }
+            #mobile-header-simple .navbar-toggler::after { color: var(--primary-gold) !important; }
             
-            .navbar-toggler {
-                position: relative !important;
-                right: auto !important;
-                top: auto !important;
-                transform: none !important;
-            }
-            
-            .main-content,
-            .sidebar-content {
-                padding: 0 15px;
-            }
-            
-            .bg-header {
-                margin-bottom: 20px !important;
-            }
+            #mobile-header-simple .navbar-brand { margin: 10px auto !important; display: block; filter: brightness(0.95); }
         }
-        
-        /* Menu dropdowns no mouseover */
+
+        /* === DESKTOP OVERRIDES FOR LIGHT BACKGROUND === */
         @media (min-width: 992px) {
-            .navbar-nav .dropdown:hover .dropdown-menu {
-                display: block;
-                margin-top: 0;
-            }
+            #topbar .topbar-contacts small, 
+            #topbar .topbar-contacts small i { color: #333 !important; }
             
-            .navbar-nav .dropdown .dropdown-menu {
-                margin-top: 0;
+            #topbar .topbar-btn { 
+                color: #333 !important; 
+                border-color: rgba(0,0,0,0.15) !important; 
+                background: rgba(0,0,0,0.02) !important; 
             }
+            #topbar .topbar-btn i { color: var(--primary-maroon) !important; }
+            #topbar .topbar-btn:hover { 
+                background: rgba(77,28,33,0.05) !important; 
+                border-color: var(--primary-maroon) !important; 
+            }
+
+            /* Navbar: Dark links on cream */
+            .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
+            .navbar-dark .navbar-nav .nav-link:hover,
+            .navbar-dark .navbar-nav .nav-link.active { color: var(--primary-maroon) !important; }
         }
+
+        .titulo-evento { color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 2.2rem; font-weight: 400; margin-bottom: 1rem !important; }
+        .texto-conteudo { color: #111923; font-family: 'Open Sans', sans-serif; font-weight: 600; }
+        .bg-color-4 { background-color: #a98c78; }
+
+        /* Botões arrow corrigidos */
+        .btn-arrow-only { position: relative; display: inline-block; width: 100%; border-bottom: 1px solid #111923; padding-top: 20px; transition: all 0.3s ease; cursor: pointer; }
+        .btn-arrow-only i { position: absolute; right: 0; top: 0; color: #111923; font-size: 18px; transition: all 0.3s ease; }
+        .btn-arrow-only:hover { transform: translateX(5px); }
+        .btn-arrow-only:hover i { transform: translateX(5px); }
         
-        /* Breadcrumbs com separador circular */
-        .breadcrumb {
-            background: transparent;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .evento-relacionado { padding: 12px 0; border-bottom: 1px solid #f5f2ed; transition: all 0.3s ease; }
+        .evento-relacionado:last-child { border-bottom: none; padding-bottom: 0; }
+        .evento-relacionado:hover h6 a { color: var(--primary-gold) !important; }
+        .evento-relacionado .resumo { font-family: 'Open Sans', sans-serif; font-size: 0.8rem; color: #777; margin-top: 4px; line-height: 1.5; }
+        
+        .share-icons a { width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin: 0 5px; transition: all 0.3s ease; }
+        .share-icons a:hover { transform: translateY(-3px); }
+        .action-buttons { display: flex; gap: 15px; padding: 15px 0; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; }
+        .action-buttons .btn { background-color: transparent; color: #8B6B47; border: 1px solid #8B6B47; transition: all 0.3s; }
+        .action-buttons .btn:hover { background-color: #8B6B47; color: white; transform: translateY(-2px); }
+        
+        .announcement-item { margin-bottom: 5px; }
+        .announcement-separator { border: 0; height: 1px; background: #f0ece4; margin: 15px 0; }
+        .evento-carousel .owl-item img { height: 400px; object-fit: cover; }
+
+        /* Sidebar Cards Premium */
+        .sidebar-card {
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid #f0ece4;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            margin-bottom: 2rem;
         }
-        
-        .breadcrumb-item + .breadcrumb-item::before {
-            content: "•";
-            color: rgba(255,255,255,0.7);
-            padding: 0 8px;
-            font-size: 8px;
-            vertical-align: middle;
-        }
-        
-        .breadcrumb-item a {
-            color: rgba(255,255,255,0.9);
-            text-decoration: none;
-        }
-        
-        .breadcrumb-item.active {
-            color: white;
-        }
-        
-        /* Evento relacionado com resumo */
-        .evento-relacionado {
-            padding: 15px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .evento-relacionado:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-        
-        .evento-relacionado .resumo {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 5px;
-        }
-        
-        /* Botões de compartilhar só ícones */
-        .share-icons a {
-            width: 35px;
-            height: 35px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin: 0 5px;
-            transition: all 0.3s ease;
-        }
-        
-        .share-icons a:hover {
-            transform: translateY(-3px);
-        }
-        
-        /* Botões de ação com cores castanho/dourado */
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            padding: 15px 0;
-            margin-bottom: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .action-buttons .btn {
-            background-color: transparent;
-            color: #8B6B47;
-            border: 1px solid #8B6B47;
-            transition: all 0.3s;
-        }
-        
-        .action-buttons .btn:hover {
-            background-color: #8B6B47;
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        /* Anúncios sidebar com separador */
-        .announcement-item {
-            margin-bottom: 15px;
+        .sidebar-card h4 {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--primary-maroon);
+            font-size: 1.3rem;
+            font-weight: 700;
+            position: relative;
             padding-bottom: 15px;
+            margin-bottom: 20px;
         }
-        
-        .announcement-separator {
-            border: 0;
-            height: 1px;
-            background: rgba(255,255,255,0.3);
-            margin: 15px 0;
-        }
-        
-        /* Slider de imagens */
-        .evento-carousel .owl-item img {
-            height: 400px;
-            object-fit: cover;
+        .sidebar-card h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary-gold);
         }
     </style>
 </head>
@@ -291,77 +226,86 @@ $page_title = "Agenda";
 
         <?php include 'includes/topbar.php'; ?>
 
-    <!-- Navbar & Header Start -->
-    <div class="container-fluid position-relative p-0">
-        <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
-            <a href="index.php" class="navbar-brand p-0">
-                <img src="img/logo3.png" style="width:70%;height:auto;padding-top:5%;" align="center" border="0" alt="OAGB Logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="fa fa-bars"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav ms-auto py-0">
-                    <a href="index.php" class="nav-item nav-link">INÍCIO</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">ORDEM</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="apresentacao-historia.php" class="dropdown-item">Apresentação e História</a>
-                            <a href="orgaos-sociais.php" class="dropdown-item">Órgãos Sociais</a>                            
-                            <a href="comissoes-especializadas.php" class="dropdown-item">Comissões Especializadas</a>
-                            <a href="cooperacao-institucional.php" class="dropdown-item">Cooperação Institucional</a>
-                        </div>
+    <!-- Desktop Header (EXACTAMENTE IGUAL AO agenda.php) -->
+    <div class="container-fluid position-relative p-0 d-none d-lg-block">
+        <?php include 'includes/navbar.php'; ?>
+        <div class="container-fluid d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: #fafafa; border-bottom: 1px solid #e0dcd2;">
+            <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 20px;">
+                <div class="container d-flex justify-content-between">
+                    <div class="d-flex align-items-center" style="margin-top: 12px;">
+                        <a href="index.php">Início</a><span class="bc-sep"></span>
+                        <a href="agenda.php">Agenda</a><span class="bc-sep"></span>
+                        <span class="bc-active"><?php echo htmlspecialchars(truncate_text($evento->titulo, 30)); ?></span>
                     </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">ADVOGADOS</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="advogados.php" class="dropdown-item">Advogados</a>
-                            <a href="pesquisa-advogados.php" class="dropdown-item">Pesquisa de Advogados</a>                            
-                            <a href="advogados-inscritos.php" class="dropdown-item">Advogados Inscritos em vigor</a>
-                            <a href="pesquisa-estagiarios.php" class="dropdown-item">Pesquisa de Advogados Estagiários</a>                            
-                            <a href="estagiarios-inscritos.php" class="dropdown-item">Advogados Estagiários Inscritos em vigor</a>
-                            <a href="solicitacao-advogados.php" class="dropdown-item">Solicitação de Advogados</a>                           
-                            <a href="inscricao-ordem.php" class="dropdown-item">Inscrição na Ordem</a>
-                        </div>
+                    <div class="quick-links d-flex align-items-center gap-2">
+                        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+                        <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
                     </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">PÚBLICO</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="pareceres-deliberacoes.php" class="dropdown-item">Pareceres e Deliberações</a>
-                            <a href="comunicados.php" class="dropdown-item">Comunicados</a>
-                            <a href="publicacoes.php" class="dropdown-item">Publicações</a>
-                            <a href="orcamento.php" class="dropdown-item">Orçamento</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">COMUNICAÇÃO</a>
-                        <div class="dropdown-menu m-0" style="left: auto; right: 0;">
-                            <a href="agenda.php" class="dropdown-item">Agenda</a>
-                            <a href="noticias.php" class="dropdown-item">Notícias</a>
-                            <a href="anuncios.php" class="dropdown-item">Anúncios</a>
-                        </div>
-                    </div>
-                    <a href="contacto.php" class="nav-item nav-link">CONTACTO</a>
                 </div>
-                <button type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal">
-                    <i class="fa fa-search"></i>
-                </button>
-                <div id="" class="">&nbsp;</div>
             </div>
-        </nav>
+        </div>
+    </div>
 
-        <!-- Header com Background Image -->
-        <div class="container-fluid bg-primary py-5 bg-header">
-            <div class="row py-5">
-                <div class="col-12 pt-lg-5 mt-lg-5 text-center">
-                    <h1 class="display-4 text-white animated zoomIn"><?php echo $page_title; ?></h1>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a href="index.php">Início</a></li>
-                            <li class="breadcrumb-item"><a href="agenda.php">Agenda</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Evento</li>
-                        </ol>
-                    </nav>
+    <!-- Mobile Header (fundo creme, sem imagem) - EXACTAMENTE IGUAL AO agenda.php -->
+    <div class="d-block d-lg-none">
+        <div id="mobile-header-simple" style="position: relative; overflow: hidden;">
+            <!-- Contacts -->
+            <div class="mobile-header-contacts container-fluid px-1 pt-3 pb-1">
+                <div class="row g-0 mb-3">
+                    <div class="col-12 d-flex justify-content-center align-items-center gap-2 overflow-auto" style="white-space: nowrap;">
+                        <small class="text-nowrap"><i class="fa fa-map-marker-alt me-1"></i>Bissau, Guiné-Bissau</small>
+                        <small class="text-nowrap"><i class="fa fa-phone-alt me-1"></i>+245 955 475 889</small>
+                        <small class="text-nowrap"><i class="fa fa-envelope-open me-1"></i>info@oagb.gw</small>
+                    </div>
+                </div>
+
+                <div class="row g-0 mb-1">
+                    <div class="col-12 d-flex justify-content-center align-items-center gap-3">
+                        <button type="button" class="btn btn-sm mobile-pill-btn px-2 fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#searchModal">
+                             <i class="fa fa-search" style="font-size: 1rem;"></i>
+                        </button>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-sm mobile-pill-btn px-2 fw-bold d-flex align-items-center" data-bs-toggle="dropdown" data-bs-display="static">
+                                <i class="fa fa-globe" style="font-size: 1rem;"></i>
+                            </button>
+                            <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2050; margin-top: 10px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: absolute; left: 50%; transform: translateX(-50%); right: auto;">
+                                <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
+                                <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
+                                <a href="#" onclick="changeLanguage('fr'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
+                                <a href="#" onclick="changeLanguage('es'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
+                                <a href="#" onclick="changeLanguage('ar'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
+                                <a href="#" onclick="changeLanguage('zh-CN'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
+                                <a href="#" onclick="changeLanguage('ru'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
+                            </div>
+                        </div>
+                        <a href="portal/login.php" class="btn btn-sm mobile-pill-btn px-2 fw-bold text-uppercase d-flex align-items-center">
+                            <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Área Reservada
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navbar -->
+            <div class="mobile-navbar-wrapper container-fluid p-0" style="margin-top: 5px;">
+                <?php include 'includes/navbar.php'; ?>
+            </div>
+
+            <!-- Breadcrumbs -->
+            <div class="mobile-breadcrumb-bar">
+                <div class="container d-flex align-items-center justify-content-between py-2">
+                    <div style="font-size: 0.72rem;">
+                        <a href="index.php">Início</a>
+                        <span class="bc-sep"></span>
+                        <a href="agenda.php">Agenda</a>
+                        <span class="bc-sep"></span>
+                        <span class="bc-active"><?php echo htmlspecialchars(truncate_text($evento->titulo, 20)); ?></span>
+                    </div>
+                    <div class="quick-links d-flex gap-1">
+                        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+                        <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -386,32 +330,14 @@ $page_title = "Agenda";
     </div>
     <!-- Full Screen Search End -->
 
-    <!-- Action Buttons -->
-    <div class="container action-buttons">
-        <button onclick="window.history.back()" class="btn btn-sm">
-            <i class="bi bi-arrow-left"></i> Voltar
-        </button>
-        <button onclick="window.print()" class="btn btn-sm">
-            <i class="bi bi-printer"></i> Imprimir
-        </button>
-        <button onclick="shareEvent()" class="btn btn-sm">
-            <i class="bi bi-share"></i> Partilhar
-        </button>
-        <button onclick="translatePage()" class="btn btn-sm">
-            <i class="bi bi-translate"></i> Traduzir
-        </button>
-        <button onclick="addToCalendar()" class="btn btn-sm">
-            <i class="bi bi-calendar-plus"></i> Adicionar ao Calendário
-        </button>
-    </div>
 
     <!-- Event Detail Start -->
-    <div class="container-fluid py-3">
+    <div class="container-fluid pt-5 pb-3">
         <div class="container">
             <div class="row g-5">
                 <div class="col-lg-8 main-content">
                     <!-- Event Content -->
-                    <div class="bg-light rounded p-4">
+                    <div class="pe-lg-4">
                         <h1 class="titulo-evento">
                             <?php echo htmlspecialchars($evento->titulo); ?>
                         </h1>
@@ -437,18 +363,28 @@ $page_title = "Agenda";
                             <div class="owl-carousel evento-carousel">
                                 <?php if (!empty($evento->imagem_destaque)): ?>
                                 <div class="item">
-                                    <img class="img-fluid rounded" src="gestao/assets/uploads/files/<?php echo htmlspecialchars($evento->imagem_destaque); ?>" alt="">
+                                    <img class="img-fluid rounded" src="uploads/<?php echo htmlspecialchars($evento->imagem_destaque); ?>" alt="">
                                 </div>
                                 <?php endif; ?>
                                 <?php foreach ($imagens_evento as $img): ?>
-                                <div class="item">
-                                    <img class="img-fluid rounded" src="gestao/assets/uploads/files/<?php echo htmlspecialchars($img->imagem); ?>" alt="">
+                                <div class="item position-relative">
+                                    <img class="img-fluid rounded" src="uploads/<?php echo htmlspecialchars($img->imagem); ?>" alt="<?php echo htmlspecialchars($img->legenda ?? ''); ?>">
+                                    <?php if (!empty($img->legenda) || !empty($img->descricao)): ?>
+                                    <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: rgba(0,0,0,0.6); border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem; text-align: left;">
+                                        <?php if (!empty($img->legenda)): ?>
+                                        <h6 class="text-white mb-1" style="font-size: 0.95rem; font-weight: 700;"><?php echo htmlspecialchars($img->legenda); ?></h6>
+                                        <?php endif; ?>
+                                        <?php if (!empty($img->descricao)): ?>
+                                        <p class="text-white small mb-0" style="font-size: 0.8rem; opacity: 0.9;"><?php echo htmlspecialchars($img->descricao); ?></p>
+                                        <?php endif; ?>
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
                                 <?php endforeach; ?>
                             </div>
                             <?php else: ?>
                             <!-- Imagem única -->
-                            <img class="img-fluid w-100 rounded" src="gestao/assets/uploads/files/<?php echo htmlspecialchars($evento->imagem_destaque); ?>" alt="<?php echo htmlspecialchars($evento->titulo); ?>">
+                            <img class="img-fluid w-100 rounded" src="uploads/<?php echo htmlspecialchars($evento->imagem_destaque); ?>" alt="<?php echo htmlspecialchars($evento->titulo); ?>">
                             <?php endif; ?>
                         </div>
                         <?php endif; ?>
@@ -464,46 +400,22 @@ $page_title = "Agenda";
                         </div>
                         <?php endif; ?>
                         
-                        <!-- Share Buttons -->
-                        <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
-                            <div>
-                                <h6 class="mb-0" style="font-family: 'Open Sans', sans-serif;">Compartilhar:</h6>
-                            </div>
-                            <div class="share-icons">
-                                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($meta_url); ?>" 
-                                   target="_blank" class="btn btn-outline-primary btn-sm">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($meta_url); ?>&text=<?php echo urlencode($evento->titulo); ?>" 
-                                   target="_blank" class="btn btn-outline-info btn-sm">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($meta_url); ?>" 
-                                   target="_blank" class="btn btn-outline-primary btn-sm">
-                                    <i class="fab fa-linkedin-in"></i>
-                                </a>
-                                <a href="whatsapp://send?text=<?php echo urlencode($evento->titulo . ' - ' . $meta_url); ?>" 
-                                   class="btn btn-outline-success btn-sm">
-                                    <i class="fab fa-whatsapp"></i>
-                                </a>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
                 <div class="col-lg-4 sidebar-content">
                     <!-- Related Events -->
                     <?php if (!empty($eventos_relacionados)): ?>
-                    <div class="bg-light rounded p-4 mb-4">
-                        <h4 class="mb-4" style="color:#5B463F;font-family: 'Libre Baskerville', serif;">Outros Eventos</h4>
+                    <div class="sidebar-card">
+                        <h4>Outros Eventos</h4>
                         <?php 
                         $count = 0;
                         foreach ($eventos_relacionados as $relacionado): 
                             $count++;
                         ?>
                         <div class="evento-relacionado">
-                            <h6 style="font-family: 'Libre Baskerville', serif;">
-                                <a href="evento.php?id=<?php echo $relacionado->id; ?>" class="text-dark text-decoration-none">
+                            <h6 style="font-family: 'Libre Baskerville', serif; font-weight: 700;">
+                                <a href="evento.php?id=<?php echo $relacionado->id; ?>" class="text-decoration-none" style="transition: 0.3s; color: var(--primary-maroon) !important;">
                                     <?php echo htmlspecialchars($relacionado->titulo); ?>
                                 </a>
                             </h6>
@@ -511,65 +423,21 @@ $page_title = "Agenda";
                                 <?php echo htmlspecialchars(truncate_text($relacionado->descricao, 80)); ?>
                             </p>
                             <small class="text-muted" style="font-family: 'Open Sans', sans-serif;">
-                                <i class="far fa-calendar-alt me-1"></i>
+                                <i class="far fa-calendar-alt me-1" style="color: var(--primary-gold);"></i>
                                 <?php echo format_date_pt($relacionado->data_evento); ?>
                             </small>
                         </div>
                         <?php endforeach; ?>
-                        
-                        <div class="mt-4">
-                            <a href="agenda.php" class="d-block">
-                                <div class="btn-arrow-only">
-                                    <i class="bi bi-arrow-right"></i>
-                                </div>
-                            </a>
-                        </div>
                     </div>
                     <?php endif; ?>
                     
-                    <!-- Anúncios DINÂMICOS DA BD -->
-                    <?php if (!empty($anuncios)): ?>
-                    <div class="bg-color-4 rounded p-4 text-white">
-                        <h4 class="mb-4 text-white" style="font-family: 'Libre Baskerville', serif;">Anúncios</h4>
-                        <?php 
-                        $anuncio_count = 0;
-                        foreach ($anuncios as $anuncio): 
-                            $anuncio_count++;
-                        ?>
-                        <div class="announcement-item">
-                            <h6 class="text-white" style="font-family: 'Libre Baskerville', serif;">
-                                <?php if (!empty($anuncio->link_url)): ?>
-                                <a href="<?php echo htmlspecialchars($anuncio->link_url); ?>" class="text-white text-decoration-none">
-                                    <?php echo htmlspecialchars($anuncio->titulo); ?>
-                                </a>
-                                <?php else: ?>
-                                <?php echo htmlspecialchars($anuncio->titulo); ?>
-                                <?php endif; ?>
-                            </h6>
-                            <p class="mb-2" style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">
-                                <?php echo htmlspecialchars(truncate_text($anuncio->descricao, 100)); ?>
-                            </p>
-                        </div>
-                        <?php if($anuncio_count < count($anuncios)): ?>
-                        <hr class="announcement-separator">
-                        <?php endif; ?>
-                        <?php endforeach; ?>
-                        
-                        <div class="mt-4">
-                            <a href="anuncios.php" class="d-block">
-                                <div class="btn-arrow-only" style="border-color: white;">
-                                    <i class="bi bi-arrow-right" style="color: white;"></i>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
     <!-- Event Detail End -->
 
+    <?php include 'includes/banner-inscricao.php'; ?>
     <?php include 'includes/footer.php'; ?>
 
     <!-- Back to Top -->

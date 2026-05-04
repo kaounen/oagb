@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="mb-5">
             <label class="form-label small fw-bold text-muted text-uppercase">Conteúdo Institucional</label>
-            <textarea name="conteudo" class="form-control border-0 bg-light p-4" rows="15" required><?php echo $p['conteudo']; ?></textarea>
+            <textarea name="conteudo" id="editor" class="form-control border-0 bg-light p-4" rows="15" required><?php echo $p['conteudo']; ?></textarea>
         </div>
 
         <div class="row align-items-center">
@@ -82,5 +82,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </form>
 </div>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor.create(document.querySelector('#editor'), {
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
+    }).catch(error => console.error(error));
+</script>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

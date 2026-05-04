@@ -167,9 +167,9 @@ $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bis
             }
 
             /* Navbar: Dark links on cream */
-            .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 500; }
+            .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
             .navbar-dark .navbar-nav .nav-link:hover,
-            .navbar-dark .navbar-nav .nav-link.active { color: var(--primary-maroon) !important; font-weight: 700; }
+            .navbar-dark .navbar-nav .nav-link.active { color: var(--primary-maroon) !important; }
         }
     </style>
 </head>
@@ -181,13 +181,13 @@ $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bis
     <!-- Desktop Header (fundo creme, sem imagem) -->
     <div class="container-fluid position-relative p-0 d-none d-lg-block">
         <?php include 'includes/navbar.php'; ?>
-        <div class="container-fluid d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: #f7f5f0;">
+        <div class="container-fluid d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: #f7f5f0; border-bottom: 1px solid #e0dcd2;">
             <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 20px;">
                 <div class="container d-flex justify-content-between">
                     <div class="d-flex align-items-center" style="margin-top: 12px;">
                         <a href="index.php">Início</a>
                         <span class="bc-sep"></span>
-                        <a href="a-ordem-dos-advogados.php">A Ordem</a>
+                        <a href="ordem-dos-advogados.php">A Ordem</a>
                         <span class="bc-sep"></span>
                         <span class="bc-active">O Bastonário</span>
                     </div>
@@ -223,7 +223,7 @@ $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bis
                             <button type="button" class="btn btn-sm mobile-pill-btn px-2 fw-bold d-flex align-items-center" data-bs-toggle="dropdown" data-bs-display="static">
                                 <i class="fa fa-globe" style="font-size: 1rem;"></i>
                             </button>
-                            <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2050; margin-top: 10px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);">
+                            <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2050; margin-top: 10px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: absolute; left: 50%; transform: translateX(-50%); right: auto;">
                                 <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
                                 <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
                                 <a href="#" onclick="changeLanguage('fr'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
@@ -251,7 +251,7 @@ $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bis
                     <div style="font-size: 0.72rem;">
                         <a href="index.php">Início</a>
                         <span class="bc-sep"></span>
-                        <a href="a-ordem-dos-advogados.php">A Ordem</a>
+                        <a href="ordem-dos-advogados.php">A Ordem</a>
                         <span class="bc-sep"></span>
                         <span class="bc-active">O Bastonário</span>
                     </div>
@@ -371,3 +371,4 @@ $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bis
     </script>
 </body>
 </html>
+

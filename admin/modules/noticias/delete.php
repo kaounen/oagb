@@ -12,7 +12,7 @@ if ($id > 0) {
         
         if ($row) {
             $filename = $row['foto1'];
-            $upload_path = __DIR__ . '/../../../../gestao/assets/uploads/files/' . $filename;
+            $upload_path = __DIR__ . '/../../../../uploads/' . $filename;
             
             // Delete record
             $del_stmt = $pdo->prepare("DELETE FROM noticias WHERE id = ?");

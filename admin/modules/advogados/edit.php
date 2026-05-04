@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/header.php';
 
 $id = $_GET['id'] ?? 0;
 $stmt = $pdo->prepare("SELECT * FROM advogados WHERE id = ?");
@@ -18,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     header("Location: index.php?success=updated"); exit;
 }
+
+require_once __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="row mb-5 align-items-center">

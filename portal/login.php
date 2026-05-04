@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../connect.php';
+$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $registo = $_POST['registo'] ?? '';
@@ -46,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Portal do Advogado | OAGB 2.0</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --primary-gold: #B1A276; --bg-dark: #111923; }
         body { font-family: 'Open Sans', sans-serif; background-color: var(--bg-dark); height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; color: white; overflow: hidden; }
@@ -85,6 +86,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="password" name="password" class="form-control" required placeholder="••••••••">
             </div>
 
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <a href="recuperar_senha.php" class="text-decoration-none" style="font-size: 0.8rem; color: var(--primary-gold); font-weight: 600;">Esqueceu-se da Senha?</a>
+            </div>
+            
             <button type="submit" class="btn btn-portal">ENTRAR NO PORTAL</button>
         </form>
 

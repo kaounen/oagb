@@ -45,7 +45,7 @@ try {
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <?php if(!empty($row['foto'])): ?>
-                                            <img src="/oagb/gestao/assets/uploads/files/<?php echo $row['foto']; ?>" class="rounded-circle me-3 border" style="width: 40px; height: 40px; object-fit: cover;">
+                                            <img src="/oagb/uploads/<?php echo $row['foto']; ?>" class="rounded-circle me-3 border" style="width: 40px; height: 40px; object-fit: cover;">
                                         <?php else: ?>
                                             <div class="rounded-circle me-3 border bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="far fa-user text-muted opacity-50"></i></div>
                                         <?php endif; ?>

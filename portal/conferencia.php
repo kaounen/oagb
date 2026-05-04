@@ -64,6 +64,6 @@ $uname = $_SESSION['lawyer_name'] ?? 'Membro OAGB';
         };
         const api = new JitsiMeetExternalAPI(domain, options);
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 </body>
 </html>

@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Photo handling
     $imagem = '';
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../gestao/assets/uploads/files/';
+        $upload_dir = __DIR__ . '/../../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);

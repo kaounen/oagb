@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/header.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $entidade = $_POST['entidade_parceira'];
@@ -33,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } catch (PDOException $e) { $error = "Erro ao registar: " . $e->getMessage(); }
 }
+
+require_once __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="row mb-5 align-items-center">
@@ -107,7 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
 <script>
-    ClassicEditor.create(document.querySelector('#editor')).catch(e => console.error(e));
+    ClassicEditor.create(document.querySelector('#editor'), {
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
+    }).catch(e => console.error(e));
 </script>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

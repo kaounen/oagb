@@ -2,6 +2,7 @@
 session_start();
 if(!isset($_SESSION['lawyer_id'])) { header("Location: login.php"); exit; }
 require_once __DIR__ . '/../connect.php';
+$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 $lid = $_SESSION['lawyer_id'];
 $mtype = $_SESSION['member_type'] ?? 'advogado';
@@ -33,7 +34,7 @@ $history = $stmt->fetchAll();
     <title>Área Reservada | OAGB 2.0</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#B1A276">
     <script>

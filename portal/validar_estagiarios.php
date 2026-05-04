@@ -37,7 +37,7 @@ $pendentes = $stmt->fetchAll();
     <title>Validação de Estagiários | OAGB 2.0</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --primary-gold: #B1A276; --sidebar-dark: #111923; }
         body { font-family: 'Open Sans', sans-serif; background-color: #f5f6f8; }

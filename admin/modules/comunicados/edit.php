@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $imagem = $anuncio['imagem'];
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../gestao/assets/uploads/files/';
+        $upload_dir = __DIR__ . '/../../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['imagem']['name'], INFO_EXTENSION);
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="small text-muted">Trocar Imagem</div>
                                 <input type="file" name="imagem" id="img_input" class="d-none" accept="image/*">
                             </div>
-                            <img id="preview" src="/oagb/gestao/assets/uploads/files/<?php echo $anuncio['imagem']; ?>" class="img-fluid mt-3 rounded shadow-sm <?php echo empty($anuncio['imagem']) ? 'd-none':''; ?>">
+                            <img id="preview" src="/oagb/uploads/<?php echo $anuncio['imagem']; ?>" class="img-fluid mt-3 rounded shadow-sm <?php echo empty($anuncio['imagem']) ? 'd-none':''; ?>">
                         </div>
 
                         <hr class="my-4">

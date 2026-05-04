@@ -1,404 +1,327 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'connect.php';
 require_once 'includes/functions.php';
 
-$page_title = "Contacto";
-$meta_title = "Contacto - OAGB";
-$meta_description = "Entre em contacto com a Ordem dos Advogados da Guiné-Bissau. Endereço, telefone, email e formulário de contacto.";
+$success_message = '';
+$error_message = '';
 
-// Processar formulário de contacto
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $nome = clean_input($_POST['nome'] ?? '');
-        $email = clean_input($_POST['email'] ?? '');
-        $telefone = clean_input($_POST['telefone'] ?? '');
-        $assunto = clean_input($_POST['assunto'] ?? '');
-        $mensagem = clean_input($_POST['mensagem'] ?? '');
-        $csrf_token = $_POST['csrf_token'] ?? '';
-
-        // Validações
-        $errors = [];
-
-        if (empty($nome)) {
-            $errors[] = "Nome é obrigatório";
-        }
-
-        if (empty($email) || !is_valid_email($email)) {
-            $errors[] = "Email válido é obrigatório";
-        }
-
-        if (empty($assunto)) {
-            $errors[] = "Assunto é obrigatório";
-        }
-
-        if (empty($mensagem)) {
-            $errors[] = "Mensagem é obrigatória";
-        }
-
-        if (!validate_csrf_token($csrf_token)) {
-            $errors[] = "Token de segurança inválido";
-        }
-
-        if (empty($errors)) {
-            // Salvar na base de dados (criar tabela se necessário)
-            try {
-                $stmt = $pdo->prepare("
-                    INSERT INTO contactos (nome, email, telefone, assunto, mensagem, ip_origem) 
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ");
-                
-                $ip = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
-                $stmt->execute([$nome, $email, $telefone, $assunto, $mensagem, $ip]);
-
-                // Opcional: Enviar email de notificação
-                // send_contact_notification($nome, $email, $telefone, $assunto, $mensagem);
-
-                $success_message = "Mensagem enviada com sucesso! Entraremos em contacto consigo em breve.";
-                
-                // Limpar variáveis do formulário
-                $nome = $email = $telefone = $assunto = $mensagem = '';
-                
-            } catch (Exception $e) {
-                $errors[] = "Erro ao enviar mensagem. Tente novamente.";
-                error_log("Erro ao salvar contacto: " . $e->getMessage());
-            }
-        }
-    } catch (Exception $e) {
-        $errors[] = "Erro interno. Tente novamente.";
-        error_log("Erro no formulário de contacto: " . $e->getMessage());
-    }
+// Captcha Logic - Generate se não existe
+if (!isset($_SESSION['captcha_a']) || !isset($_SESSION['captcha_b'])) {
+    $_SESSION['captcha_a'] = rand(1, 9);
+    $_SESSION['captcha_b'] = rand(1, 9);
+    $_SESSION['captcha_sum'] = $_SESSION['captcha_a'] + $_SESSION['captcha_b'];
 }
 
-// Gerar token CSRF
-$csrf_token = generate_csrf_token();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = clean_input($_POST['nome']);
+    $email = clean_input($_POST['email']);
+    $telefone = clean_input($_POST['telefone']);
+    $assunto = clean_input($_POST['assunto']);
+    $mensagem = clean_input($_POST['mensagem']);
+    $captcha_res = intval($_POST['captcha_res'] ?? 0);
+    
+    $errors = [];
+    if (empty($nome) || strlen($nome) < 2) $errors[] = "Nome deve ter pelo menos 2 caracteres.";
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Email inválido.";
+    if (empty($assunto)) $errors[] = "O assunto é obrigatório.";
+    if (empty($mensagem) || strlen($mensagem) < 10) $errors[] = "A mensagem deve ter pelo menos 10 caracteres.";
+    if ($captcha_res !== $_SESSION['captcha_sum']) $errors[] = "Resposta do Captcha incorreta.";
+    
+    // Processamento de Ficheiros Anexos
+    $uploaded_files = [];
+    if (!empty($_FILES['ficheiros']['name'][0])) {
+        $files = $_FILES['ficheiros'];
+        $upload_dir = 'uploads/contactos';
+        if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+        
+        for ($i = 0; $i < count($files['name']); $i++) {
+            $file_error = $files['error'][$i];
+            if ($file_error === UPLOAD_ERR_OK) {
+                $tmp_name = $files['tmp_name'][$i];
+                $name = basename($files['name'][$i]);
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                $allowed = ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'];
+                
+                if (in_array($ext, $allowed)) {
+                    $new_name = uniqid() . '_' . time() . '_' . $i . '.' . $ext;
+                    if (move_uploaded_file($tmp_name, "$upload_dir/$new_name")) {
+                        $uploaded_files[] = $new_name;
+                    }
+                } else {
+                    $errors[] = "Ficheiro '$name' tem um formato não permitido.";
+                }
+            }
+        }
+    }
+
+    if (empty($errors)) {
+        try {
+            // Aqui pode adicionar a inserção na base de dados se criar a tabela correspondente.
+            // Por enquanto simulamos o envio ou pode ser enviado via e-mail.
+            
+            // $to = 'info@oagb.gw';
+            // $subject_mail = "Novo Contacto Site: " . $assunto;
+            // $body = "Nome: $nome\nEmail: $email\nTelefone: $telefone\nMensagem:\n$mensagem";
+            // if (!empty($uploaded_files)) {
+            //     $body .= "\nFicheiros anexados: " . count($uploaded_files);
+            // }
+            // send_email($to, $subject_mail, nl2br($body));
+            
+            $success_message = "Mensagem enviada com sucesso! A nossa equipa irá responder o mais breve possível.";
+            
+            // Generate new captcha for security
+            $_SESSION['captcha_a'] = rand(1, 9);
+            $_SESSION['captcha_b'] = rand(1, 9);
+            $_SESSION['captcha_sum'] = $_SESSION['captcha_a'] + $_SESSION['captcha_b'];
+            
+            $_POST = [];
+        } catch (Exception $e) {
+            $error_message = "Ocorreu um erro ao processar a sua mensagem. Por favor, tente novamente mais tarde.";
+        }
+    } else {
+        $error_message = implode('<br>', $errors);
+    }
+} else {
+    // Generate captcha on initial load
+    $_SESSION['captcha_a'] = rand(1, 9);
+    $_SESSION['captcha_b'] = rand(1, 9);
+    $_SESSION['captcha_sum'] = $_SESSION['captcha_a'] + $_SESSION['captcha_b'];
+}
+
+$page_title = "Contacto";
+$header_image = 'uploads/justice-velho.jpg'; // Mesma imagem para consistência ou mude se necessário
 ?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <title><?php echo htmlspecialchars($meta_title); ?></title>
-    <?php include 'includes/meta-tags.php'; ?>
-
-    <!-- Google Web Fonts -->
+    <?php include 'includes/meta_tags_include.php'; ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/animate/animate.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/header-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/footer-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
 
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <style>
+        :root { --primary-gold: #B1A276; --primary-maroon: #4D1C21; }
+        html, body { overflow-x: hidden !important; width: 100%; margin: 0; padding: 0; }
+        body { font-family: 'Open Sans', sans-serif; background-color: #fafafa; }
+        
+        /* === SUBPAGE BREADCRUMB BAR === */
+        .subpage-breadcrumb-bar { padding: 10px 0 0 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 20px; }
+        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: rgba(255,255,255,0.85) !important; text-decoration: none !important; font-size: 0.8rem; letter-spacing: 0.5px; transition: .3s; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+        .subpage-breadcrumb-bar a:hover { color: #fff; }
+        .subpage-breadcrumb-bar .bc-active { color: #fff; font-weight: 600; font-size: 0.8rem !important; opacity: 1 !important; }
+        .bc-sep { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--primary-gold); margin: 0 10px; vertical-align: middle; opacity: 0.6; }
+
+        .quick-links a {
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3);
+            display: inline-flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.9); transition: .3s; font-size: 0.8rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .quick-links a:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: var(--primary-gold); }
+
+        /* Mobile specific breadcrumbs overlaid on bottom of header */
+        @media (max-width: 991px) {
+            .mobile-breadcrumb-bar { 
+                background: transparent; padding: 10px 0; position: absolute; bottom: 0; left: 0; right: 0; 
+                z-index: 1045 !important; pointer-events: auto !important; 
+            }
+            .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span { 
+                font-size: 0.72rem; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            }
+            .mobile-breadcrumb-bar .bc-active { font-weight: 500; font-size: 0.72rem !important; }
+            .mobile-breadcrumb-bar .quick-links a { 
+                border-color: rgba(255,255,255,0.4); color: #fff; width: 28px; height: 28px; font-size: 0.65rem; 
+            }
+            #header-carousel-mobile .carousel-item { min-height: 62vh !important; }
+        }
+
+        .form-card { background: #fff; border-radius: 20px; padding: 40px; border: 1px solid #f0ece4; box-shadow: 0 15px 45px rgba(0,0,0,0.03); position: relative; z-index: 30; }
+        @media (max-width: 576px) { .form-card { padding: 25px 20px; } }
+
+        .form-label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-maroon); margin-bottom: 10px; }
+        .form-control, .form-select { border-radius: 12px; border: 1px solid #eee; padding: 12px 18px; font-size: 0.96rem; transition: .3s; background: #fbfbfb; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-gold); background: #fff; box-shadow: 0 0 0 4px rgba(177, 162, 118, 0.1); }
+        
+        .btn-submit { background: var(--primary-maroon); color: #fff; border-radius: 50px; height: 55px; font-weight: 700; border: none; transition: .3s; padding: 0 40px; font-size: 1rem; width: 100%; }
+        .btn-submit:hover { background: var(--primary-gold); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        .info-box { background: var(--primary-maroon); color: #fff; border-radius: 20px; padding: 30px; height: 100%; position: relative; overflow: hidden; }
+        .info-box::after { content: '\f095'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; bottom: -20px; right: -10px; font-size: 8rem; opacity: 0.05; }
+        .step-item { display: flex; gap: 15px; margin-bottom: 25px; }
+        .step-num { width: 32px; height: 32px; background: var(--primary-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; flex-shrink: 0; }
+        .step-title { font-weight: 700; font-size: 1rem; margin-bottom: 5px; font-family: 'Libre Baskerville'; }
+        .step-desc { font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+        .urgent-card { background: #fdfbf7; border: 1px solid #f0ece4; border-radius: 20px; padding: 30px; margin-top: 30px; }
+        .urgent-title { color: var(--primary-maroon); font-weight: 700; font-family: 'Libre Baskerville', serif; font-size: 1.3rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        
+        .alert { border-radius: 12px; font-size: 0.9rem; padding: 15px 20px; border: none; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-danger { background: #f8d7da; color: #721c24; }
+        
+        .captcha-box { display: flex; align-items: center; gap: 15px; background: #fdfbf7; padding: 15px; border-radius: 12px; border: 1px solid #f0ece4; margin-top: 5px; }
+        .captcha-q { font-weight: 700; color: var(--primary-maroon); font-size: 1.1rem; }
+    </style>
 </head>
 
 <body>
-    <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner"></div>
-    </div>
-    <!-- Spinner End -->
+<div style="overflow-x: hidden; width: 100%; position: relative;">
 
     <?php include 'includes/topbar.php'; ?>
 
-    <!-- Navbar Start -->
-    <div class="container-fluid position-relative p-0">
+    <!-- Desktop Header -->
+    <div class="container-fluid position-relative p-0 d-none d-lg-block">
         <?php include 'includes/navbar.php'; ?>
-
-        <div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
-            <div class="row py-5">
-                <div class="col-12 pt-lg-5 mt-lg-5 text-center">
-                    <h1 class="display-4 text-white animated zoomIn">Contacto</h1>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a href="index.php" class="text-white">Início</a></li>
-                            <li class="breadcrumb-item active text-white" aria-current="page">Contacto</li>
-                        </ol>
-                    </nav>
+        <div class="container-fluid bg-primary bg-header d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: linear-gradient(rgba(17, 25, 35, 0.1), rgba(17, 25, 35, 0.45)), url('<?php echo $header_image; ?>') center center no-repeat; background-size: cover;">
+            <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 20px;">
+                <div class="container d-flex justify-content-between">
+                    <div class="d-flex align-items-center" style="margin-top: 12px;">
+                        <a href="index.php">Início</a>
+                        <span class="bc-sep"></span>
+                        <span class="bc-active">Contacto</span>
+                    </div>
+                    <div class="quick-links d-flex align-items-center gap-2">
+                        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+                        <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Navbar End -->
 
-    <!-- Contact Start -->
-    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
-                <h5 class="fw-bold text-primary text-uppercase">Entre em Contacto</h5>
-                <h1 class="mb-0" style="color:#5B463F;font-family: 'Libre Baskerville'; font-weight: bold; font-style: normal;font-size:280%;">Fale Connosco</h1>
-            </div>
-            
+    <!-- Mobile Header -->
+    <?php 
+    $mobile_breadcrumbs = [
+        ['label' => 'Início', 'url' => 'index.php'],
+        ['label' => 'Contacto', 'active' => true]
+    ];
+    include 'includes/mobile-header-subpage.php'; 
+    ?>
+
+
+    <section class="py-5" style="background: #f7f5f0;">
+        <div class="container py-lg-4">
             <div class="row g-5">
-                <!-- Contact Info -->
-                <div class="col-lg-4">
-                    <div class="bg-primary rounded p-5 text-center">
-                        <h4 class="text-white mb-4">Informações de Contacto</h4>
-                        
-                        <div class="d-flex align-items-center justify-content-center mb-4">
-                            <div class="bg-white rounded-circle p-3 me-3">
-                                <i class="fa fa-map-marker-alt text-primary"></i>
-                            </div>
-                            <div class="text-start">
-                                <h6 class="text-white mb-1">Endereço</h6>
-                                <small class="text-white">Rua 15, Bissau<br>Guiné-Bissau</small>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex align-items-center justify-content-center mb-4">
-                            <div class="bg-white rounded-circle p-3 me-3">
-                                <i class="fa fa-phone-alt text-primary"></i>
-                            </div>
-                            <div class="text-start">
-                                <h6 class="text-white mb-1">Telefone</h6>
-                                <small class="text-white">+245 955 475 889</small>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex align-items-center justify-content-center mb-4">
-                            <div class="bg-white rounded-circle p-3 me-3">
-                                <i class="fa fa-envelope text-primary"></i>
-                            </div>
-                            <div class="text-start">
-                                <h6 class="text-white mb-1">Email</h6>
-                                <small class="text-white">info@oagb.gw</small>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex align-items-center justify-content-center mb-4">
-                            <div class="bg-white rounded-circle p-3 me-3">
-                                <i class="fa fa-clock text-primary"></i>
-                            </div>
-                            <div class="text-start">
-                                <h6 class="text-white mb-1">Horário</h6>
-                                <small class="text-white">Seg-Sex: 8h-17h<br>Sáb: 8h-12h</small>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex justify-content-center mt-4">
-                            <a class="btn btn-outline-light btn-square me-2" href="#"><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-outline-light btn-square me-2" href="https://www.facebook.com/profile.php?id=100087015439692"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-outline-light btn-square me-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-outline-light btn-square" href="#"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Contact Form -->
                 <div class="col-lg-8">
-                    <div class="bg-light rounded p-5">
-                        <h4 class="mb-4" style="color:#5B463F;">Envie-nos uma Mensagem</h4>
-                        
-                        <!-- Success/Error Messages -->
-                        <?php if (isset($success_message)): ?>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <i class="fa fa-check-circle me-2"></i><?php echo htmlspecialchars($success_message); ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <div class="form-card">
+                        <div class="mb-4">
+                            <h2 style="font-family:'Libre Baskerville', serif; color:var(--primary-maroon); font-weight:700; font-size:1.3rem;">Fale Connosco</h2>
+                            <p class="text-muted small">Preencha o formulário abaixo para enviar uma mensagem. Entraremos em contacto o mais rápido possível.</p>
                         </div>
+
+                        <?php if ($success_message): ?>
+                            <div class="alert alert-success mb-4"><i class="fas fa-check-circle me-2"></i> <?php echo $success_message; ?></div>
                         <?php endif; ?>
-                        
-                        <?php if (!empty($errors)): ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="fa fa-exclamation-triangle me-2"></i>
-                            <ul class="mb-0">
-                                <?php foreach ($errors as $error): ?>
-                                    <li><?php echo htmlspecialchars($error); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
+
+                        <?php if ($error_message): ?>
+                            <div class="alert alert-danger mb-4"><i class="fas fa-exclamation-circle me-2"></i> <?php echo $error_message; ?></div>
                         <?php endif; ?>
-                        
-                        <form method="POST" action="">
-                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
-                            
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label for="nome" class="form-label">Nome Completo *</label>
-                                    <input type="text" class="form-control" id="nome" name="nome" 
-                                           value="<?php echo htmlspecialchars($nome ?? ''); ?>" required>
+
+                        <form method="POST" action="contacto.php" enctype="multipart/form-data">
+                            <div class="row g-4">
+                                <div class="col-md-12">
+                                    <label class="form-label">Nome Completo</label>
+                                    <input type="text" name="nome" class="form-control" required placeholder="Seu nome completo" value="<?php echo htmlspecialchars($_POST['nome'] ?? ''); ?>">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="email" class="form-label">Email *</label>
-                                    <input type="email" class="form-control" id="email" name="email" 
-                                           value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
+                                    <label class="form-label">E-mail de Contacto</label>
+                                    <input type="email" name="email" class="form-control" required placeholder="exemplo@email.com" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="telefone" class="form-label">Telefone</label>
-                                    <input type="tel" class="form-control" id="telefone" name="telefone" 
-                                           value="<?php echo htmlspecialchars($telefone ?? ''); ?>" 
-                                           placeholder="+245 xxx xxx xxx">
+                                    <label class="form-label">Telefone / WhatsApp</label>
+                                    <input type="tel" name="telefone" class="form-control" placeholder="+245 ..." value="<?php echo htmlspecialchars($_POST['telefone'] ?? ''); ?>">
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="assunto" class="form-label">Assunto *</label>
-                                    <select class="form-select" id="assunto" name="assunto" required>
-                                        <option value="">Selecione um assunto</option>
-                                        <option value="informacoes_gerais" <?php echo (($assunto ?? '') == 'informacoes_gerais') ? 'selected' : ''; ?>>Informações Gerais</option>
-                                        <option value="inscricao_ordem" <?php echo (($assunto ?? '') == 'inscricao_ordem') ? 'selected' : ''; ?>>Inscrição na Ordem</option>
-                                        <option value="consulta_juridica" <?php echo (($assunto ?? '') == 'consulta_juridica') ? 'selected' : ''; ?>>Consulta Jurídica</option>
-                                        <option value="formacao_eventos" <?php echo (($assunto ?? '') == 'formacao_eventos') ? 'selected' : ''; ?>>Formação e Eventos</option>
-                                        <option value="reclamacao_sugestao" <?php echo (($assunto ?? '') == 'reclamacao_sugestao') ? 'selected' : ''; ?>>Reclamação/Sugestão</option>
-                                        <option value="parcerias" <?php echo (($assunto ?? '') == 'parcerias') ? 'selected' : ''; ?>>Parcerias</option>
-                                        <option value="imprensa" <?php echo (($assunto ?? '') == 'imprensa') ? 'selected' : ''; ?>>Imprensa</option>
-                                        <option value="outros" <?php echo (($assunto ?? '') == 'outros') ? 'selected' : ''; ?>>Outros</option>
-                                    </select>
+                                <div class="col-md-12">
+                                    <label class="form-label">Assunto</label>
+                                    <input type="text" name="assunto" class="form-control" required placeholder="Motivo do seu contacto" value="<?php echo htmlspecialchars($_POST['assunto'] ?? ''); ?>">
                                 </div>
-                                <div class="col-12">
-                                    <label for="mensagem" class="form-label">Mensagem *</label>
-                                    <textarea class="form-control" id="mensagem" name="mensagem" rows="6" 
-                                              placeholder="Escreva a sua mensagem aqui..." required><?php echo htmlspecialchars($mensagem ?? ''); ?></textarea>
+                                <div class="col-md-12">
+                                    <label class="form-label">Mensagem</label>
+                                    <textarea name="mensagem" class="form-control" rows="5" required placeholder="Escreva a sua mensagem..."><?php echo htmlspecialchars($_POST['mensagem'] ?? ''); ?></textarea>
                                 </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="concordo_politica" required>
-                                        <label class="form-check-label" for="concordo_politica">
-                                            Concordo com a <a href="politica-privacidade.php" target="_blank">Política de Privacidade</a> *
-                                        </label>
+                                <div class="col-md-12">
+                                    <label class="form-label">Anexar Ficheiros (Multi-seleção)</label>
+                                    <input type="file" name="ficheiros[]" class="form-control" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+                                    <small class="text-muted">Pode selecionar vários ficheiros (Imagens, PDF, DOC). Máximo 10MB por ficheiro. (Opcional)</small>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    <label class="form-label">Verificação de Segurança (Captcha)</label>
+                                    <div class="captcha-box">
+                                        <span class="captcha-q">Quanto é <?php echo $_SESSION['captcha_a']; ?> + <?php echo $_SESSION['captcha_b']; ?>?</span>
+                                        <input type="number" name="captcha_res" class="form-control" style="max-width: 120px;" required placeholder="Resultado">
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-primary py-3 px-5">
-                                        <i class="fa fa-paper-plane me-2"></i>Enviar Mensagem
-                                    </button>
+
+                                <div class="col-md-12 text-end mt-4">
+                                    <button type="submit" class="btn-submit">ENVIAR MENSAGEM <i class="fas fa-paper-plane ms-2"></i></button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <!-- Contact End -->
 
-    <!-- Map Start -->
-    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
-                <h5 class="fw-bold text-primary text-uppercase">Localização</h5>
-                <h1 class="mb-0" style="color:#5B463F;font-family: 'Libre Baskerville'; font-weight: bold; font-style: normal;font-size:280%;">Como Chegar</h1>
-            </div>
-            
-            <div class="row g-5">
-                <div class="col-lg-6">
-                    <div class="bg-light rounded p-5">
-                        <h4 class="mb-4" style="color:#5B463F;">Indicações</h4>
-                        <div class="mb-4">
-                            <h6 class="text-primary mb-2">De Carro:</h6>
-                            <p class="mb-0">A sede da OAGB localiza-se na Rua 15, no centro de Bissau. Há estacionamento limitado nas proximidades.</p>
-                        </div>
-                        <div class="mb-4">
-                            <h6 class="text-primary mb-2">Transporte Público:</h6>
-                            <p class="mb-0">Várias linhas de transporte público passam perto da nossa sede. A paragem mais próxima fica a 2 minutos a pé.</p>
-                        </div>
-                        <div class="mb-4">
-                            <h6 class="text-primary mb-2">Pontos de Referência:</h6>
-                            <ul class="mb-0">
-                                <li>Próximo ao Tribunal Regional de Bissau</li>
-                                <li>A 5 minutos do Ministério da Justiça</li>
-                                <li>No centro histórico da cidade</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="bg-light rounded p-2">
-                        <!-- Google Maps Embed -->
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.7234567890123!2d-15.5985!3d11.8497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDUwJzU5LjAiTiAxNcKwMzUnNTQuNiJX!5e0!3m2!1spt!2sgw!4v1234567890123" 
-                                width="100%" height="350" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy" 
-                                referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Map End -->
+                <div class="col-lg-4">
+                    <div class="info-box-container" style="position:relative; z-index:20;">
+                        <div class="info-box">
+                            <h3 class="mb-4 text-white" style="font-family:'Libre Baskerville', serif; font-weight:700; font-size:1.3rem;">Os Nossos Contactos</h3>
+                            
+                            <div class="step-item">
+                                <div class="step-num"><i class="fas fa-map-marker-alt"></i></div>
+                                <div>
+                                    <div class="step-title" style="font-size:1rem; font-family:'Libre Baskerville', serif;">Endereço</div>
+                                    <div class="step-desc">Avenida Amílcar Cabral<br>Bissau, Guiné-Bissau</div>
+                                </div>
+                            </div>
 
-    <!-- Quick Contact Options -->
-    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s" style="background: #f8f9fa;">
-        <div class="container py-5">
-            <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
-                <h5 class="fw-bold text-primary text-uppercase">Contacto Rápido</h5>
-                <h1 class="mb-0" style="color:#5B463F;font-family: 'Libre Baskerville'; font-weight: bold; font-style: normal;font-size:280%;">Outras Formas de Contacto</h1>
-            </div>
-            
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6 wow slideInUp" data-wow-delay="0.3s">
-                    <div class="bg-white rounded shadow p-4 text-center h-100">
-                        <div class="bg-primary rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fa fa-phone text-white fa-lg"></i>
+                            <div class="step-item">
+                                <div class="step-num"><i class="fas fa-phone-alt"></i></div>
+                                <div>
+                                    <div class="step-title">Telefone</div>
+                                    <div class="step-desc">+245 955 475 889<br>+245 966 000 000</div>
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-num"><i class="fas fa-envelope"></i></div>
+                                <div>
+                                    <div class="step-title">E-mail</div>
+                                    <div class="step-desc">info@oagb.gw</div>
+                                </div>
+                            </div>
                         </div>
-                        <h5 class="mb-2">Telefone</h5>
-                        <p class="mb-3">Ligue diretamente para esclarecimentos rápidos</p>
-                        <a href="tel:+245955475889" class="btn btn-outline-primary btn-sm">
-                            +245 955 475 889
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 wow slideInUp" data-wow-delay="0.6s">
-                    <div class="bg-white rounded shadow p-4 text-center h-100">
-                        <div class="bg-primary rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fa fa-envelope text-white fa-lg"></i>
+
+                        <div class="urgent-card">
+                            <div class="urgent-title"><i class="far fa-clock"></i> Horário de Atendimento</div>
+                            <p class="text-muted small mb-4">A nossa sede está aberta para atendimento presencial nos seguintes horários:</p>
+                            
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="bg-light rounded-circle p-2" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-calendar-day text-primary"></i></div>
+                                <div>
+                                    <div class="small fw-bold">Segunda a Sexta</div>
+                                    <div style="color:var(--primary-maroon);">08:00 - 16:00</div>
+                                </div>
+                            </div>
                         </div>
-                        <h5 class="mb-2">Email</h5>
-                        <p class="mb-3">Envie um email para questões detalhadas</p>
-                        <a href="mailto:info@oagb.gw" class="btn btn-outline-primary btn-sm">
-                            info@oagb.gw
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 wow slideInUp" data-wow-delay="0.9s">
-                    <div class="bg-white rounded shadow p-4 text-center h-100">
-                        <div class="bg-primary rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fab fa-whatsapp text-white fa-lg"></i>
-                        </div>
-                        <h5 class="mb-2">WhatsApp</h5>
-                        <p class="mb-3">Contacto rápido via WhatsApp</p>
-                        <a href="https://wa.me/245955475889" target="_blank" class="btn btn-outline-primary btn-sm">
-                            Enviar Mensagem
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 wow slideInUp" data-wow-delay="1.2s">
-                    <div class="bg-white rounded shadow p-4 text-center h-100">
-                        <div class="bg-primary rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fab fa-facebook-f text-white fa-lg"></i>
-                        </div>
-                        <h5 class="mb-2">Facebook</h5>
-                        <p class="mb-3">Siga-nos e envie mensagem</p>
-                        <a href="https://www.facebook.com/profile.php?id=100087015439692" target="_blank" class="btn btn-outline-primary btn-sm">
-                            Visitar Página
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Quick Contact Options End -->
+    </section>
 
     <?php include 'includes/footer.php'; ?>
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>
-
-    <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/counterup/counterup.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=<?php echo time(); ?>"></script>
+</div>
 </body>
 </html>

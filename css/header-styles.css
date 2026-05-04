@@ -162,19 +162,22 @@
     background-color: rgba(255,255,255,0.15) !important;
     border-radius: 20px !important;
     backdrop-filter: blur(10px) !important;
-    transition: all 0.3s ease !important;
-    min-height: 45px !important;
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    min-height: 48px !important;
     line-height: 1.5 !important;
 }
 
+#header-carousel .carousel-caption .btn:hover,
+#header-carousel .carousel-caption .btn:focus,
+#header-carousel .carousel-caption .btn:active,
 #header-carousel-mobile .carousel-caption .btn:hover,
 #header-carousel-mobile .carousel-caption .btn:focus,
 #header-carousel-mobile .carousel-caption .btn:active {
-    background-color: rgba(255,255,255,0.9) !important;
-    color: #333 !important;
+    background-color: rgba(255,255,255,0.35) !important;
+    color: #fff !important;
     border-color: rgba(255,255,255,1) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
 }
 
 #header-carousel-mobile .carousel-caption .btn,

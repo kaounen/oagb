@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/header.php';
 
 // Form Handling
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -19,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Image handling omitted for brevity, but stays same...
     $imagem = '';
     if (isset($_FILES['imagem_destaque']) && $_FILES['imagem_destaque']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../gestao/assets/uploads/files/';
+        $upload_dir = __DIR__ . '/../../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['imagem_destaque']['name'], PATHINFO_EXTENSION);
@@ -45,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } catch (PDOException $e) { $error = "Erro ao guardar evento: " . $e->getMessage(); }
 }
+
+require_once __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="row mb-5 align-items-center">

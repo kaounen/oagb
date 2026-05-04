@@ -1,4 +1,5 @@
 <?php
+ob_start();
 // admin/includes/db.php
 
 // Reuse the existing main connection
@@ -33,5 +34,5 @@ if (!defined('ADMIN_PATH')) {
     }
 }
 if (!defined('ROOT_URL')) define('ROOT_URL', str_replace('/admin', '', ADMIN_PATH));
-if (!defined('UPLOADS_PATH')) define('UPLOADS_PATH', ROOT_URL . '/gestao/assets/uploads/files/');
+if (!defined('UPLOADS_PATH')) define('UPLOADS_PATH', ROOT_URL . '/uploads/');
 ?>

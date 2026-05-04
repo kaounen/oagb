@@ -35,7 +35,7 @@ foreach ($art_rows as $artigo) {
 
 $page_title = "Estatutos da OAGB";
 $meta_description = "Consulte online os Estatutos da Ordem dos Advogados da Guiné-Bissau.";
-$header_image = 'gestao/assets/uploads/files/close-up-scales-justice-original-azul.jpg';
+$header_image = 'uploads/close-up-scales-justice-original-azul.jpg';
 $has_header_image = !empty($header_image);
 ?>
 <!DOCTYPE html>
@@ -45,7 +45,7 @@ $has_header_image = !empty($header_image);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
@@ -158,7 +158,7 @@ $has_header_image = !empty($header_image);
                     <div class="d-flex align-items-center" style="margin-top: 12px;">
                         <a href="index.php">Início</a>
                         <span class="bc-sep"></span>
-                        <a href="a-ordem-dos-advogados.php">A Ordem</a>
+                        <a href="ordem-dos-advogados.php">A Ordem</a>
                         <span class="bc-sep"></span>
                         <span class="bc-active">Estatutos</span>
                     </div>
@@ -172,75 +172,16 @@ $has_header_image = !empty($header_image);
         </div>
     </div>
 
-    <!-- Mobile Header (Identical to Index in structure and size) -->
-    <div class="d-block d-lg-none" style="overflow: hidden !important; width: 100vw; position: relative;">
-        <div id="header-carousel-mobile" class="carousel slide" data-bs-ride="false" style="position: relative; overflow: hidden !important;">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="w-100" src="<?php echo htmlspecialchars($header_image); ?>" alt="OAGB Mobile Header">
-                    
-                    <!-- Contacts (Identical to Index) -->
-                    <div class="mobile-header-contacts container-fluid px-1 pt-3 pb-1">
-                        <div class="row mb-3 mx-0">
-                            <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; gap: 8px; overflow-x: auto; width: 100%;">
-                                <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-map-marker-alt text-white-50 me-1"></i>Av. Amílcar Cabral</small>
-                                <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-phone-alt text-white-50 me-1"></i>+245 955475889</small>
-                                <small class="text-white text-nowrap" style="font-size: 0.70rem;"><i class="fa fa-envelope-open text-white-50 me-1"></i>info@oagb.gw</small>
-                            </div>
-                        </div>
-                        
-                        <div class="row mb-1 mx-0">
-                            <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; gap: 12px; width: 100%;">
-                                <button type="button" class="btn btn-sm btn-outline-light px-2 fw-bold d-flex align-items-center mobile-pill-btn" data-bs-toggle="modal" data-bs-target="#searchModal">
-                                     <i class="fa fa-search" style="font-size: 1rem;"></i>
-                                </button>
-                                <div class="dropdown">
-                                    <button type="button" class="btn btn-sm btn-outline-light px-2 fw-bold d-flex align-items-center mobile-pill-btn" data-bs-toggle="dropdown" data-bs-display="static">
-                                        <i class="fa fa-globe" style="font-size: 1rem;"></i>
-                                    </button>
-                                    <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2050; margin-top: 10px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: absolute; left: 50%; transform: translateX(-50%); right: auto;">
-                                        <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
-                                        <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
-                                        <a href="#" onclick="changeLanguage('fr'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
-                                        <a href="#" onclick="changeLanguage('es'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
-                                        <a href="#" onclick="changeLanguage('ar'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
-                                        <a href="#" onclick="changeLanguage('zh-CN'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
-                                        <a href="#" onclick="changeLanguage('ru'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
-                                    </div>
-                                </div>
-                                <a href="portal/login.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center mobile-pill-btn">
-                                    <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Área Reservada
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Mobile Header -->
+    <?php 
+    $mobile_breadcrumbs = [
+        ['label' => 'Início', 'url' => 'index.php'],
+        ['label' => 'A Ordem', 'url' => 'ordem-dos-advogados.php'],
+        ['label' => 'Estatutos', 'active' => true]
+    ];
+    include 'includes/mobile-header-subpage.php'; 
+    ?>
 
-                    <!-- Navbar (Identical to Index) -->
-                    <div class="mobile-navbar-wrapper container-fluid position-relative p-0">
-                        <?php include 'includes/navbar.php'; ?>
-                    </div>
-
-                    <!-- Breadcrumbs (Positioned at bottom of Index-sized header) -->
-                    <div class="mobile-breadcrumb-bar">
-                        <div class="container d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center">
-                                <a href="index.php" class="text-white opacity-75">Início</a>
-                                <span class="dot-sep" style="width: 4px; height: 4px; background: #B1A276; display: inline-block; border-radius: 50%; margin: 0 8px; vertical-align: middle;"></span>
-                                <a href="a-ordem-dos-advogados.php" class="text-white opacity-75">A Ordem</a>
-                                <span class="dot-sep" style="width: 4px; height: 4px; background: #B1A276; display: inline-block; border-radius: 50%; margin: 0 8px; vertical-align: middle;"></span>
-                                <span class="bc-active">Estatutos</span>
-                            </div>
-                            <div class="quick-links d-flex gap-1">
-                                <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
-                                <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
-                                <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Content Area -->
     <section class="py-5" style="background: #f7f5f0;">
@@ -501,3 +442,4 @@ $has_header_image = !empty($header_image);
     </script>
 </body>
 </html>
+

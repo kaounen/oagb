@@ -1,359 +1,344 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'connect.php';
+require_once 'includes/functions.php';
 
 $resultados = [];
-$filtros_aplicados = [];
-$total_resultados = 0;
+$filtros = [];
+$pesquisou = false;
 
-// Processar formulário de pesquisa
-if ($_POST) {
-    $sql = "SELECT numero_registo, nome_completo, regiao, localidade, telefone, email, data_inscricao FROM advogados WHERE status = 'ativo'";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['q'])) {
+    $pesquisou = true;
+    $sql = "SELECT id, numero_registo, nome_completo, regiao, localidade, telefone, email, data_inscricao, foto 
+            FROM advogados 
+            WHERE status = 'ativo'";
     $params = [];
-    
-    if (!empty($_POST['nome'])) {
+
+    $nome = clean_input($_POST['nome'] ?? $_GET['nome'] ?? $_GET['q'] ?? '');
+    if ($nome) {
         $sql .= " AND nome_completo LIKE ?";
-        $params[] = '%' . sanitize($_POST['nome']) . '%';
-        $filtros_aplicados['nome'] = sanitize($_POST['nome']);
+        $params[] = "%$nome%";
+        $filtros['nome'] = $nome;
     }
-    
-    if (!empty($_POST['registo'])) {
+
+    $registo = clean_input($_POST['registo'] ?? $_GET['registo'] ?? '');
+    if ($registo) {
         $sql .= " AND numero_registo LIKE ?";
-        $params[] = '%' . sanitize($_POST['registo']) . '%';
-        $filtros_aplicados['registo'] = sanitize($_POST['registo']);
+        $params[] = "%$registo%";
+        $filtros['registo'] = $registo;
     }
-    
-    if (!empty($_POST['regiao'])) {
+
+    $regiao = clean_input($_POST['regiao'] ?? $_GET['regiao'] ?? '');
+    if ($regiao && $regiao !== '') {
         $sql .= " AND regiao = ?";
-        $params[] = sanitize($_POST['regiao']);
-        $filtros_aplicados['regiao'] = sanitize($_POST['regiao']);
+        $params[] = $regiao;
+        $filtros['regiao'] = $regiao;
     }
-    
-    if (!empty($_POST['localidade'])) {
+
+    $localidade = clean_input($_POST['localidade'] ?? $_GET['localidade'] ?? '');
+    if ($localidade) {
         $sql .= " AND localidade LIKE ?";
-        $params[] = '%' . sanitize($_POST['localidade']) . '%';
-        $filtros_aplicados['localidade'] = sanitize($_POST['localidade']);
+        $params[] = "%$localidade%";
+        $filtros['localidade'] = $localidade;
     }
-    
-    if (!empty($_POST['morada'])) {
-        $sql .= " AND morada LIKE ?";
-        $params[] = '%' . sanitize($_POST['morada']) . '%';
-        $filtros_aplicados['morada'] = sanitize($_POST['morada']);
-    }
-    
+
     $sql .= " ORDER BY nome_completo ASC LIMIT 50";
-    
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $resultados = $stmt->fetchAll();
-    $total_resultados = count($resultados);
 }
 
 $page_title = "Pesquisa de Advogados";
-$breadcrumb = "Advogados";
+$header_image = 'uploads/lady-justice-holding-scales-sword.jpg';
 ?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="utf-8">
-    <title>Pesquisa de Advogados - Ordem dos Advogados da Guiné-Bissau</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Pesquisa de Advogados, OAGB, Advogados Guinea-Bissau" name="keywords">
-    <meta content="Pesquise advogados qualificados na Guiné-Bissau por região e especialidade" name="description">
-
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
+    <?php include 'includes/meta_tags_include.php'; ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/animate/animate.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/header-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/footer-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
 
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <style>
+        :root { --primary-gold: #B1A276; --primary-maroon: #4D1C21; }
+        html, body { overflow-x: hidden !important; width: 100%; margin: 0; padding: 0; }
+        body { font-family: 'Open Sans', sans-serif; background-color: #fafafa; }
+        
+        /* === SUBPAGE BREADCRUMB BAR === */
+        .subpage-breadcrumb-bar { padding: 10px 0 0 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 20px; }
+        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: rgba(255,255,255,0.85) !important; text-decoration: none !important; font-size: 0.8rem; letter-spacing: 0.5px; transition: .3s; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+        .subpage-breadcrumb-bar a:hover { color: #fff; }
+        .subpage-breadcrumb-bar .bc-active { color: #fff; font-weight: 600; font-size: 0.8rem !important; opacity: 1 !important; }
+        .bc-sep { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--primary-gold); margin: 0 10px; vertical-align: middle; opacity: 0.6; }
+
+        .quick-links a {
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3);
+            display: inline-flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.9); transition: .3s; font-size: 0.8rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .quick-links a:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: var(--primary-gold); }
+
+        /* Mobile specific breadcrumbs overlaid on bottom of header */
+        @media (max-width: 991px) {
+            .mobile-breadcrumb-bar { 
+                background: transparent; padding: 10px 0; position: absolute; bottom: 0; left: 0; right: 0; 
+                z-index: 1045 !important; pointer-events: auto !important; 
+            }
+            .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span { 
+                font-size: 0.72rem; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            }
+            .mobile-breadcrumb-bar .bc-active { font-weight: 500; font-size: 0.72rem !important; }
+            .mobile-breadcrumb-bar .quick-links a { 
+                border-color: rgba(255,255,255,0.4); color: #fff; width: 28px; height: 28px; font-size: 0.65rem; 
+            }
+            #header-carousel-mobile .carousel-item { min-height: 62vh !important; }
+        }
+
+
+        .search-container { background: #fff; border-radius: 20px; padding: 35px 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.04); position: relative; margin-top: 0; margin-bottom: 40px; border: 1px solid rgba(0,0,0,0.02); }
+        @media (max-width: 576px) { .search-container { padding: 25px 20px; } }
+
+        .form-label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-maroon); margin-bottom: 10px; }
+        .form-control, .form-select { border-radius: 12px; border: 1px solid #eee; padding: 12px 18px; font-size: 0.9rem; transition: .3s; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-gold); box-shadow: 0 0 0 4px rgba(177, 162, 118, 0.1); }
+        
+        .btn-search { background: var(--primary-maroon); color: #fff; border-radius: 12px; height: 50px; font-weight: 700; border: none; transition: .3s; width: 100%; margin-top: 31px; }
+        .btn-search:hover { background: var(--primary-gold); transform: translateY(-2px); }
+        
+        .lawyer-card { background: #fff; border-radius: 24px; overflow: hidden; border: 1px solid #f0ece4; transition: .3s; height: 100%; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+        .lawyer-card:hover { transform: translateY(-5px); box-shadow: 0 15px 45px rgba(177, 162, 118, 0.12); }
+        .lawyer-header { padding: 25px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #f9f6f0; }
+        .lawyer-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #f0ece4; background: #eee; }
+        .lawyer-initials { width: 60px; height: 60px; border-radius: 50%; background: var(--primary-maroon); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-family: 'Libre Baskerville'; font-weight: 700; border: 2px solid #f0ece4; }
+        .lawyer-name { font-family: 'Libre Baskerville', serif; font-size: 1rem; color: var(--primary-maroon); font-weight: 700; margin-bottom: 2px; }
+        .lawyer-reg { font-size: 0.7rem; color: var(--primary-gold); font-weight: 700; text-transform: uppercase; }
+        .lawyer-body { padding: 25px; min-height: 140px; }
+        .lawyer-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.85rem; color: #666; }
+        .lawyer-item i { color: var(--primary-gold); width: 14px; text-align: center; }
+        .lawyer-footer { padding: 15px 25px; background: #fdfbf7; border-top: 1px solid #f9f6f0; display: flex; gap: 10px; }
+        .btn-lawyer { flex: 1; border-radius: 50px; font-size: 0.75rem; font-weight: 700; padding: 8px; transition: .3s; text-decoration: none; text-align: center; }
+        
+        .btn-lawyer-call {
+            color: var(--primary-gold);
+            border: 1px solid var(--primary-gold);
+            background: transparent;
+        }
+        .btn-lawyer-call:hover {
+            background: var(--primary-gold);
+            color: #fff;
+        }
+        
+        .btn-lawyer-email {
+            background: var(--primary-maroon);
+            color: #fff;
+            border: 1px solid var(--primary-maroon);
+        }
+        .btn-lawyer-email:hover {
+            background: #3a1519;
+            color: #fff;
+            border-color: #3a1519;
+        }
+        
+        .badge-filter { background: #f8f9fa; border: 1px solid #eee; color: #666; padding: 6px 15px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .badge-filter i { color: var(--primary-gold); font-size: 0.6rem; }
+        .quick-links a {
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3);
+            display: inline-flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.9); transition: .3s; font-size: 0.8rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .quick-links a:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: var(--primary-gold); }
+    </style>
 </head>
 
 <body>
-    <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner"></div>
-    </div>
-    <!-- Spinner End -->
+<div style="overflow-x: hidden; width: 100%; position: relative;">
 
-        <?php include 'includes/topbar.php'; ?>
+    <?php include 'includes/topbar.php'; ?>
 
-    <!-- Navbar & Header Start -->
-    <div class="container-fluid position-relative p-0">
+    <!-- Desktop Header -->
+    <div class="container-fluid position-relative p-0 d-none d-lg-block">
         <?php include 'includes/navbar.php'; ?>
-
-        <div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
-            <div class="row py-5">
-                <div class="col-12 pt-lg-5 mt-lg-5 text-center">
-                    <h1 class="display-4 text-white animated zoomIn"><?php echo $page_title; ?></h1>
-                    <a href="index.php" class="h5 text-white">Início</a>
-                    <i class="far fa-circle text-white px-2"></i>
-                    <a href="" class="h5 text-white"><?php echo $page_title; ?></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Navbar & Header End -->
-
-    <!-- Full Screen Search Start -->
-    <div class="modal fade" id="searchModal" tabindex="-1">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content" style="background: rgba(9, 30, 62, .7);">
-                <div class="modal-header border-0">
-                    <button type="button" class="btn bg-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex align-items-center justify-content-center">
-                    <div class="input-group" style="max-width: 600px;">
-                        <input type="text" class="form-control bg-transparent border-primary p-3" placeholder="Digite a palavra de pesquisa">
-                        <button class="btn btn-primary px-4"><i class="bi bi-search"></i></button>
+        <div class="container-fluid bg-primary bg-header d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: linear-gradient(rgba(17, 25, 35, 0.1), rgba(17, 25, 35, 0.45)), url('<?php echo $header_image; ?>') center center no-repeat; background-size: cover;">
+            <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 20px;">
+                <div class="container d-flex justify-content-between">
+                    <div class="d-flex align-items-center" style="margin-top: 12px;">
+                        <a href="index.php">Início</a>
+                        <span class="bc-sep"></span>
+                        <a href="advogados-inscritos.php">Advogados</a>
+                        <span class="bc-sep"></span>
+                        <span class="bc-active">Pesquisa</span>
+                    </div>
+                    <div class="quick-links d-flex align-items-center gap-2">
+                        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+                        <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Full Screen Search End -->
 
-    <!-- Search Form Start -->
-    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
-                <h5 class="fw-bold text-primary text-uppercase" style="font-family: 'Open Sans';">Encontre um Advogado</h5>
-                <h1 class="mb-0" style="color:#5B463F;font-family: 'Libre Baskerville'; font-weight: bold;">Pesquise por critérios específicos</h1>
-            </div>
-            
-            <div class="row g-5">
-                <div class="col-lg-6 wow slideInUp" data-wow-delay="0.3s">
-                    <form method="POST" action="">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <select class="form-select bg-light border-0" name="regiao" style="height: 55px;">
-                                    <option value="">Selecione a Região</option>
-                                    <?php foreach ($regioes_gb as $codigo => $nome): ?>
-                                        <option value="<?php echo $codigo; ?>" <?php echo (isset($filtros_aplicados['regiao']) && $filtros_aplicados['regiao'] == $codigo) ? 'selected' : ''; ?>>
-                                            <?php echo $nome; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="nome" class="form-control border-0 bg-light px-4" placeholder="Nome do Advogado" style="height: 55px;" value="<?php echo isset($filtros_aplicados['nome']) ? htmlspecialchars($filtros_aplicados['nome']) : ''; ?>">
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="registo" class="form-control border-0 bg-light px-4" placeholder="Número de Registo" style="height: 55px;" value="<?php echo isset($filtros_aplicados['registo']) ? htmlspecialchars($filtros_aplicados['registo']) : ''; ?>">
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="localidade" class="form-control border-0 bg-light px-4" placeholder="Localidade" style="height: 55px;" value="<?php echo isset($filtros_aplicados['localidade']) ? htmlspecialchars($filtros_aplicados['localidade']) : ''; ?>">
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="morada" class="form-control border-0 bg-light px-4" placeholder="Morada" style="height: 55px;" value="<?php echo isset($filtros_aplicados['morada']) ? htmlspecialchars($filtros_aplicados['morada']) : ''; ?>">
-                            </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">
-                                    <i class="fa fa-search me-2"></i>Pesquisar
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-6 wow slideInUp" data-wow-delay="0.6s">
-                    <img src="img/old-books-library-table.jpg" style="width:100%;height:auto;" class="img-fluid rounded shadow" alt="Biblioteca Legal">
-                    <div class="bg-light rounded p-4 mt-4">
-                        <h5 class="mb-3" style="font-family: 'Libre Baskerville'; color: #4D1C21;">Informações Úteis</h5>
-                        <ul class="list-unstyled" style="font-family: 'Open Sans';">
-                            <li class="mb-2"><i class="bi bi-check-circle text-primary me-2"></i>Pesquise por região para encontrar advogados próximos</li>
-                            <li class="mb-2"><i class="bi bi-check-circle text-primary me-2"></i>Use o número de registo para verificar credenciais</li>
-                            <li class="mb-2"><i class="bi bi-check-circle text-primary me-2"></i>Todos os advogados listados estão em situação regular</li>
-                            <li class="mb-0"><i class="bi bi-check-circle text-primary me-2"></i>Para mais informações, consulte o nosso <a href="advogados-inscritos.php">registo completo</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Search Form End -->
+    <!-- Mobile Header -->
+    <?php 
+    $mobile_breadcrumbs = [
+        ['label' => 'Início', 'url' => 'index.php'],
+        ['label' => 'Advogados', 'url' => 'advogados-inscritos.php'],
+        ['label' => 'Pesquisa', 'active' => true]
+    ];
+    include 'includes/mobile-header-subpage.php'; 
+    ?>
 
-    <!-- Results Section -->
-    <?php if ($_POST): ?>
-    <div class="container-fluid py-5" style="background: #f8f9fa;">
+
+    <section class="pb-5 pt-5" style="background: #f7f5f0;">
         <div class="container">
-            <!-- Results Header -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h3 style="font-family: 'Libre Baskerville'; color: #4D1C21;">
-                            Resultados da Pesquisa
-                        </h3>
-                        <span class="badge bg-primary fs-6">
-                            <?php echo $total_resultados; ?> resultado(s) encontrado(s)
-                        </span>
-                    </div>
-                    
-                    <!-- Applied Filters -->
-                    <?php if (!empty($filtros_aplicados)): ?>
-                    <div class="mt-3">
-                        <h6 class="mb-2" style="font-family: 'Open Sans';">Filtros aplicados:</h6>
-                        <?php foreach ($filtros_aplicados as $campo => $valor): ?>
-                            <span class="badge bg-secondary me-2">
-                                <?php 
-                                $labels = [
-                                    'nome' => 'Nome',
-                                    'registo' => 'Registo',
-                                    'regiao' => 'Região',
-                                    'localidade' => 'Localidade',
-                                    'morada' => 'Morada'
-                                ];
-                                echo $labels[$campo] . ': ' . htmlspecialchars($valor);
-                                ?>
-                            </span>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php endif; ?>
+            
+            <div class="search-container">
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-1" style="color: var(--primary-maroon); font-family: 'Libre Baskerville';">
+                        <i class="fas fa-search me-2" style="color: var(--primary-gold);"></i> Encontrar Advogado
+                    </h5>
+                    <p class="text-muted small mb-0">Preencha os campos abaixo para localizar um profissional inscrito.</p>
                 </div>
-            </div>
-
-            <!-- Results -->
-            <?php if ($total_resultados > 0): ?>
-            <div class="row g-4">
-                <?php foreach ($resultados as $advogado): ?>
-                <div class="col-lg-6 col-xl-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body">
-                            <div class="d-flex align-items-start mb-3">
-                                <div class="bg-primary rounded-circle p-3 me-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-user-tie text-white"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h5 class="card-title mb-1" style="font-family: 'Libre Baskerville'; color: #4D1C21;">
-                                        <?php echo htmlspecialchars($advogado->nome_completo); ?>
-                                    </h5>
-                                    <small class="text-muted" style="font-family: 'Open Sans';">
-                                        Registo: <?php echo htmlspecialchars($advogado->numero_registo); ?>
-                                    </small>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <div class="row text-sm">
-                                    <div class="col-12 mb-2">
-                                        <i class="bi bi-geo-alt text-primary me-2"></i>
-                                        <span style="font-family: 'Open Sans';">
-                                            <?php echo htmlspecialchars($advogado->regiao); ?>
-                                            <?php if ($advogado->localidade): ?>
-                                                - <?php echo htmlspecialchars($advogado->localidade); ?>
-                                            <?php endif; ?>
-                                        </span>
-                                    </div>
-                                    <?php if ($advogado->telefone): ?>
-                                    <div class="col-12 mb-2">
-                                        <i class="bi bi-telephone text-primary me-2"></i>
-                                        <span style="font-family: 'Open Sans';">
-                                            <?php echo htmlspecialchars($advogado->telefone); ?>
-                                        </span>
-                                    </div>
-                                    <?php endif; ?>
-                                    <?php if ($advogado->email): ?>
-                                    <div class="col-12 mb-2">
-                                        <i class="bi bi-envelope text-primary me-2"></i>
-                                        <span style="font-family: 'Open Sans';">
-                                            <?php echo htmlspecialchars($advogado->email); ?>
-                                        </span>
-                                    </div>
-                                    <?php endif; ?>
-                                    <div class="col-12">
-                                        <i class="bi bi-calendar text-primary me-2"></i>
-                                        <span style="font-family: 'Open Sans';">
-                                            Inscrito em <?php echo format_date($advogado->data_inscricao); ?>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Action Buttons -->
-                            <div class="d-grid gap-2">
-                                <?php if ($advogado->telefone): ?>
-                                <a href="tel:<?php echo $advogado->telefone; ?>" class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-telephone me-2"></i>Ligar
-                                </a>
-                                <?php endif; ?>
-                                <?php if ($advogado->email): ?>
-                                <a href="mailto:<?php echo $advogado->email; ?>" class="btn btn-outline-secondary btn-sm">
-                                    <i class="bi bi-envelope me-2"></i>Enviar Email
-                                </a>
-                                <?php endif; ?>
-                            </div>
+                <form method="POST" action="pesquisa-advogados.php">
+                    <div class="row g-3">
+                        <div class="col-lg-4 col-md-6">
+                            <label class="form-label">Nome Completo</label>
+                            <input type="text" name="nome" class="form-control" placeholder="Ex: Januário Pedro..." value="<?php echo htmlspecialchars($filtros['nome'] ?? ''); ?>">
+                        </div>
+                        <div class="col-lg-2 col-md-6">
+                            <label class="form-label">Cédula Nº</label>
+                            <input type="text" name="registo" class="form-control" placeholder="Nº de Registo" value="<?php echo htmlspecialchars($filtros['registo'] ?? ''); ?>">
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label">Região</label>
+                            <select name="regiao" class="form-select">
+                                <option value="">Todas as Regiões</option>
+                                <?php foreach ($regioes_gb as $val => $label): ?>
+                                    <option value="<?php echo $val; ?>" <?php echo (isset($filtros['regiao']) && $filtros['regiao'] == $val) ? 'selected' : ''; ?>>
+                                        <?php echo $label; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-flex align-items-end">
+                            <button type="submit" class="btn-search"><i class="fas fa-search me-2"></i> PESQUISAR</button>
                         </div>
                     </div>
-                </div>
-                <?php endforeach; ?>
+                </form>
             </div>
-            
-            <?php if ($total_resultados >= 50): ?>
-            <div class="text-center mt-4">
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Foram mostrados os primeiros 50 resultados. Para uma pesquisa mais específica, use mais filtros.
+
+            <?php if ($pesquisou): ?>
+                <div class="mt-4 pt-2">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                        <div>
+                            <h3 class="fw-bold m-0" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1.3rem;">
+                                <?php echo count($resultados); ?> Advogados Encontrados
+                            </h3>
+                            <div class="mt-2">
+                                <?php foreach($filtros as $key => $val): ?>
+                                    <span class="badge-filter"><i class="fas fa-check"></i> <?php echo ucfirst($key); ?>: <?php echo htmlspecialchars($val); ?></span>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <a href="pesquisa-advogados.php" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Limpar Filtros</a>
+                    </div>
+
+                    <div class="row g-4">
+                        <?php if (count($resultados) > 0): foreach ($resultados as $adv): ?>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="lawyer-card">
+                                    <div class="lawyer-header">
+                                        <?php if ($adv->foto): ?>
+                                            <img src="uploads/advogados/<?php echo $adv->foto; ?>" class="lawyer-avatar" alt="<?php echo $adv->nome_completo; ?>">
+                                        <?php else: ?>
+                                            <div class="lawyer-initials">
+                                                <?php 
+                                                    $names = explode(' ', $adv->nome_completo);
+                                                    echo substr($names[0], 0, 1) . (isset($names[1]) ? substr($names[1], 0, 1) : '');
+                                                ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div>
+                                            <div class="lawyer-reg">Cédula nº <?php echo $adv->numero_registo; ?></div>
+                                            <h4 class="lawyer-name"><?php echo htmlspecialchars($adv->nome_completo); ?></h4>
+                                        </div>
+                                    </div>
+                                    <div class="lawyer-body">
+                                        <div class="lawyer-item">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span><?php echo htmlspecialchars($adv->regiao . ($adv->localidade ? ' - ' . $adv->localidade : '')); ?></span>
+                                        </div>
+                                        <?php if($adv->telefone): ?>
+                                            <div class="lawyer-item">
+                                                <i class="fas fa-phone-alt"></i>
+                                                <span><?php echo htmlspecialchars($adv->telefone); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if($adv->email): ?>
+                                            <div class="lawyer-item">
+                                                <i class="fas fa-envelope"></i>
+                                                <span class="text-truncate" style="max-width: 100%;"><?php echo htmlspecialchars($adv->email); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="lawyer-footer">
+                                        <a href="tel:<?php echo $adv->telefone; ?>" class="btn btn-lawyer-call btn-lawyer"> Ligar</a>
+                                        <a href="mailto:<?php echo $adv->email; ?>" class="btn btn-lawyer-email btn-lawyer"> Email</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; else: ?>
+                            <div class="col-12 text-center py-5">
+                                <div class="p-5 bg-white rounded-4 border shadow-sm">
+                                    <i class="fas fa-search fa-3x mb-3 text-muted"></i>
+                                    <h4 class="fw-bold" style="color: var(--primary-maroon);">Nenhum resultado</h4>
+                                    <p class="text-muted">Tente ajustar os critérios de pesquisa ou verifique a ortografia do nome.</p>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
-            </div>
-            <?php endif; ?>
-            
             <?php else: ?>
-            <div class="text-center">
-                <div class="alert alert-warning">
-                    <h5><i class="bi bi-search me-2"></i>Nenhum resultado encontrado</h5>
-                    <p class="mb-0">Tente ajustar os critérios de pesquisa ou consulte a nossa <a href="advogados-inscritos.php">lista completa de advogados</a>.</p>
+                <!-- Pre-search Content -->
+                <div class="row mt-5 pt-4 g-lg-5 g-3 z-1 position-relative overflow-hidden">
+                    <div class="col-lg-4 text-center px-4">
+                        <div class="mb-4 d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background-color: rgba(177, 162, 118, 0.1); transition: .3s;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='scale(1)';">
+                            <i class="fas fa-shield-alt fs-2" style="color: var(--primary-gold);"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3" style="color: var(--primary-maroon); font-family: 'Libre Baskerville';">Segurança Jurídica</h5>
+                        <p class="text-muted small m-0" style="line-height: 1.6;">Todos os advogados listados estão devidamente inscritos e autorizados a exercer a advocacia na Guiné-Bissau.</p>
+                    </div>
+                    <div class="col-lg-4 text-center px-4">
+                        <div class="mb-4 d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background-color: rgba(177, 162, 118, 0.1); transition: .3s;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='scale(1)';">
+                            <i class="fas fa-map-marked-alt fs-2" style="color: var(--primary-gold);"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3" style="color: var(--primary-maroon); font-family: 'Libre Baskerville';">Filtro Regional</h5>
+                        <p class="text-muted small m-0" style="line-height: 1.6;">Encontre profissionais próximos de si filtrando por região ou localidade específica.</p>
+                    </div>
+                    <div class="col-lg-4 text-center px-4">
+                        <div class="mb-4 d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background-color: rgba(177, 162, 118, 0.1); transition: .3s;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='scale(1)';">
+                            <i class="fas fa-id-card fs-2" style="color: var(--primary-gold);"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3" style="color: var(--primary-maroon); font-family: 'Libre Baskerville';">Verificabilidade</h5>
+                        <p class="text-muted small m-0" style="line-height: 1.6;">Valide a identidade de um profissional através do seu número de cédula profissional.</p>
+                    </div>
                 </div>
-            </div>
             <?php endif; ?>
         </div>
-    </div>
-    <?php endif; ?>
+    </section>
 
-    <!-- Call to Action -->
-    <!-- <div class="container-fluid bg-primary py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h3 class="text-white mb-2" style="font-family: 'Libre Baskerville';">Não encontrou o que procura?</h3>
-                    <p class="text-white mb-0" style="font-family: 'Open Sans';">Solicite a indicação de um advogado qualificado para o seu caso específico.</p>
-                </div>
-                <div class="col-lg-4 text-lg-end">
-                    <a href="solicitacao-advogados.php" class="btn btn-light py-3 px-5 me-3">Solicitar Advogado</a>
-                    <a href="advogados-inscritos.php" class="btn btn-outline-light py-3 px-5">Ver Todos</a>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- Footer -->
     <?php include 'includes/footer.php'; ?>
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>
-
-    <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/counterup/counterup.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=<?php echo time(); ?>"></script>
+</div>
 </body>
 </html>

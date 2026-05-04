@@ -543,3 +543,32 @@ if (!function_exists('oagb_fix_encoding')) {
         return $fixed_text;
     }
 }
+
+// Regiões da Guiné-Bissau
+$regioes_gb = [
+    'SAB' => 'Setor Autónomo de Bissau',
+    'Bafatá' => 'Bafatá',
+    'Biombo' => 'Biombo',
+    'Bolama' => 'Bolama-Bijagós',
+    'Cacheu' => 'Cacheu',
+    'Gabú' => 'Gabú',
+    'Oio' => 'Oio',
+    'Quinara' => 'Quinara',
+    'Tombali' => 'Tombali'
+];
+
+// Áreas jurídicas
+$areas_juridicas = [
+    'civil' => 'Direito Civil',
+    'criminal' => 'Direito Criminal',
+    'comercial' => 'Direito Comercial',
+    'trabalho' => 'Direito do Trabalho',
+    'administrativo' => 'Direito Administrativo',
+    'constitucional' => 'Direito Constitucional',
+    'internacional' => 'Direito Internacional',
+    'familia' => 'Direito da Família',
+    'propriedade' => 'Direito de Propriedade',
+    'tributario' => 'Direito Tributário',
+    'ambiental' => 'Direito Ambiental',
+    'outro' => 'Outro'
+];

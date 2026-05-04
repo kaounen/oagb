@@ -1,15 +1,22 @@
 <?php
 require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/header.php';
 
 $id = $_GET['id'] ?? 0;
 
 require_once __DIR__ . '/../../includes/AttachmentHelper.php';
+require_once __DIR__ . '/../../includes/GalleryHelper.php';
 
 // Handle Attachment Deletion
 if (isset($_GET['delete_attachment'])) {
     AttachmentHelper::delete($pdo, $_GET['delete_attachment']);
     header("Location: edit.php?id=" . $id . "&att_deleted=1");
+    exit;
+}
+
+// Handle Gallery Deletion
+if (isset($_GET['delete_gallery'])) {
+    GalleryHelper::delete($pdo, 'noticia', $_GET['delete_gallery']);
+    header("Location: edit.php?id=" . $id . "&gal_deleted=1");
     exit;
 }
 
@@ -25,6 +32,7 @@ try {
     }
 
     $attachments = AttachmentHelper::get($pdo, 'noticia', $id);
+    $gallery = GalleryHelper::get($pdo, 'noticia', $id);
 } catch (PDOException $e) {
     header("Location: index.php");
     exit;
@@ -42,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Photo upload handling
     if (isset($_FILES['foto1']) && $_FILES['foto1']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../gestao/assets/uploads/files/';
+        $upload_dir = __DIR__ . '/../../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['foto1']['name'], PATHINFO_EXTENSION);
@@ -63,9 +71,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("UPDATE noticias SET titulo = ?, data_publicacao = ?, conteudo = ?, imagem_destaque = ?, resumo = ?, categoria_tipo = ?, slug = ? WHERE id = ?");
         $stmt->execute([$titulo, $data_pub, $conteudo, $imagem, $legenda, $cat_tipo, $slug, $id]);
         
+        // Handle Quick PDF Attachment (ficheiro_anexo column if exists)
+        if (isset($_FILES['pdf_anexo']) && $_FILES['pdf_anexo']['error'] === UPLOAD_ERR_OK) {
+            $upload_dir = __DIR__ . '/../../../../uploads/';
+            $ext = pathinfo($_FILES['pdf_anexo']['name'], PATHINFO_EXTENSION);
+            $pdf_name = 'doc_' . $id . '_' . uniqid() . '.' . $ext;
+            if (move_uploaded_file($_FILES['pdf_anexo']['tmp_name'], $upload_dir . $pdf_name)) {
+                $pdo->prepare("UPDATE noticias SET ficheiro_anexo = ? WHERE id = ?")->execute([$pdf_name, $id]);
+            }
+        }
+
         // Handle Multiple Attachments
         if (isset($_FILES['attachments'])) {
             AttachmentHelper::save($pdo, 'noticia', $id, $_FILES['attachments']);
+        }
+
+        // Handle Gallery Uploads
+        if (isset($_FILES['gallery_files'])) {
+            GalleryHelper::save($pdo, 'noticia', $id, $_FILES['gallery_files']);
+        }
+
+        // Update Gallery Metadata
+        if (isset($_POST['gal_title'])) {
+            foreach ($_POST['gal_title'] as $img_id => $title) {
+                $desc = $_POST['gal_desc'][$img_id] ?? '';
+                $order = $_POST['gal_order'][$img_id] ?? 0;
+                GalleryHelper::update($pdo, 'noticia', $img_id, $title, $desc, $order);
+            }
         }
 
         header("Location: index.php?updated=1");
@@ -74,6 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Erro ao atualizar notícia: " . $e->getMessage();
     }
 }
+
+require_once __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="row mb-5 align-items-center">
@@ -128,13 +162,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="small text-muted">Trocar imagem atual</div>
                                     <input type="file" name="foto1" id="foto1_input" class="d-none" accept="image/*">
                                 </div>
-                                <img id="preview" src="/oagb/gestao/assets/uploads/files/<?php echo $noticia['imagem_destaque']; ?>" class="img-fluid mt-3 rounded shadow-sm <?php echo empty($noticia['imagem_destaque']) ? 'd-none' : ''; ?>">
+                                <img id="preview" src="/oagb/uploads/<?php echo $noticia['imagem_destaque']; ?>" class="img-fluid mt-3 rounded shadow-sm <?php echo empty($noticia['imagem_destaque']) ? 'd-none' : ''; ?>">
                             </div>
 
                             <div class="mb-4">
                                 <label class="form-label text-uppercase fw-bold text-muted small">Legenda da Imagem / Resumo</label>
                                 <input type="text" name="legendaFoto1" class="form-control border-0" value="<?php echo htmlspecialchars($noticia['resumo']); ?>">
                             </div>
+
+                            <div class="mb-4">
+                                <label class="form-label text-uppercase fw-bold text-muted small">Documento PDF (Quick Download)</label>
+                                <input type="file" name="pdf_anexo" class="form-control border-0 bg-white shadow-sm" accept=".pdf">
+                                <?php if(!empty($noticia['ficheiro_anexo'])): ?>
+                                    <div class="mt-2 small"><i class="fas fa-file-pdf text-danger"></i> <?php echo $noticia['ficheiro_anexo']; ?></div>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Galeria Slider Component -->
+                            <?php 
+                            $type = 'noticia';
+                            $gallery = GalleryHelper::get($pdo, 'noticia', $id);
+                            require __DIR__ . '/../../includes/partials/gallery_form.php'; 
+                            ?>
 
                             <!-- Múltiplos Anexos Component -->
                             <?php 

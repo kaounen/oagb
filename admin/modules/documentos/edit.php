@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/header.php';
 
 $id = $_GET['id'] ?? 0;
 
@@ -45,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } catch (PDOException $e) { $error = "Erro ao atualizar: " . $e->getMessage(); }
 }
+
+require_once __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="row mb-5 align-items-center">

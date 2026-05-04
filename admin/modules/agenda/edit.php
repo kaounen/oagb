@@ -1,15 +1,20 @@
 <?php
 require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/header.php';
 
 require_once __DIR__ . '/../../includes/AttachmentHelper.php';
-
-$id = $_GET['id'] ?? 0;
+require_once __DIR__ . '/../../includes/GalleryHelper.php';
 
 // Handle Attachment Deletion
 if (isset($_GET['delete_attachment'])) {
     AttachmentHelper::delete($pdo, $_GET['delete_attachment']);
     header("Location: edit.php?id=" . $id . "&att_deleted=1");
+    exit;
+}
+
+// Handle Gallery Deletion
+if (isset($_GET['delete_gallery'])) {
+    GalleryHelper::delete($pdo, 'evento', $_GET['delete_gallery']);
+    header("Location: edit.php?id=" . $id . "&gal_deleted=1");
     exit;
 }
 
@@ -20,6 +25,7 @@ try {
     if(!$event) { header("Location: index.php"); exit; }
     
     $attachments = AttachmentHelper::get($pdo, 'evento', $id);
+    $gallery = GalleryHelper::get($pdo, 'evento', $id);
 } catch (PDOException $e) { header("Location: index.php"); exit; }
 
 // Process Form Submission
@@ -39,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $imagem = $event['imagem_destaque'];
     if (isset($_FILES['imagem_destaque']) && $_FILES['imagem_destaque']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../gestao/assets/uploads/files/';
+        $upload_dir = __DIR__ . '/../../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['imagem_destaque']['name'], PATHINFO_EXTENSION);
@@ -63,6 +69,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             AttachmentHelper::save($pdo, 'evento', $id, $_FILES['attachments']);
         }
 
+        // Handle Gallery Uploads
+        if (isset($_FILES['gallery_files'])) {
+            GalleryHelper::save($pdo, 'evento', $id, $_FILES['gallery_files']);
+        }
+
+        // Update Gallery Metadata
+        if (isset($_POST['gal_title'])) {
+            foreach ($_POST['gal_title'] as $img_id => $title) {
+                $desc_meta = $_POST['gal_desc'][$img_id] ?? '';
+                $order = $_POST['gal_order'][$img_id] ?? 0;
+                GalleryHelper::update($pdo, 'evento', $img_id, $title, $desc_meta, $order);
+            }
+        }
+
         header("Location: index.php?updated=1");
         exit;
     } catch (PDOException $e) { $error = "Erro ao atualizar: " . $e->getMessage(); }
@@ -73,6 +93,7 @@ $d_ini = date('Y-m-d', strtotime($event['data_evento']));
 $h_ini = date('H:i', strtotime($event['data_evento']));
 $d_fim = $event['data_fim_evento'] ? date('Y-m-d', strtotime($event['data_fim_evento'])) : $d_ini;
 $h_fim = $event['data_fim_evento'] ? date('H:i', strtotime($event['data_fim_evento'])) : '18:00';
+require_once __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="row mb-5 align-items-center">
@@ -136,13 +157,20 @@ $h_fim = $event['data_fim_evento'] ? date('H:i', strtotime($event['data_fim_even
 
                         <div class="mb-4">
                             <label class="form-label text-uppercase fw-bold text-muted small">Cartaz Digital (Atual Evento)</label>
-                            <img id="preview" src="/oagb/gestao/assets/uploads/files/<?php echo $event['imagem_destaque']; ?>" class="img-fluid rounded shadow-sm mb-3 <?php echo empty($event['imagem_destaque']) ? 'd-none':''; ?>">
+                            <img id="preview" src="/oagb/uploads/<?php echo $event['imagem_destaque']; ?>" class="img-fluid rounded shadow-sm mb-3 <?php echo empty($event['imagem_destaque']) ? 'd-none':''; ?>">
                             <div class="border rounded p-3 text-center bg-white cursor-pointer border-dashed" onclick="document.getElementById('img_input').click();">
                                 <i class="fas fa-sync-alt fa-2x text-muted mb-2"></i>
                                 <div class="small text-muted">Trocar Cartaz</div>
                                 <input type="file" name="imagem_destaque" id="img_input" class="d-none" accept="image/*">
                             </div>
                         </div>
+
+                        <!-- Galeria Slider Component -->
+                        <?php 
+                        $type = 'evento';
+                        $gallery = GalleryHelper::get($pdo, 'evento', $id);
+                        require __DIR__ . '/../../includes/partials/gallery_form.php'; 
+                        ?>
 
                         <!-- Gallery & Attachments -->
                         <?php 

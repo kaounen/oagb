@@ -44,7 +44,7 @@ try {
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <?php if(!empty($event['imagem_destaque'])): ?>
-                                            <img src="/oagb/gestao/assets/uploads/files/<?php echo $event['imagem_destaque']; ?>" class="rounded me-3 border" style="width: 45px; height: 45px; object-fit: cover;">
+                                            <img src="/oagb/uploads/<?php echo $event['imagem_destaque']; ?>" class="rounded me-3 border" style="width: 45px; height: 45px; object-fit: cover;">
                                         <?php else: ?>
                                             <div class="rounded me-3 border bg-light d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="far fa-calendar text-muted opacity-25"></i></div>
                                         <?php endif; ?>

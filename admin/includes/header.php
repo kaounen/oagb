@@ -15,7 +15,7 @@ require_once __DIR__ . '/auth_check.php';
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
         :root {
@@ -161,8 +161,8 @@ require_once __DIR__ . '/auth_check.php';
                 </a>
                 
                 <div class="sidebar-section-title">A Ordem (Institucional)</div>
-                <a href="<?php echo ADMIN_PATH; ?>/modules/paginas/edit.php?slug=apresentacao" class="list-group-item <?php echo (strpos($_SERVER['QUERY_STRING'] ?? '', 'slug=apresentacao') !== false) ? 'active' : ''; ?>">
-                    <i class="fas fa-info-circle"></i> Apresentação
+                <a href="<?php echo ADMIN_PATH; ?>/modules/paginas/edit.php?slug=apresentacao-historia" class="list-group-item <?php echo (strpos($_SERVER['QUERY_STRING'] ?? '', 'slug=apresentacao-historia') !== false) ? 'active' : ''; ?>">
+                    <i class="fas fa-info-circle"></i> Apresentação Geral
                 </a>
                 <a href="<?php echo ADMIN_PATH; ?>/modules/paginas/edit.php?slug=historia" class="list-group-item <?php echo (strpos($_SERVER['QUERY_STRING'] ?? '', 'slug=historia') !== false) ? 'active' : ''; ?>">
                     <i class="fas fa-history"></i> História

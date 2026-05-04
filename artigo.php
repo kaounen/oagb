@@ -7,6 +7,39 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once 'includes/functions.php';
 require_once 'connect.php';
 
+if (!function_exists('oagb_resolve_media_path')) {
+    /**
+     * Normaliza caminhos de imagens vindos da base de dados.
+     */
+    function oagb_resolve_media_path($rawPath, $defaultPath)
+    {
+        if (empty($rawPath)) {
+            return $defaultPath;
+        }
+
+        $normalized = str_replace('\\', '/', trim((string) $rawPath));
+        $normalized = preg_replace('#\.\.+#', '', $normalized);
+
+        if ($normalized === '') {
+            return $defaultPath;
+        }
+
+        if (preg_match('#^https?://#i', $normalized)) {
+            return $normalized;
+        }
+
+        if ($normalized[0] === '/') {
+            $normalized = ltrim($normalized, '/');
+        }
+
+        if (strpos($normalized, 'uploads/') === 0 || strpos($normalized, 'img/') === 0) {
+            return $normalized;
+        }
+
+        return 'uploads/' . $normalized;
+    }
+}
+
 // Obter ID ou slug da notícia
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $slug = isset($_GET['slug']) ? clean_input($_GET['slug']) : '';
@@ -45,6 +78,62 @@ try {
     ");
     $stmt->execute([$noticia->categoria, $noticia->id]);
     $noticias_relacionadas = $stmt->fetchAll();
+
+    // Buscar notícias mais lidas
+    $stmt = $pdo->prepare("
+        SELECT id, titulo, slug, resumo, imagem_destaque, data_publicacao, visualizacoes 
+        FROM noticias 
+        WHERE ativo = 1 
+        ORDER BY visualizacoes DESC 
+        LIMIT 3
+    ");
+    $stmt->execute();
+    $mais_lidas = $stmt->fetchAll();
+    
+    // Buscar tags populares
+    $stmt = $pdo->prepare("
+        SELECT tags FROM noticias 
+        WHERE ativo = 1 AND tags IS NOT NULL
+    ");
+    $stmt->execute();
+    $all_tags = $stmt->fetchAll();
+    
+    $tags_count = [];
+    foreach ($all_tags as $row) {
+        if (!empty($row->tags)) {
+            $tags_array = explode(',', $row->tags);
+            foreach ($tags_array as $t) {
+                $t = trim($t);
+                if (!empty($t)) {
+                    $tags_count[$t] = isset($tags_count[$t]) ? $tags_count[$t] + 1 : 1;
+                }
+            }
+        }
+    }
+    arsort($tags_count);
+    $tags_populares = array_slice($tags_count, 0, 15, true);
+    
+    // Buscar imagens adicionais (slider)
+    $stmt = $pdo->prepare("SELECT * FROM noticias_imagens WHERE noticia_id = ? ORDER BY ordem_exibicao ASC, id ASC");
+    $stmt->execute([$noticia->id]);
+    $noticia_imagens = $stmt->fetchAll();
+
+    $todas_imagens = [];
+    if (!empty($noticia->imagem_destaque)) {
+        $todas_imagens[] = (object)[
+            'imagem' => $noticia->imagem_destaque,
+            'legenda' => $noticia->titulo
+        ];
+    }
+    foreach ($noticia_imagens as $img) {
+        if (empty($noticia->imagem_destaque) || $img->imagem !== $noticia->imagem_destaque) {
+            $todas_imagens[] = (object)[
+                'imagem' => $img->imagem,
+                'legenda' => $img->legenda,
+                'descricao' => $img->descricao ?? ''
+            ];
+        }
+    }
     
 } catch (Exception $e) {
     error_log("Erro ao buscar notícia: " . $e->getMessage());
@@ -55,7 +144,7 @@ try {
 $page_title = htmlspecialchars($noticia->titulo);
 $meta_description = htmlspecialchars($noticia->resumo);
 $meta_image = !empty($noticia->imagem_destaque) ? 
-              'gestao/assets/uploads/files/' . $noticia->imagem_destaque : 
+              'uploads/' . $noticia->imagem_destaque : 
               'img/Asset 7-100.jpg';
 ?>
 <!DOCTYPE html>
@@ -75,17 +164,107 @@ $meta_image = !empty($noticia->imagem_destaque) ?
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/header-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/footer-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/banner-inscricao.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="css/index-styles.css?v=<?php echo time(); ?>" rel="stylesheet">
     
     <style>
+        :root {
+            --primary-gold: #B1A276;
+            --primary-maroon: #4D1C21;
+            --dark-navy: #111923;
+        }
+        body { font-family: 'Open Sans', sans-serif; background-color: #fafafa; }
+
+        /* === SUBPAGE BREADCRUMB BAR (fundo creme — cores escuras) === */
+        .subpage-breadcrumb-bar { padding: 10px 0 0 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 20px; text-align:left;}
+        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: #666 !important; text-decoration: none !important; font-size: 0.85rem; transition: .3s; }
+        .subpage-breadcrumb-bar a:hover { color: var(--primary-maroon) !important; }
+        .subpage-breadcrumb-bar .bc-active { color: var(--primary-maroon) !important; font-weight: 600; }
+        .bc-sep { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--primary-gold); margin: 0 10px; vertical-align: middle; }
+
+        .quick-links a {
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--primary-maroon);
+            display: inline-flex; align-items: center; justify-content: center;
+            color: var(--primary-maroon) !important; transition: .3s; font-size: 0.8rem;
+        }
+        .quick-links a:hover { background: rgba(77,28,33,0.08); color: var(--primary-gold) !important; border-color: var(--primary-gold); }
+        .quick-links a:hover i { color: var(--primary-gold) !important; }
+
+        /* Mobile breadcrumbs & header (fundo creme) */
+        @media (max-width: 991px) {
+            .mobile-breadcrumb-bar {
+                background: #fafafa !important; padding: 10px 0;
+                border-bottom: 1px solid #e0dcd2;
+            }
+            .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span {
+                font-size: 0.72rem; color: #666 !important;
+            }
+            .mobile-breadcrumb-bar .bc-active { color: var(--primary-maroon) !important; font-weight: 600; font-size: 0.72rem !important; }
+            .mobile-breadcrumb-bar .quick-links a {
+                border-color: var(--primary-maroon) !important; color: var(--primary-maroon) !important; width: 28px; height: 28px; font-size: 0.65rem;
+            }
+            .mobile-breadcrumb-bar .quick-links a:hover {
+                background: rgba(77,28,33,0.08) !important; border-color: var(--primary-gold) !important;
+            }
+            #mobile-header-simple { background: #fafafa !important; padding-bottom: 10px; width: 100%; overflow: hidden; }
+            #mobile-header-simple .mobile-header-contacts { background: #fafafa !important; }
+            #mobile-header-simple .mobile-header-contacts small { color: var(--primary-maroon) !important; font-size: 0.70rem; }
+            #mobile-header-simple .mobile-header-contacts i { color: var(--primary-maroon) !important; }
+            #mobile-header-simple .mobile-pill-btn { color: var(--primary-maroon) !important; border-color: var(--primary-maroon) !important; background: transparent !important; }
+            #mobile-header-simple .mobile-pill-btn i { color: var(--primary-maroon) !important; }
+            #mobile-header-simple .mobile-pill-btn:hover,
+            #mobile-header-simple .mobile-pill-btn:active,
+            #mobile-header-simple .mobile-pill-btn:focus {
+                background: rgba(77,28,33,0.08) !important; 
+                border-color: var(--primary-gold) !important;
+                color: var(--primary-maroon) !important;
+            }
+            #mobile-header-simple .mobile-pill-btn:hover i { color: var(--primary-maroon) !important; }
+            #mobile-header-simple .navbar-toggler,
+            #mobile-header-simple .navbar-toggler *,
+            #mobile-header-simple .navbar-toggler i { color: var(--primary-gold) !important; border-color: var(--primary-gold) !important; }
+            #mobile-header-simple .navbar-toggler::after { color: var(--primary-gold) !important; }
+            
+            #mobile-header-simple .dropdown-item:hover,
+            #mobile-header-simple .dropdown-item:active {
+                background: rgba(77,28,33,0.05) !important;
+                color: var(--primary-gold) !important;
+            }
+            
+            /* Logo adjustment for mobile on cream background */
+            #mobile-header-simple .navbar-brand { margin: 10px auto !important; display: block; filter: brightness(0.95); }
+        }
+
+        /* === DESKTOP OVERRIDES FOR LIGHT BACKGROUND === */
+        @media (min-width: 992px) {
+            /* Topbar: Dark text on cream */
+            #topbar .topbar-contacts small, 
+            #topbar .topbar-contacts small i { color: #333 !important; }
+            
+            #topbar .topbar-btn { 
+                color: #333 !important; 
+                border-color: rgba(0,0,0,0.15) !important; 
+                background: rgba(0,0,0,0.02) !important; 
+            }
+            #topbar .topbar-btn i { color: var(--primary-maroon) !important; }
+            #topbar .topbar-btn:hover { 
+                background: rgba(77,28,33,0.05) !important; 
+                border-color: var(--primary-maroon) !important; 
+            }
+
+            /* Navbar: Dark links on cream */
+            .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
+            .navbar-dark .navbar-nav .nav-link:hover,
+            .navbar-dark .navbar-nav .nav-link.active { color: var(--primary-maroon) !important; }
+        }
+
         .article-content {
             font-family: 'Open Sans', sans-serif;
             font-size: 1.1rem;
@@ -162,6 +341,7 @@ $meta_image = !empty($noticia->imagem_destaque) ?
             overflow: hidden;
             transition: all 0.3s ease;
             height: 100%;
+            background: #fff;
         }
         
         .related-article:hover {
@@ -174,94 +354,103 @@ $meta_image = !empty($noticia->imagem_destaque) ?
             height: 200px;
             object-fit: cover;
         }
-        
-        .breadcrumb {
-            background: transparent;
-            padding: 0;
-            margin-bottom: 2rem;
-        }
-        
-        .breadcrumb-item + .breadcrumb-item::before {
-            content: "›";
-            color: #999;
-        }
-        
-        /* Tags */
-        .article-tags {
-            margin-top: 2rem;
-        }
-        
-        .tag-badge {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            margin: 0.2rem;
-            background: #f0f0f0;
-            color: #666;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .tag-badge:hover {
-            background: #c18046;
-            color: white;
-        }
-        
-        /* Print Styles */
-        @media print {
-            .navbar, .footer, .share-buttons, .related-articles, .back-to-top {
-                display: none !important;
-            }
-            
-            .article-content {
-                font-size: 12pt;
-            }
-        }
-        
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .article-content {
-                font-size: 1rem;
-            }
-            
-            .article-meta {
-                gap: 1rem;
-            }
-            
-            .share-buttons .btn {
-                margin-bottom: 0.5rem;
-            }
-        }
     </style>
 </head>
 
 <body>
-    <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner"></div>
-    </div>
-    <!-- Spinner End -->
+    <?php include 'includes/topbar.php'; ?>
 
-        <?php include 'includes/topbar.php'; ?>
-
-    <!-- Navbar Start -->
-    <div class="container-fluid position-relative p-0">
+    <!-- Desktop Header -->
+    <div class="container-fluid position-relative p-0 d-none d-lg-block">
         <?php include 'includes/navbar.php'; ?>
+        <div class="container-fluid d-flex align-items-end" style="min-height: 400px; padding-bottom: 0; background: #fafafa; border-bottom: 1px solid #e0dcd2;">
+            <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 20px;">
+                <div class="container d-flex justify-content-between">
+                    <div class="d-flex align-items-center" style="margin-top: 12px;">
+                        <a href="index.php">Início</a>
+                        <span class="bc-sep"></span>
+                        <a href="#">Comunicação</a>
+                        <span class="bc-sep"></span>
+                        <a href="noticias.php">Notícias</a>
+                        <span class="bc-sep"></span>
+                        <span class="bc-active">Artigo</span>
+                    </div>
+                    <div class="quick-links d-flex align-items-center gap-2">
+                        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+                        <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Header -->
+    <div class="d-block d-lg-none">
+        <div id="mobile-header-simple" style="position: relative; overflow: hidden;">
+            <div class="mobile-header-contacts container-fluid px-1 pt-3 pb-1">
+                <div class="row g-0 mb-3">
+                    <div class="col-12 d-flex justify-content-center align-items-center gap-2 overflow-auto" style="white-space: nowrap;">
+                        <small class="text-nowrap"><i class="fa fa-map-marker-alt me-1"></i>Bissau, Guiné-Bissau</small>
+                        <small class="text-nowrap"><i class="fa fa-phone-alt me-1"></i>+245 955 475 889</small>
+                        <small class="text-nowrap"><i class="fa fa-envelope-open me-1"></i>info@oagb.gw</small>
+                    </div>
+                </div>
+
+                <div class="row g-0 mb-1">
+                    <div class="col-12 d-flex justify-content-center align-items-center gap-3">
+                        <button type="button" class="btn btn-sm mobile-pill-btn px-2 fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#searchModal">
+                             <i class="fa fa-search" style="font-size: 1rem;"></i>
+                        </button>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-sm mobile-pill-btn px-2 fw-bold d-flex align-items-center" data-bs-toggle="dropdown" data-bs-display="static">
+                                <i class="fa fa-globe" style="font-size: 1rem;"></i>
+                            </button>
+                            <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2050; margin-top: 10px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: absolute; left: 50%; transform: translateX(-50%); right: auto;">
+                                <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
+                                <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
+                                <a href="#" onclick="changeLanguage('fr'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
+                                <a href="#" onclick="changeLanguage('es'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
+                                <a href="#" onclick="changeLanguage('ar'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
+                                <a href="#" onclick="changeLanguage('zh-CN'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
+                                <a href="#" onclick="changeLanguage('ru'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
+                            </div>
+                        </div>
+                        <a href="portal/login.php" class="btn btn-sm mobile-pill-btn px-2 fw-bold text-uppercase d-flex align-items-center">
+                            <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Área Reservada
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mobile-navbar-wrapper container-fluid p-0" style="margin-top: 5px;">
+                <?php include 'includes/navbar.php'; ?>
+            </div>
+
+            <div class="mobile-breadcrumb-bar">
+                <div class="container d-flex align-items-center justify-content-between py-2">
+                    <div style="font-size: 0.72rem;">
+                        <a href="index.php">Início</a>
+                        <span class="bc-sep"></span>
+                        <a href="noticias.php">Notícias</a>
+                        <span class="bc-sep"></span>
+                        <span class="bc-active">Artigo</span>
+                    </div>
+                    <div class="quick-links d-flex gap-1">
+                        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+                        <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- Navbar End -->
 
     <!-- Article Content Start -->
     <div class="container-fluid py-5">
         <div class="container">
-            <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.php">Início</a></li>
-                    <li class="breadcrumb-item"><a href="noticias.php">Notícias</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars(truncate_text($noticia->titulo, 50)); ?></li>
-                </ol>
-            </nav>
+
             
             <div class="row g-5">
                 <!-- Article Main Content -->
@@ -273,34 +462,58 @@ $meta_image = !empty($noticia->imagem_destaque) ?
                         </h1>
                         
                         <!-- Article Meta Information -->
-                        <div class="article-meta">
+                        <div class="article-meta" style="border-bottom: none; margin-bottom: 1rem; padding-bottom: 0;">
                             <div class="article-meta-item">
-                                <i class="far fa-calendar-alt text-primary"></i>
-                                <span><?php echo format_date_pt($noticia->data_publicacao); ?></span>
+                                <span style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
+                                    <i class="far fa-calendar-alt me-1"></i> <?php echo format_date_pt($noticia->data_publicacao); ?>
+                                </span>
                             </div>
                             <?php if (!empty($noticia->autor)): ?>
                             <div class="article-meta-item">
-                                <i class="far fa-user text-primary"></i>
-                                <span><?php echo htmlspecialchars($noticia->autor); ?></span>
-                            </div>
-                            <?php endif; ?>
-                            <div class="article-meta-item">
-                                <i class="far fa-eye text-primary"></i>
-                                <span><?php echo number_format($noticia->visualizacoes); ?> visualizações</span>
-                            </div>
-                            <?php if (!empty($noticia->categoria)): ?>
-                            <div class="article-meta-item">
-                                <i class="far fa-folder text-primary"></i>
-                                <span><?php echo htmlspecialchars(ucfirst($noticia->categoria)); ?></span>
+                                <i class="far fa-user" style="color: #B1A276;"></i>
+                                <span style="color: #666; font-size: 0.9rem;"><?php echo htmlspecialchars($noticia->autor); ?></span>
                             </div>
                             <?php endif; ?>
                         </div>
                         
-                        <!-- Featured Image -->
-                        <?php if (!empty($noticia->imagem_destaque)): ?>
-                        <img src="gestao/assets/uploads/files/<?php echo htmlspecialchars($noticia->imagem_destaque); ?>" 
-                             alt="<?php echo htmlspecialchars($noticia->titulo); ?>" 
-                             class="img-fluid rounded mb-4 w-100">
+                        <!-- Slider / Imagem -->
+                        <?php if (count($todas_imagens) > 1): ?>
+                            <div id="artigoCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                                <div class="carousel-inner rounded">
+                                    <?php foreach ($todas_imagens as $index => $img): ?>
+                                    <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
+                                        <?php $img_path = oagb_resolve_media_path($img->imagem, 'uploads/OAGB-Placeholder.jpg'); ?>
+                                        <img src="<?php echo htmlspecialchars($img_path); ?>" class="d-block w-100" style="object-fit: cover; max-height: 500px;" alt="<?php echo htmlspecialchars($img->legenda ?? $noticia->titulo); ?>">
+                                        <?php if (!empty($img->legenda)): ?>
+                                        <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.6); border-radius: 5px; bottom: 20px; left: 10%; right: 10%; padding: 10px;">
+                                            <h6 class="text-white mb-0" style="font-family: 'Open Sans', sans-serif; font-weight: 700;"><?php echo htmlspecialchars($img->legenda); ?></h6>
+                                            <?php if (!empty($img->descricao)): ?>
+                                            <p class="text-white small mb-0 mt-1" style="font-size: 0.85rem; opacity: 0.9;"><?php echo htmlspecialchars($img->descricao); ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#artigoCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 15px;"></span>
+                                    <span class="visually-hidden">Anterior</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#artigoCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 15px;"></span>
+                                    <span class="visually-hidden">Próximo</span>
+                                </button>
+                            </div>
+                        <?php elseif (count($todas_imagens) === 1): ?>
+                            <?php $img_path = oagb_resolve_media_path($todas_imagens[0]->imagem, 'uploads/OAGB-Placeholder.jpg'); ?>
+                            <div class="mb-4 position-relative">
+                                <img src="<?php echo htmlspecialchars($img_path); ?>" class="img-fluid rounded w-100" style="max-height: 500px; object-fit: cover;" alt="<?php echo htmlspecialchars($todas_imagens[0]->legenda ?? $noticia->titulo); ?>">
+                                <?php if (!empty($todas_imagens[0]->legenda) && $todas_imagens[0]->legenda !== $noticia->titulo): ?>
+                                <div class="position-absolute bottom-0 start-0 w-100 p-2 text-center" style="background: rgba(0,0,0,0.6); border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem;">
+                                    <span class="text-white" style="font-size: 0.9rem;"><?php echo htmlspecialchars($todas_imagens[0]->legenda); ?></span>
+                                </div>
+                                <?php endif; ?>
+                            </div>
                         <?php endif; ?>
                         
                         <!-- Article Summary/Lead -->
@@ -345,106 +558,82 @@ $meta_image = !empty($noticia->imagem_destaque) ?
                     </div>
                     <?php endif; ?>
                     
-                    <!-- Share Buttons -->
-                    <div class="share-buttons">
-                        <h5 class="mb-3">Partilhar:</h5>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" 
-                           target="_blank" class="btn btn-primary">
-                            <i class="fab fa-facebook-f"></i> Facebook
-                        </a>
-                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>&text=<?php echo urlencode($noticia->titulo); ?>" 
-                           target="_blank" class="btn btn-info text-white">
-                            <i class="fab fa-twitter"></i> Twitter
-                        </a>
-                        <a href="https://wa.me/?text=<?php echo urlencode($noticia->titulo . ' - ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" 
-                           target="_blank" class="btn btn-success">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </a>
-                        <a href="mailto:?subject=<?php echo urlencode($noticia->titulo); ?>&body=<?php echo urlencode('Veja esta notícia: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" 
-                           class="btn btn-secondary">
-                            <i class="far fa-envelope"></i> Email
-                        </a>
-                        <button onclick="window.print();" class="btn btn-dark">
-                            <i class="fas fa-print"></i> Imprimir
-                        </button>
-                    </div>
+
                 </div>
                 
                 <!-- Sidebar -->
                 <div class="col-lg-4">
-                    <!-- Search Widget -->
-                    <div class="mb-5">
-                        <div class="bg-light rounded p-4">
-                            <h4 class="mb-4" style="font-family: 'Libre Baskerville', serif;">Pesquisar</h4>
-                            <form action="pesquisa.php" method="GET">
-                                <div class="input-group">
-                                    <input type="text" name="q" class="form-control p-3" placeholder="Palavra-chave..." required>
-                                    <button class="btn btn-primary px-4"><i class="bi bi-search"></i></button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    
-                    <!-- Categories Widget -->
-                    <div class="mb-5">
-                        <div class="bg-light rounded p-4">
-                            <h4 class="mb-4" style="font-family: 'Libre Baskerville', serif;">Categorias</h4>
-                            <div class="d-flex flex-column">
-                                <a href="noticias.php?categoria=comunicados" class="mb-2">
-                                    <i class="bi bi-arrow-right text-primary me-2"></i>Comunicados
-                                </a>
-                                <a href="noticias.php?categoria=formacao" class="mb-2">
-                                    <i class="bi bi-arrow-right text-primary me-2"></i>Formação
-                                </a>
-                                <a href="noticias.php?categoria=eventos" class="mb-2">
-                                    <i class="bi bi-arrow-right text-primary me-2"></i>Eventos
-                                </a>
-                                <a href="noticias.php?categoria=institucional" class="mb-2">
-                                    <i class="bi bi-arrow-right text-primary me-2"></i>Institucional
-                                </a>
+                    <!-- Mais Lidas -->
+                    <?php if (!empty($mais_lidas)): ?>
+                    <div class="mb-5 p-4 rounded-3" style="background: #fff; border: 1px solid #f0ece4; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+                        <h5 class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 700; position: relative; padding-bottom: 10px;">
+                            Mais Lidas
+                            <span style="position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: #B1A276;"></span>
+                        </h5>
+                        <?php $total_lidas = count($mais_lidas); $lida_idx = 0; foreach ($mais_lidas as $lida): $lida_idx++; ?>
+                        <div class="d-flex align-items-center mb-0">
+                            <?php if (!empty($lida->imagem_destaque)): ?>
+                                <?php $img_lida = oagb_resolve_media_path($lida->imagem_destaque, ''); ?>
+                                <img class="img-fluid rounded" src="<?php echo htmlspecialchars($img_lida); ?>" style="width: 80px; height: 80px; object-fit: cover;" alt="">
+                                <div class="ps-3">
+                            <?php else: ?>
+                                <div class="w-100">
+                            <?php endif; ?>
+                                <h6 class="mb-1" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.4;">
+                                    <a href="artigo.php?id=<?php echo $lida->id; ?>&slug=<?php echo urlencode($lida->slug); ?>" class="text-decoration-none fw-bold" style="color: #4D1C21; transition: 0.3s;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
+                                        <?php echo htmlspecialchars($lida->titulo); ?>
+                                    </a>
+                                </h6>
+                                <small style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;"><?php echo format_date_pt($lida->data_publicacao); ?></small>
                             </div>
                         </div>
+                        <?php if ($lida_idx < $total_lidas): ?>
+                        <hr style="border-top: 1px solid #f0ece4; margin: 1.2rem 0; opacity: 1;">
+                        <?php endif; ?>
+                        <?php endforeach; ?>
                     </div>
-                    
-                    <!-- Newsletter Widget -->
-                    <div class="mb-5">
-                        <div class="bg-primary rounded p-4">
-                            <h4 class="mb-4 text-white" style="font-family: 'Libre Baskerville', serif;">Newsletter</h4>
-                            <p class="text-white mb-3">Subscreva a nossa newsletter para receber as últimas notícias e atualizações.</p>
-                            <form action="subscricao.php" method="POST">
-                                <div class="input-group">
-                                    <input type="email" name="email" class="form-control p-3" placeholder="Seu email" required>
-                                    <button class="btn btn-dark px-4" type="submit">Subscrever</button>
-                                </div>
-                            </form>
+                    <?php endif; ?>
+
+                    <!-- Tags Populares -->
+                    <?php if (!empty($tags_populares)): ?>
+                    <div class="mb-5 p-4 rounded-3" style="background: #fff; border: 1px solid #f0ece4; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+                        <h5 class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 700; position: relative; padding-bottom: 10px;">
+                            Tags Populares
+                            <span style="position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: #B1A276;"></span>
+                        </h5>
+                        <div class="d-flex flex-wrap m-n1">
+                            <?php foreach ($tags_populares as $t => $count): ?>
+                            <a href="noticias.php?tag=<?php echo urlencode($t); ?>" class="btn btn-light btn-sm m-1 px-3 rounded-pill" style="font-size: 0.8rem; background: #f8f9fa; color: #666; border: 1px solid #eee;">
+                                <?php echo htmlspecialchars($t); ?>
+                            </a>
+                            <?php endforeach; ?>
                         </div>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
             
             <!-- Related Articles -->
             <?php if (!empty($noticias_relacionadas)): ?>
             <div class="related-articles mt-5">
-                <h3 class="mb-4" style="color:#5B463F; font-family: 'Libre Baskerville', serif;">Notícias Relacionadas</h3>
+                <h3 class="mb-4" style="color:#4D1C21; font-family: 'Libre Baskerville', serif;">Notícias Relacionadas</h3>
                 <div class="row g-4">
                     <?php foreach ($noticias_relacionadas as $relacionada): ?>
                     <div class="col-lg-4">
                         <div class="related-article">
-                            <?php if (!empty($relacionada->imagem_destaque)): ?>
-                            <img src="gestao/assets/uploads/files/<?php echo htmlspecialchars($relacionada->imagem_destaque); ?>" 
-                                 alt="<?php echo htmlspecialchars($relacionada->titulo); ?>">
-                            <?php else: ?>
-                            <img src="img/Asset 7-100.jpg" alt="<?php echo htmlspecialchars($relacionada->titulo); ?>">
-                            <?php endif; ?>
+                            <?php 
+                            $img_relacionada = oagb_resolve_media_path($relacionada->imagem_destaque, 'uploads/OAGB-Placeholder.jpg');
+                            ?>
+                            <img src="<?php echo htmlspecialchars($img_relacionada); ?>" alt="<?php echo htmlspecialchars($relacionada->titulo); ?>">
                             <div class="p-4">
                                 <h5 class="mb-3">
                                     <a href="artigo.php?id=<?php echo $relacionada->id; ?>&slug=<?php echo urlencode($relacionada->slug); ?>" 
-                                       class="text-dark text-decoration-none">
+                                       class="text-dark text-decoration-none fw-bold" style="font-size: 1rem;">
                                         <?php echo htmlspecialchars($relacionada->titulo); ?>
                                     </a>
                                 </h5>
-                                <p class="text-muted mb-3"><?php echo htmlspecialchars(truncate_text($relacionada->resumo, 100)); ?></p>
-                                <small class="text-muted">
+                                <p class="text-muted mb-3" style="font-size: 0.85rem;"><?php echo htmlspecialchars(truncate_text($relacionada->resumo, 80)); ?></p>
+                                <small style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
                                     <i class="far fa-calendar-alt me-1"></i>
                                     <?php echo format_date_pt($relacionada->data_publicacao); ?>
                                 </small>
@@ -458,6 +647,8 @@ $meta_image = !empty($noticia->imagem_destaque) ?
         </div>
     </div>
     <!-- Article Content End -->
+
+    <?php include 'includes/banner-inscricao.php'; ?>
 
     <!-- Footer Start -->
     <?php include 'includes/footer.php'; ?>

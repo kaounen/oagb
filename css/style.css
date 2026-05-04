@@ -334,8 +334,14 @@ font-family: 'Open Sans'; font-weight:normal; font-style: normal;font-size:100%;
         background: rgba(0,0,0,0.02) !important;
     }
 
+    .navbar-dark.navbar-scrolled .navbar-nav .nav-link,
     .navbar-dark.is-scrolled .navbar-nav .nav-link {
-        color: var(--dark) !important;
+        color: #B1A276 !important;
+    }
+    
+    .navbar-dark.navbar-scrolled .navbar-nav .nav-link:hover,
+    .navbar-dark.is-scrolled .navbar-nav .nav-link:hover {
+        color: #4D1C21 !important;
     }
 
     .navbar-dark.is-scrolled .navbar-brand h1,

@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/header.php';
 
 $id = $_GET['id'] ?? 0;
 
@@ -49,6 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } catch (PDOException $e) { $error = "Erro ao atualizar: " . $e->getMessage(); }
 }
+
+require_once __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="row mb-5 align-items-center">
@@ -123,7 +124,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
 <script>
-    ClassicEditor.create(document.querySelector('#editor')).catch(e => console.error(e));
+    ClassicEditor.create(document.querySelector('#editor'), {
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
+    }).catch(e => console.error(e));
     document.getElementById('img_input').onchange = evt => {
         const [file] = document.getElementById('img_input').files;
         if (file) {

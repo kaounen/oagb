@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/db.php';
-require_once __DIR__ . '/../../includes/header.php';
+require_once __DIR__ . '/../../includes/GalleryHelper.php';
+require_once __DIR__ . '/../../includes/AttachmentHelper.php';
 
 // Process Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Image handling
     $imagem = '';
     if (isset($_FILES['foto1']) && $_FILES['foto1']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../gestao/assets/uploads/files/';
+        $upload_dir = __DIR__ . '/../../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['foto1']['name'], PATHINFO_EXTENSION);
@@ -34,9 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_id = $pdo->lastInsertId();
 
         // Handle Multiple Attachments
-        require_once __DIR__ . '/../../includes/AttachmentHelper.php';
         if (isset($_FILES['attachments'])) {
             AttachmentHelper::save($pdo, 'noticia', $new_id, $_FILES['attachments']);
+        }
+
+        // Handle Gallery Uploads
+        if (isset($_FILES['gallery_files'])) {
+            GalleryHelper::save($pdo, 'noticia', $new_id, $_FILES['gallery_files']);
         }
 
         // LOG ACTION
@@ -49,6 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Erro ao guardar notícia: " . $e->getMessage();
     }
 }
+
+require_once __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="row mb-5 align-items-center">
@@ -112,6 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label class="form-label text-uppercase fw-bold text-muted small">Legenda da Imagem</label>
                                 <input type="text" name="legendaFoto1" class="form-control border-0" placeholder="Opcional...">
                             </div>
+
+                            <!-- Galeria Slider Component -->
+                            <?php 
+                            $type = 'noticia';
+                            $gallery = []; // Vazia na criação
+                            require __DIR__ . '/../../includes/partials/gallery_form.php'; 
+                            ?>
 
                             <!-- Múltiplos Anexos Component -->
                             <?php 

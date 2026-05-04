@@ -36,11 +36,11 @@ if (!function_exists('oagb_resolve_media_path')) {
             $normalized = ltrim($normalized, '/');
         }
 
-        if (strpos($normalized, 'gestao/assets/uploads/files/') === 0 || strpos($normalized, 'img/') === 0) {
+        if (strpos($normalized, 'uploads/') === 0 || strpos($normalized, 'img/') === 0) {
             return $normalized;
         }
 
-        return 'gestao/assets/uploads/files/' . $normalized;
+        return 'uploads/' . $normalized;
     }
 }
 
@@ -75,21 +75,21 @@ if (isset($pdo)) {
                 (object)[
                     'titulo' => 'Bem-vindo à Ordem dos Advogados da Guiné-Bissau',
                     'subtitulo' => 'A Ordem dos Advogados da Guiné-Bissau (OAGB) é uma associação pública de licenciados em Direito.',
-                    'imagem' => 'gestao/assets/uploads/files/brass-scales-justice-close-up-view.jpg',
-                    'link_texto' => 'Saiba mais',
-                    'link_url' => 'apresentacao-historia.php'
+                    'imagem' => 'uploads/brass-scales-justice-close-up-view.jpg',
+                    'link_texto' => 'Apresentação',
+                    'link_url' => 'ordem-dos-advogados.php'
                 ],
                 (object)[
                     'titulo' => 'Cadastro Nacional de Advogados',
                     'subtitulo' => 'O Cadastro Nacional dos Advogados (CNA) é mantido pelo Conselho de Administração da OAGB.',
-                    'imagem' => 'gestao/assets/uploads/files/close-up-scales-justice-original-azul.jpg',
+                    'imagem' => 'uploads/close-up-scales-justice-original-azul.jpg',
                     'link_texto' => 'Pesquisar Advogados',
                     'link_url' => 'pesquisa-advogados.php'
                 ],
                 (object)[
                     'titulo' => 'Justiça e Transparência',
                     'subtitulo' => 'Garantindo a excelência jurídica e a defesa dos direitos dos cidadãos da Guiné-Bissau.',
-                    'imagem' => 'gestao/assets/uploads/files/close-up-detail-scales-justice.jpg',
+                    'imagem' => 'uploads/close-up-detail-scales-justice.jpg',
                     'link_texto' => 'Nossos Serviços',
                     'link_url' => 'publicacoes.php'
                 ]
@@ -148,34 +148,34 @@ if (isset($pdo)) {
             }
         }
         
-        // Buscar último parecer/deliberação (com fallback)
+        // Buscar último parecer/deliberação (da tabela documentos_publicos)
         try {
             $stmt = $pdo->prepare("
-                SELECT titulo, tipo, numero_documento, link_url, data_documento 
-                FROM pareceres_deliberacoes 
-                WHERE ativo = 1 
+                SELECT id, tipo, numero_documento as numero, titulo as assunto, arquivo, data_documento as data_emissao, link_externo as link_url 
+                FROM documentos_publicos 
+                WHERE ativo = 1 AND tipo IN ('parecer', 'deliberacao')
                 ORDER BY data_documento DESC 
                 LIMIT 1
             ");
             $stmt->execute();
             $ultimo_parecer = $stmt->fetch();
         } catch (Exception $e) {
-            error_log("Tabela pareceres_deliberacoes não encontrada: " . $e->getMessage());
+            error_log("Erro ao buscar documentos_publicos: " . $e->getMessage());
         }
         
-        // Buscar último comunicado (com fallback)
+        // Buscar último comunicado/anúncio (da tabela anuncios)
         try {
             $stmt = $pdo->prepare("
-                SELECT titulo, descricao, link_url, data_publicacao 
-                FROM comunicados 
+                SELECT id, titulo, data_inicio as data_publicacao 
+                FROM anuncios 
                 WHERE ativo = 1 
-                ORDER BY data_publicacao DESC 
+                ORDER BY data_inicio DESC 
                 LIMIT 1
             ");
             $stmt->execute();
             $ultimo_comunicado = $stmt->fetch();
         } catch (Exception $e) {
-            error_log("Tabela comunicados não encontrada: " . $e->getMessage());
+            error_log("Erro ao buscar anúncios: " . $e->getMessage());
         }
 
     } catch (Exception $e) {
@@ -197,7 +197,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
@@ -353,7 +353,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                                 <?php echo htmlspecialchars($slide->subtitulo); ?>
                             </p>
                             <?php if (!empty($slide->link_url)): ?>
-                            <a href="<?php echo htmlspecialchars($slide->link_url); ?>" class="btn btn-outline-light py-2 px-4 animated slideInRight">
+                            <a href="<?php echo htmlspecialchars($slide->link_url); ?>" class="btn btn-outline-light py-2 px-4 animated slideInRight" style="position: relative; z-index: 99999;">
                                 <?php echo htmlspecialchars($slide->link_texto ?? 'Saiba mais'); ?>
                             </a>
                             <?php endif; ?>
@@ -388,25 +388,28 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                     <div class="bg-color-1 shadow facts-card">
                         <div class="facts-title">
                             <i class="fas fa-gavel fa-2x me-3" style="color: white;"></i>
-                            <h5 style="color: white; font-family: 'Libre Baskerville', serif; font-weight: 600; margin: 0;">
+                            <h5 style="color: white; font-family: 'Open Sans', sans-serif; font-weight: 600; margin: 0;">
                                 Pareceres e Deliberações
                             </h5>
                         </div>
                         <div class="facts-content">
-                            <?php if($ultimo_parecer): ?>
-                            <small style="color:#fff; font-family: 'Open Sans', sans-serif; opacity: 0.8;">
-                                <?php echo !empty($ultimo_parecer->data_documento) ? format_date_pt($ultimo_parecer->data_documento) : '15 de dezembro de 2023'; ?>
-                            </small>
-                            <a href="<?php echo htmlspecialchars($ultimo_parecer->link_url ?? 'pareceres-deliberacoes.php'); ?>" class="linkSublinhado" style="color:#fff; font-family: 'Open Sans', sans-serif;">
-                                <?php echo htmlspecialchars($ultimo_parecer->numero_documento ?? ''); ?> - <?php echo htmlspecialchars(truncate_text($ultimo_parecer->titulo, 40)); ?>
-                            </a>
+                            <?php if($ultimo_parecer && is_object($ultimo_parecer)): ?>
+                                <?php 
+                                    $link_parecer = (!empty($ultimo_parecer->arquivo) && $ultimo_parecer->arquivo !== '#') ? 'uploads/' . $ultimo_parecer->arquivo : ($ultimo_parecer->link_url ?? 'pareceres-deliberacoes.php'); 
+                                ?>
+                                <small style="color:#fff; font-family: 'Open Sans', sans-serif; opacity: 0.8;">
+                                    <?php echo !empty($ultimo_parecer->data_emissao) ? format_date_pt($ultimo_parecer->data_emissao) : 'Data não disponível'; ?>
+                                </small>
+                                <a href="<?php echo htmlspecialchars($link_parecer); ?>" class="linkSublinhado" target="_blank" style="color:#fff; font-family: 'Open Sans', sans-serif; font-size: 1rem;">
+                                    <?php echo htmlspecialchars($ultimo_parecer->numero ?? ''); ?> - <?php echo htmlspecialchars(truncate_text($ultimo_parecer->assunto, 40)); ?>
+                                </a>
                             <?php else: ?>
-                            <small style="color:#fff; font-family: 'Open Sans', sans-serif; opacity: 0.8;">
-                                15 de dezembro de 2023
-                            </small>
-                            <a href="pareceres-deliberacoes.php" class="linkSublinhado" style="color:#fff; font-family: 'Libre Baskerville', serif;">
-                                CNEF - Deliberação n.º 8/2023
-                            </a>
+                                <small style="color:#fff; font-family: 'Open Sans', sans-serif; opacity: 0.8;">
+                                    Sem documentos recentes
+                                </small>
+                                <a href="pareceres-deliberacoes.php" class="linkSublinhado" style="color:#fff; font-family: 'Open Sans', sans-serif; font-size: 1rem;">
+                                    Consultar todos os pareceres
+                                </a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -415,7 +418,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                     <div class="bg-color-3 shadow facts-card">
                         <div class="facts-title">
                             <i class="fas fa-search fa-2x me-3" style="color: white;"></i>
-                            <h5 style="color: white; font-family: 'Libre Baskerville', serif; font-weight: 600; margin: 0;">
+                            <h5 style="color: white; font-family: 'Open Sans', sans-serif; font-weight: 600; margin: 0;">
                                 Pesquisa de Advogados
                             </h5>
                         </div>
@@ -430,27 +433,25 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                     <div class="bg-color-4 shadow facts-card">
                         <div class="facts-title">
                             <i class="fas fa-bullhorn fa-2x me-3" style="color: white;"></i>
-                            <h5 style="color: white; font-family: 'Libre Baskerville', serif; font-weight: 600; margin: 0;">
+                            <h5 style="color: white; font-family: 'Open Sans', sans-serif; font-weight: 600; margin: 0;">
                                 Comunicados
                             </h5>
                         </div>
                         <div class="facts-content">
                             <?php if($ultimo_comunicado): ?>
-                            <?php if(!empty($ultimo_comunicado->data_publicacao)): ?>
-                            <small style="color:#fff; font-family: 'Open Sans', sans-serif; opacity: 0.8;">
-                                <?php echo format_date_pt($ultimo_comunicado->data_publicacao); ?>
-                            </small>
-                            <?php endif; ?>
-                            <a href="<?php echo htmlspecialchars($ultimo_comunicado->link_url ?? 'comunicados.php'); ?>" class="linkSublinhado" style="color:#fff; font-family: 'Open Sans', sans-serif;">
-                                <?php echo htmlspecialchars(truncate_text($ultimo_comunicado->titulo, 50)); ?>
-                            </a>
+                                <small style="color:#fff; font-family: 'Open Sans', sans-serif; opacity: 0.8;">
+                                    <?php echo !empty($ultimo_comunicado->data_publicacao) ? format_date_pt($ultimo_comunicado->data_publicacao) : 'Data não disponível'; ?>
+                                </small>
+                                <a href="anuncio.php?id=<?php echo $ultimo_comunicado->id; ?>" class="linkSublinhado" style="color:#fff; font-family: 'Open Sans', sans-serif;">
+                                    <?php echo htmlspecialchars(truncate_text($ultimo_comunicado->titulo, 50)); ?>
+                                </a>
                             <?php else: ?>
-                            <small style="color:#fff; font-family: 'Open Sans', sans-serif; opacity: 0.8;">
-                                20 de novembro de 2024
-                            </small>
-                            <a href="comunicados.php" class="linkSublinhado" style="color:#fff; font-family: 'Open Sans', sans-serif;">
-                                Comunicado - Assembleia Geral 2024
-                            </a>
+                                <small style="color:#fff; font-family: 'Open Sans', sans-serif; opacity: 0.8;">
+                                    Sem comunicados recentes
+                                </small>
+                                <a href="anuncios.php" class="linkSublinhado" style="color:#fff; font-family: 'Open Sans', sans-serif;">
+                                    Consultar todos os comunicados
+                                </a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -481,7 +482,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                             if (empty($raw_noticia_imagem) && !empty($noticia->foto)) {
                                 $raw_noticia_imagem = $noticia->foto;
                             }
-                            $img_noticia = oagb_resolve_media_path($raw_noticia_imagem, 'img/Asset 7-100.jpg');
+                            $img_noticia = oagb_resolve_media_path($raw_noticia_imagem, 'uploads/OAGB-Placeholder.jpg');
                             ?>
                             <img class="img-fluid" src="<?php echo htmlspecialchars($img_noticia); ?>" alt="<?php echo htmlspecialchars($noticia->titulo); ?>">
                         </div>
