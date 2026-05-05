@@ -9,10 +9,10 @@ $ordem_pages = ['ordem-dos-advogados.php', 'bastonario-ordem.php', 'orgaos-socia
 $advogados_pages = ['pesquisa-advogados.php', 'advogados-inscritos.php', 'pesquisa-estagiarios.php', 'estagiarios-inscritos.php', 'solicitacao-advogados.php', 'inscricao-ordem.php'];
 
 // Páginas do menu PÚBLICO
-$publico_pages = ['pareceres-deliberacoes.php', 'comunicados.php', 'publicacoes.php', 'orcamento.php'];
+$publico_pages = ['pareceres-deliberacoes.php', 'comunicados.php', 'publicacoes.php', 'orcamento.php', 'revista-oagb.php', 'legislacao-nacional.php', 'legislacao-internacional.php', 'glossario-juridico.php', 'biblioteca-oagb.php'];
 
 // Páginas do menu COMUNICAÇÃO
-$comunicacao_pages = ['agenda.php', 'noticias.php', 'anuncios.php'];
+$comunicacao_pages = ['agenda.php', 'noticias.php', 'anuncios.php', 'cidadaos.php'];
 
 
 // Verificar se está em uma página de dropdown
@@ -49,7 +49,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="pesquisa-advogados.php" class="dropdown-item">Pesquisa de Advogados</a>
                     <a href="advogados-inscritos.php" class="dropdown-item">Advogados Inscritos em vigor</a>
                     <a href="pesquisa-estagiarios.php" class="dropdown-item">Pesquisa de Advogados Estagiários</a>
-                    <a href="estagiarios-inscritos.php" class="dropdown-item">Advogados Estagiários Inscritos em vigor</a>
+                    <a href="estagiarios-inscritos.php" class="dropdown-item">Estagiários Inscritos em vigor</a>
                     <a href="solicitacao-advogados.php" class="dropdown-item">Solicitação de Advogados</a>
                     <a href="inscricao-ordem.php" class="dropdown-item">Inscrição na Ordem</a>
                 </div>
@@ -61,6 +61,11 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="comunicados.php" class="dropdown-item">Comunicados</a>
                     <a href="publicacoes.php" class="dropdown-item">Publicações</a>
                     <a href="orcamento.php" class="dropdown-item">Orçamento</a>
+                    <a href="revista-oagb.php" class="dropdown-item">Revista da OAGB</a>
+                    <a href="legislacao-nacional.php" class="dropdown-item">Legislação Nacional</a>
+                    <a href="legislacao-internacional.php" class="dropdown-item">Legislação Internacional</a>
+                    <a href="glossario-juridico.php" class="dropdown-item">Glossário Jurídico</a>
+                    <a href="biblioteca-oagb.php" class="dropdown-item">Biblioteca OAGB</a>
                 </div>
             </div>
             <div class="nav-item dropdown">
@@ -69,6 +74,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="agenda.php" class="dropdown-item">Agenda</a>
                     <a href="noticias.php" class="dropdown-item">Notícias</a>
                     <a href="anuncios.php" class="dropdown-item">Anúncios</a>
+                    <a href="cidadaos.php" class="dropdown-item">Cidadãos</a>
                 </div>
             </div>
             <a href="contacto.php" class="nav-item nav-link pe-lg-0 <?php echo (basename($_SERVER['PHP_SELF']) == 'contacto.php') ? 'active' : ''; ?>">CONTACTO</a>
@@ -87,6 +93,19 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
 </nav>
 
 <style>
+
+/* Dropdown compacto (desktop) */
+@media (min-width: 992px) {
+    .navbar .dropdown-menu .dropdown-item {
+        font-size: 0.90rem;
+        padding: 6px 18px;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+    .navbar .dropdown-menu {
+        padding: 6px 0;
+    }
+}
 
 /* Correção para menu mobile */
 @media (max-width: 991.98px) {

@@ -222,6 +222,23 @@ require_once __DIR__ . '/auth_check.php';
                     <i class="fas fa-stamp"></i> Atos Oficiais (Comunicados, etc.)
                 </a>
 
+                <div class="sidebar-section-title">Publicações & Conteúdo</div>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/revistas/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/revistas/') !== false ? 'active' : ''; ?>">
+                    <i class="far fa-newspaper"></i> Revista da OAGB
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/legislacao/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/legislacao/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-scroll"></i> Legislação
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/glossario/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/glossario/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-book-open"></i> Glossário Jurídico
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/biblioteca/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/biblioteca/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-university"></i> Biblioteca
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/cidadaos/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/cidadaos/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-users"></i> Info Cidadãos
+                </a>
+
                 <div class="sidebar-section-title">Gestão Operacional</div>
                 <a href="<?php echo ADMIN_PATH; ?>/modules/financeiro/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/financeiro/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-wallet"></i> Tesouraria & Quotas
