@@ -3,7 +3,7 @@
 $pagina_atual = basename($_SERVER['PHP_SELF']);
 
 // Páginas do menu ORDEM
-$ordem_pages = ['ordem-dos-advogados.php', 'bastonario-ordem.php', 'orgaos-sociais.php', 'comissoes-especializadas.php', 'cooperacao-institucional.php'];
+$ordem_pages = ['ordem-dos-advogados.php', 'bastonario-ordem.php', 'orgaos-sociais.php', 'comissoes-especializadas.php', 'cooperacao-institucional.php', 'deontologia-etica.php', 'centro-estagio.php'];
 
 // Páginas do menu ADVOGADOS
 $advogados_pages = ['pesquisa-advogados.php', 'advogados-inscritos.php', 'pesquisa-estagiarios.php', 'estagiarios-inscritos.php', 'solicitacao-advogados.php', 'inscricao-ordem.php'];
@@ -41,6 +41,8 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="orgaos-sociais.php" class="dropdown-item">Órgãos Sociais</a>
                     <a href="comissoes-especializadas.php" class="dropdown-item">Comissões Especializadas</a>
                     <a href="cooperacao-institucional.php" class="dropdown-item">Cooperação Institucional</a>
+                    <a href="deontologia-etica.php" class="dropdown-item">Deontologia e Ética</a>
+                    <a href="centro-estagio.php" class="dropdown-item">Centro de Estágio</a>
                 </div>
             </div>
             <div class="nav-item dropdown">

@@ -271,14 +271,25 @@ $header_image = 'uploads/justice-velho.jpg'; // Mesma imagem para consistência 
 
                 <div class="col-lg-4">
                     <div class="info-box-container" style="position:relative; z-index:20;">
+                        <?php
+                        // Carregar departamentos dinâmicos
+                        try {
+                            $stmt_dep = $pdo->prepare("SELECT * FROM departamentos_contactos WHERE status = 'ativo' ORDER BY ordem ASC");
+                            $stmt_dep->execute();
+                            $departamentos = $stmt_dep->fetchAll();
+                        } catch (Exception $e) { $departamentos = []; }
+                        
+                        if (!empty($departamentos)):
+                            $first = $departamentos[0];
+                        ?>
                         <div class="info-box">
                             <h3 class="mb-4 text-white" style="font-family:'Libre Baskerville', serif; font-weight:700; font-size:1.3rem;">Os Nossos Contactos</h3>
                             
                             <div class="step-item">
                                 <div class="step-num"><i class="fas fa-map-marker-alt"></i></div>
                                 <div>
-                                    <div class="step-title" style="font-size:1rem; font-family:'Libre Baskerville', serif;">Endereço</div>
-                                    <div class="step-desc">Avenida Amílcar Cabral<br>Bissau, Guiné-Bissau</div>
+                                    <div class="step-title" style="font-size:1rem; font-family:'Libre Baskerville', serif;">Sede</div>
+                                    <div class="step-desc"><?php echo nl2br(htmlspecialchars($first->morada)); ?></div>
                                 </div>
                             </div>
 
@@ -286,7 +297,7 @@ $header_image = 'uploads/justice-velho.jpg'; // Mesma imagem para consistência 
                                 <div class="step-num"><i class="fas fa-phone-alt"></i></div>
                                 <div>
                                     <div class="step-title">Telefone</div>
-                                    <div class="step-desc">+245 955 475 889<br>+245 966 000 000</div>
+                                    <div class="step-desc"><?php echo htmlspecialchars($first->telefone); ?></div>
                                 </div>
                             </div>
 
@@ -294,23 +305,51 @@ $header_image = 'uploads/justice-velho.jpg'; // Mesma imagem para consistência 
                                 <div class="step-num"><i class="fas fa-envelope"></i></div>
                                 <div>
                                     <div class="step-title">E-mail</div>
-                                    <div class="step-desc">info@oagb.gw</div>
+                                    <div class="step-desc"><?php echo htmlspecialchars($first->email); ?></div>
                                 </div>
                             </div>
+
+                            <?php if($first->horario): ?>
+                            <div class="step-item">
+                                <div class="step-num"><i class="far fa-clock"></i></div>
+                                <div>
+                                    <div class="step-title">Horário</div>
+                                    <div class="step-desc"><?php echo htmlspecialchars($first->horario); ?></div>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
 
+                        <!-- Outros departamentos -->
+                        <?php if(count($departamentos) > 1): ?>
                         <div class="urgent-card">
-                            <div class="urgent-title"><i class="far fa-clock"></i> Horário de Atendimento</div>
-                            <p class="text-muted small mb-4">A nossa sede está aberta para atendimento presencial nos seguintes horários:</p>
-                            
-                            <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="bg-light rounded-circle p-2" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-calendar-day text-primary"></i></div>
-                                <div>
-                                    <div class="small fw-bold">Segunda a Sexta</div>
-                                    <div style="color:var(--primary-maroon);">08:00 - 16:00</div>
+                            <div class="urgent-title"><i class="fas fa-building"></i> Departamentos</div>
+                            <?php foreach(array_slice($departamentos, 1) as $dep): ?>
+                                <div class="mb-3 pb-3" style="border-bottom: 1px solid #f0ece4;">
+                                    <div class="fw-bold small" style="color: var(--primary-maroon);"><?php echo htmlspecialchars($dep->titulo); ?></div>
+                                    <?php if($dep->morada): ?><div class="text-muted" style="font-size:0.78rem;"><i class="fas fa-map-marker-alt me-1 opacity-50"></i><?php echo htmlspecialchars($dep->morada); ?></div><?php endif; ?>
+                                    <?php if($dep->telefone): ?><div class="text-muted" style="font-size:0.78rem;"><i class="fas fa-phone-alt me-1 opacity-50"></i><?php echo htmlspecialchars($dep->telefone); ?></div><?php endif; ?>
+                                    <?php if($dep->email): ?><div class="text-muted" style="font-size:0.78rem;"><i class="fas fa-envelope me-1 opacity-50"></i><?php echo htmlspecialchars($dep->email); ?></div><?php endif; ?>
+                                    <?php if($dep->horario): ?><div class="text-muted" style="font-size:0.78rem;"><i class="far fa-clock me-1 opacity-50"></i><?php echo htmlspecialchars($dep->horario); ?></div><?php endif; ?>
                                 </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php else: ?>
+                        <!-- Fallback estático caso tabela esteja vazia -->
+                        <div class="info-box">
+                            <h3 class="mb-4 text-white" style="font-family:'Libre Baskerville', serif; font-weight:700; font-size:1.3rem;">Os Nossos Contactos</h3>
+                            <div class="step-item">
+                                <div class="step-num"><i class="fas fa-map-marker-alt"></i></div>
+                                <div><div class="step-title">Endereço</div><div class="step-desc">Bissau, Guiné-Bissau</div></div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-num"><i class="fas fa-envelope"></i></div>
+                                <div><div class="step-title">E-mail</div><div class="step-desc">info@oagb.gw</div></div>
                             </div>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
