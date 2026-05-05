@@ -293,35 +293,94 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
                                 <i class="far fa-file-pdf fa-2x"></i>
                             </div>
                             <h4 class="fw-bold mb-3" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif;">Organograma em PDF</h4>
-                            <p class="text-muted mx-auto mb-4" style="max-width: 500px; font-size: 0.9rem;">Consulte a estrutura hierárquica completa da Ordem dos Advogados da Guiné-Bissau em formato PDF.</p>
                             <a href="uploads/orgaos/<?php echo $config->organograma_pdf_path; ?>" target="_blank" class="btn rounded-pill px-5 py-3 shadow-sm" style="background: var(--primary-maroon); color: #fff; font-weight:600;">
                                 <i class="fas fa-download me-2"></i>Descarregar PDF
                             </a>
                         </div>
                     <?php else: ?>
-                        <!-- Auto Generated Tree (Simplified for premium look) -->
+                        <!-- Organograma Estrutural — Estatutos OAGB 2018 (Art. 11.º) -->
+                        <div class="mb-3">
+                            <span class="badge rounded-pill px-3 py-2" style="background: rgba(77,28,33,0.08); color: var(--primary-maroon); font-size: 0.75rem; font-weight: 600;">
+                                <i class="fas fa-info-circle me-1"></i> Estrutura conforme Estatutos de 2018 — Art. 11.º
+                            </span>
+                        </div>
                         <div class="tree py-4">
-                            <?php
-                            function renderNode($pdo, $superior_id = null) {
-                                $stmt = $pdo->prepare("SELECT id, nome, cargo FROM orgaos_sociais WHERE superior_id " . ($superior_id === null ? "IS NULL" : "= ?") . " AND ativo = 1 ORDER BY ordem_exibicao ASC");
-                                $stmt->execute($superior_id === null ? [] : [$superior_id]);
-                                $nodes = $stmt->fetchAll();
-                                
-                                if (count($nodes) > 0) {
-                                    echo "<ul>";
-                                    foreach($nodes as $node) {
-                                        $nome = oagb_fix_encoding($node->nome);
-                                        $cargo = oagb_fix_encoding($node->cargo);
-                                        echo "<li>";
-                                        echo "<div class='node shadow-sm'><div class='n-name'>{$nome}</div><div class='n-role'>{$cargo}</div></div>";
-                                        renderNode($pdo, $node->id);
-                                        echo "</li>";
-                                    }
-                                    echo "</ul>";
-                                }
-                            }
-                            renderNode($pdo);
-                            ?>
+                            <ul>
+                                <!-- Nível 1: Congresso dos Advogados (órgão supremo) -->
+                                <li>
+                                    <div class="node shadow-sm" style="background: var(--primary-maroon); color: #fff; border-color: var(--primary-maroon); width: 220px;">
+                                        <div class="n-name" style="color: #fff;">Congresso dos Advogados</div>
+                                        <div class="n-role" style="color: var(--primary-gold);">Órgão Deliberativo Supremo</div>
+                                    </div>
+                                    <ul>
+                                        <!-- Nível 2: Assembleia Geral -->
+                                        <li>
+                                            <div class="node shadow-sm" style="border-left: 3px solid var(--primary-gold);">
+                                                <div class="n-name">Assembleia Geral</div>
+                                                <div class="n-role">Órgão Deliberativo</div>
+                                            </div>
+                                        </li>
+                                        <!-- Nível 2: Bastonário -->
+                                        <li>
+                                            <div class="node shadow-sm" style="background: rgba(77,28,33,0.06); border-left: 3px solid var(--primary-maroon);">
+                                                <div class="n-name">Bastonário</div>
+                                                <div class="n-role">Representante Máximo</div>
+                                            </div>
+                                            <ul>
+                                                <!-- Nível 3: Órgãos sob alçada do Bastonário -->
+                                                <li>
+                                                    <div class="node shadow-sm">
+                                                        <div class="n-name">Conselho Nacional</div>
+                                                        <div class="n-role">Órgão Executivo</div>
+                                                    </div>
+                                                    <ul>
+                                                        <li>
+                                                            <div class="node shadow-sm" style="width: 160px;">
+                                                                <div class="n-name" style="font-size: 0.78rem;">Conselho Regional</div>
+                                                                <div class="n-role">Delegação Regional</div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="node shadow-sm" style="width: 160px;">
+                                                                <div class="n-name" style="font-size: 0.78rem;">Centro de Estágio</div>
+                                                                <div class="n-role">Formação</div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <div class="node shadow-sm">
+                                                        <div class="n-name">Conselho Fiscal</div>
+                                                        <div class="n-role">Fiscalização</div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <!-- Nível 2: Órgãos independentes -->
+                                        <li>
+                                            <div class="node shadow-sm" style="border-left: 3px solid #2c6e49;">
+                                                <div class="n-name">Conselho de Deontologia</div>
+                                                <div class="n-role" style="color: #2c6e49;">Ética Profissional</div>
+                                            </div>
+                                            <ul>
+                                                <li>
+                                                    <div class="node shadow-sm" style="border-left: 3px solid #c0392b;">
+                                                        <div class="n-name">Tribunal de Ética</div>
+                                                        <div class="n-role" style="color: #c0392b;">Disciplina</div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <!-- Nível 2: Conselho de Jurisdição -->
+                                        <li>
+                                            <div class="node shadow-sm" style="border-left: 3px solid #2980b9;">
+                                                <div class="n-name">Conselho de Jurisdição</div>
+                                                <div class="n-role" style="color: #2980b9;">Contencioso</div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     <?php endif; ?>
                 </div>
