@@ -426,23 +426,31 @@ $page_title = "Agenda";
                         <h4>Outros Eventos</h4>
                         <?php 
                         $count = 0;
+                        $total_relacionados = count($eventos_relacionados);
                         foreach ($eventos_relacionados as $relacionado): 
                             $count++;
                         ?>
-                        <div class="evento-relacionado">
-                            <h6 style="font-family: 'Libre Baskerville', serif; font-weight: 700;">
-                                <a href="evento.php?id=<?php echo $relacionado->id; ?>" class="text-decoration-none" style="transition: 0.3s; color: var(--primary-maroon) !important;">
-                                    <?php echo htmlspecialchars($relacionado->titulo); ?>
-                                </a>
-                            </h6>
-                            <p class="resumo">
-                                <?php echo htmlspecialchars(truncate_text($relacionado->descricao, 80)); ?>
-                            </p>
-                            <small class="text-muted" style="font-family: 'Open Sans', sans-serif;">
-                                <i class="far fa-calendar-alt me-1" style="color: var(--primary-gold);"></i>
-                                <?php echo format_date_pt($relacionado->data_evento); ?>
-                            </small>
+                        <div class="mb-0 group-card-lidas" style="transition: all 0.3s ease;">
+                            <a href="evento.php?id=<?php echo $relacionado->id; ?>" class="text-decoration-none d-block">
+                                <?php if (!empty($relacionado->imagem_destaque)): ?>
+                                    <?php $img_lida = oagb_resolve_media_path($relacionado->imagem_destaque, 'uploads/OAGB-Placeholder.jpg'); ?>
+                                    <div class="rounded-3 overflow-hidden mb-3" style="position: relative;">
+                                        <img class="img-fluid w-100" src="<?php echo htmlspecialchars($img_lida); ?>" style="height: 160px; object-fit: cover; transition: transform 0.5s ease;" alt="" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                    </div>
+                                <?php endif; ?>
+                                <div class="w-100">
+                                    <div class="mb-2" style="color:#B1A276; font-family: 'Open Sans', sans-serif; font-weight: 700; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px;">
+                                        <i class="far fa-calendar-alt me-1"></i> <?php echo format_date_pt($relacionado->data_evento); ?>
+                                    </div>
+                                    <h6 class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 1.05rem; line-height: 1.45; color: #4D1C21; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
+                                        <?php echo htmlspecialchars($relacionado->titulo); ?>
+                                    </h6>
+                                </div>
+                            </a>
                         </div>
+                        <?php if ($count < $total_relacionados): ?>
+                        <hr style="border-top: 1px solid #f0ece4; margin: 1.2rem 0; opacity: 1;">
+                        <?php endif; ?>
                         <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
