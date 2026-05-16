@@ -224,7 +224,7 @@ $meta_image = !empty($anuncio->imagem) ? 'uploads/' . $anuncio->imagem : 'img/As
                                     <div class="mb-2" style="color:#B1A276; font-family: 'Open Sans', sans-serif; font-weight: 700; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px;">
                                         <i class="fas fa-bullhorn me-1"></i> <?php echo format_date_pt($lida->data_inicio); ?>
                                     </div>
-                                    <h6 class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 1.05rem; line-height: 1.45; color: #4D1C21; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
+                                    <h6 class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.45; color: #4D1C21; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
                                         <?php echo htmlspecialchars(truncate_text($lida->titulo, 50)); ?>
                                     </h6>
                                 </div>

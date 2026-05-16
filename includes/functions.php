@@ -522,6 +522,19 @@ function time_elapsed($datetime) {
     return 'Agora mesmo';
 }
 
+if (!function_exists('oagb_resolve_media_path')) {
+    function oagb_resolve_media_path($rawPath, $defaultPath) {
+        if (empty($rawPath)) return $defaultPath;
+        $normalized = str_replace('\\', '/', trim((string) $rawPath));
+        $normalized = preg_replace('#\.\.+#', '', $normalized);
+        if ($normalized === '') return $defaultPath;
+        if (preg_match('#^https?://#i', $normalized)) return $normalized;
+        if ($normalized[0] === '/') $normalized = ltrim($normalized, '/');
+        if (strpos($normalized, 'uploads/') === 0 || strpos($normalized, 'img/') === 0) return $normalized;
+        return 'uploads/' . $normalized;
+    }
+}
+
 if (!function_exists('oagb_fix_encoding')) {
     /**
      * Corrige problemas de codificação de caracteres legados da base de dados.
