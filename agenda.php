@@ -246,10 +246,6 @@ $meta_description = "Agenda de eventos, formações, congressos e atividades da 
                 background: rgba(0,0,0,0.02) !important; 
             }
             #topbar .topbar-btn i { color: var(--primary-maroon) !important; }
-            #topbar .topbar-btn:hover { 
-                background: rgba(77,28,33,0.05) !important; 
-                border-color: var(--primary-maroon) !important; 
-            }
 
             /* Navbar: Dark links on cream */
             .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
@@ -349,7 +345,7 @@ $meta_description = "Agenda de eventos, formações, congressos e atividades da 
 </style>
 </head>
 
-<body>
+<body class="header-light-page">
 
     <?php include 'includes/topbar.php'; ?>
 

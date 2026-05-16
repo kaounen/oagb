@@ -2,6 +2,9 @@
 require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/header.php';
 
+// Fetch Editions (Builder)
+$edicoes = $pdo->query("SELECT * FROM newsletter_edicoes ORDER BY created_at DESC")->fetchAll();
+
 // Fetch Subscriptions
 try {
     $stmt = $pdo->query("SELECT * FROM newsletter_subscricoes ORDER BY data_inscricao DESC");
@@ -11,14 +14,77 @@ try {
 
 <div class="row mb-5 align-items-center">
     <div class="col-md-6">
-        <h2 class="page-title">Newsletter & Subscritores</h2>
-        <div class="text-muted small">Gestão da base de dados de emails para envio de circulares.</div>
+        <h2 class="page-title">Newsletter & Comunicação</h2>
+        <div class="text-muted small">Crie edições modulares e gira a sua base de contactos.</div>
     </div>
     <div class="col-md-6 text-md-end">
-        <a href="export.php" class="btn btn-login w-auto px-4"><i class="fas fa-file-csv me-2"></i> Exportar CSV</a>
+        <div class="d-flex gap-2 justify-content-end">
+            <a href="builder.php" class="btn btn-dark w-auto px-4 shadow-sm"><i class="fas fa-magic me-2 text-warning"></i> Criar Nova Edição</a>
+            <a href="send.php" class="btn btn-login w-auto px-4 shadow-sm"><i class="fas fa-paper-plane me-2"></i> Disparo Rápido</a>
+        </div>
     </div>
 </div>
 
+<!-- Editions Section -->
+<div class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold m-0"><i class="fas fa-history me-2 text-gold"></i> Edições Recentes (Builder)</h5>
+    </div>
+    <div class="card border-0 shadow-sm overflow-hidden p-0">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4 border-0 small text-uppercase py-3">ID</th>
+                        <th class="border-0 small text-uppercase py-3">Título da Edição</th>
+                        <th class="border-0 small text-uppercase py-3">Data de Criação</th>
+                        <th class="border-0 small text-uppercase py-3 text-center">Estado</th>
+                        <th class="border-0 small text-uppercase py-3 text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if(empty($edicoes)): ?>
+                        <tr><td colspan="5" class="text-center py-5 text-muted">Nenhuma edição criada no builder ainda.</td></tr>
+                    <?php else: ?>
+                        <?php foreach($edicoes as $ed): ?>
+                            <tr>
+                                <td class="ps-4 small text-muted">#<?php echo $ed['id']; ?></td>
+                                <td>
+                                    <div class="fw-bold"><?php echo htmlspecialchars($ed['titulo']); ?></div>
+                                    <div class="text-muted x-small">Template: <?php echo $ed['design_template']; ?></div>
+                                </td>
+                                <td class="small"><?php echo date('d/m/Y H:i', strtotime($ed['created_at'])); ?></td>
+                                <td class="text-center">
+                                    <?php if($ed['status'] === 'rascunho'): ?>
+                                        <span class="badge bg-warning-subtle text-warning px-3 py-2">Rascunho</span>
+                                    <?php elseif($ed['status'] === 'aprovado'): ?>
+                                        <span class="badge bg-info-subtle text-info px-3 py-2">Aprovado</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-success-subtle text-success px-3 py-2">Enviado</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="builder.php?id=<?php echo $ed['id']; ?>" class="btn btn-sm btn-outline-dark px-3" title="Editar"><i class="fas fa-edit"></i></a>
+                                        <a href="send.php?edition=<?php echo $ed['id']; ?>" class="btn btn-sm btn-login px-3" title="Enviar"><i class="fas fa-paper-plane"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<hr class="my-5 opacity-10">
+
+<!-- Subscribers Section -->
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <h5 class="fw-bold m-0"><i class="fas fa-users me-2 text-gold"></i> Subscritores da Newsletter</h5>
+    <a href="export.php" class="btn btn-sm btn-outline-secondary px-3"><i class="fas fa-file-csv me-1"></i> Exportar CSV</a>
+</div>
 <div class="card border-0 shadow-sm overflow-hidden p-0">
     <div class="table-responsive">
         <table class="table align-middle mb-0 table-hover">

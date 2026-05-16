@@ -32,13 +32,13 @@ try { $items = $pdo->query("SELECT * FROM $table ORDER BY ordem ASC")->fetchAll(
             <?php if(empty($items)): ?><tr><td colspan="5" class="text-center py-5 text-muted">Sem registos.</td></tr>
             <?php else: foreach($items as $i): ?>
                 <tr>
-                    <td class="ps-4"><span class="badge bg-light text-muted border">#<?php echo $i->id; ?></span></td>
-                    <td><div class="fw-bold small"><?php echo htmlspecialchars($i->titulo); ?></div></td>
-                    <td class="small"><?php echo htmlspecialchars($tipo==='internacional' ? $i->organizacao : $i->categoria); ?></td>
-                    <td><span class="badge <?php echo $i->status==='ativo'?'bg-success':'bg-secondary'; ?>"><?php echo ucfirst($i->status); ?></span></td>
+                    <td class="ps-4"><span class="badge bg-light text-muted border">#<?php echo $i['id']; ?></span></td>
+                    <td><div class="fw-bold small"><?php echo htmlspecialchars($i['titulo']); ?></div></td>
+                    <td class="small"><?php echo htmlspecialchars($tipo==='internacional' ? ($i['organizacao'] ?? '') : ($i['categoria'] ?? '')); ?></td>
+                    <td><span class="badge <?php echo ($i['status'] ?? '') ==='ativo'?'bg-success':'bg-secondary'; ?>"><?php echo ucfirst($i['status'] ?? 'ativo'); ?></span></td>
                     <td class="text-center"><div class="btn-group">
-                        <a href="edit.php?tipo=<?php echo $tipo; ?>&id=<?php echo $i->id; ?>" class="btn btn-sm btn-outline-secondary p-2 me-1"><i class="far fa-edit"></i></a>
-                        <a href="delete.php?tipo=<?php echo $tipo; ?>&id=<?php echo $i->id; ?>" class="btn btn-sm btn-outline-danger p-2" onclick="return confirm('Eliminar?');"><i class="far fa-trash-alt"></i></a>
+                        <a href="edit.php?tipo=<?php echo $tipo; ?>&id=<?php echo $i['id']; ?>" class="btn btn-sm btn-outline-secondary p-2 me-1"><i class="far fa-edit"></i></a>
+                        <a href="delete.php?tipo=<?php echo $tipo; ?>&id=<?php echo $i['id']; ?>" class="btn btn-sm btn-outline-danger p-2" onclick="return confirm('Eliminar?');"><i class="far fa-trash-alt"></i></a>
                     </div></td>
                 </tr>
             <?php endforeach; endif; ?>

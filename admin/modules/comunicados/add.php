@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Photo handling
     $imagem = '';
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../uploads/';
+        $upload_dir = __DIR__ . '/../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <label class="form-label text-uppercase fw-bold text-muted small">Link de Destino (URL)</label>
-                            <input type="url" name="link_url" class="form-control bg-light border-0" placeholder="https://oagb.gw/anexo.pdf">
+                            <input type="text" name="link_url" class="form-control bg-light border-0" placeholder="https://oagb.gw/anexo.pdf ou pagina.php">
                         </div>
                         <div class="col-md-6 mb-4">
                             <label class="form-label text-uppercase fw-bold text-muted small">Texto do Link</label>

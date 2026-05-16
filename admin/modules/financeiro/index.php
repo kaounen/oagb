@@ -23,6 +23,7 @@ try {
         <div class="text-muted small">Controle de quotas, taxas de inscrição e propinas institucionais.</div>
     </div>
     <div class="col-md-6 text-md-end">
+        <a href="configuracoes.php" class="btn btn-dark w-auto px-4 me-2"><i class="fas fa-cog me-2"></i> Configurações</a>
         <a href="certidoes.php" class="btn btn-login-subtle text-login w-auto px-4 me-2 border-login-subtle border"><i class="fas fa-certificate me-2"></i> Emitir Certidões</a>
         <a href="alertas_quotas.php" class="btn btn-danger w-auto px-4 me-2"><i class="fas fa-exclamation-triangle me-2"></i> Verificar Atrasos em Quotas</a>
         <a href="novo_recebimento.php" class="btn btn-login w-auto px-4"><i class="fas fa-plus-circle me-2"></i> Registar Recebimento</a>
@@ -93,7 +94,7 @@ try {
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <a href="view_recibo.php?id=<?php echo $p['id']; ?>" class="btn btn-sm btn-outline-secondary p-2 me-1"><i class="fas fa-receipt"></i></a>
+                                    <a href="recibo.php?id=<?php echo $p['id']; ?>" class="btn btn-sm btn-outline-secondary p-2 me-1" title="Ver Recibo"><i class="fas fa-print"></i></a>
                                     <a href="validar.php?id=<?php echo $p['id']; ?>" class="btn btn-sm btn-outline-success p-2"><i class="fas fa-check"></i></a>
                                 </div>
                             </td>

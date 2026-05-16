@@ -5,13 +5,34 @@ require_once __DIR__ . '/../connect.php';
 $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 $lid = $_SESSION['lawyer_id'];
+$mtype = $_SESSION['member_type'] ?? 'advogado';
+
+// Fetch Financial Config
+$stmt = $pdo->query("SELECT chave, valor FROM finan_config");
+$fconfig = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+$quota_valor = ($mtype == 'estagiario') ? ($fconfig['quota_estagiario'] ?? 5000) : ($fconfig['quota_advogado'] ?? 15000);
+$tipo_quota_id = ($mtype == 'estagiario') ? 2 : 1; 
+
+// Handle Advance Payment Request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay_advance'])) {
+    $months = (int)$_POST['num_months'];
+    $total = $quota_valor * $months;
+    
+    // Create a pending record for the multi-month payment
+    $stmt = $pdo->prepare("INSERT INTO finan_pagamentos (advogado_id, membro_tipo, tipo_pagamento_id, meses_pagos, valor_pago, status, data_pagamento, metodo_pagamento) 
+                           VALUES (?, ?, ?, ?, ?, 'pendente', NOW(), 'mobile_money')");
+    $stmt->execute([$lid, $mtype, $tipo_quota_id, $months, $total]);
+    $pay_id = $pdo->lastInsertId();
+    
+    header("Location: pagamento_gateway.php?bill=$pay_id"); exit;
+}
 
 // Fetch All Payments
 $stmt = $pdo->prepare("SELECT p.*, tp.nome as tipo_nome 
                        FROM finan_pagamentos p 
                        JOIN finan_tipos_pagamento tp ON p.tipo_pagamento_id = tp.id
                        WHERE p.advogado_id = ? 
-                       ORDER BY p.data_pagamento DESC");
+                       ORDER BY p.data_pagamento DESC, p.id DESC");
 $stmt->execute([$lid]);
 $payments = $stmt->fetchAll();
 ?>
@@ -24,11 +45,19 @@ $payments = $stmt->fetchAll();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <style>
         :root { --primary-gold: #B1A276; --sidebar-dark: #111923; }
         body { font-family: 'Open Sans', sans-serif; background-color: #f5f6f8; }
         .hero-finance { background: var(--sidebar-dark); padding: 50px 0; color: white; border-bottom: 5px solid var(--primary-gold); }
         .finance-card { background: white; border-radius: 20px; padding: 40px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: -40px; }
+        .btn-login { background: var(--primary-gold); color: #111923; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 700; transition: 0.3s; }
+        .btn-login:hover { background: #111923; color: white; transform: translateY(-2px); }
+        
+        /* DataTable Custom Styling */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current { background: var(--primary-gold) !important; border: none !important; color: white !important; border-radius: 10px; }
+        .dataTables_filter input { border-radius: 10px; border: 1px solid #ddd; padding: 8px 15px; }
+        .table thead th { border-bottom: 2px solid #eee !important; }
     </style>
 </head>
 <body>
@@ -41,9 +70,36 @@ $payments = $stmt->fetchAll();
     </header>
 
     <main class="container mb-5">
+        <div class="row g-4 mb-4">
+            <div class="col-lg-12">
+                <div class="card border-0 shadow-sm p-4 bg-white rounded-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0"><i class="fas fa-plus-circle me-2 text-primary"></i> Pagamento Antecipado / Novo</h5>
+                        <div class="badge bg-light text-dark border p-2 px-3 small">Valor Unitário: <?php echo number_format($quota_valor, 0, ',', '.'); ?> CFA</div>
+                    </div>
+                    <form method="POST" class="row g-3 align-items-end">
+                        <div class="col-md-8">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Selecionar Período de Quotas</label>
+                            <select name="num_months" class="form-select border-0 bg-light p-3 rounded-3" required>
+                                <option value="1">1 Mês (<?php echo number_format($quota_valor, 0, ',', '.'); ?> CFA)</option>
+                                <option value="3">Trimestre - 3 Meses (<?php echo number_format($quota_valor * 3, 0, ',', '.'); ?> CFA)</option>
+                                <option value="6">Semestre - 6 Meses (<?php echo number_format($quota_valor * 6, 0, ',', '.'); ?> CFA)</option>
+                                <option value="12">Anual - 12 Meses (<?php echo number_format($quota_valor * 12, 0, ',', '.'); ?> CFA)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" name="pay_advance" class="btn btn-login w-100 py-3 shadow-sm fw-bold text-uppercase">
+                                <i class="fas fa-wallet me-2"></i> Gerar Pagamento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="finance-card">
             <div class="table-responsive">
-                <table class="table align-middle">
+                <table class="table align-middle" id="financeTable">
                     <thead>
                         <tr class="bg-light text-uppercase small fw-bold text-muted">
                             <th class="border-0 p-3">Data</th>
@@ -59,7 +115,9 @@ $payments = $stmt->fetchAll();
                         <?php else: ?>
                             <?php foreach($payments as $p): ?>
                                 <tr>
-                                    <td class="p-3"><?php echo date('d/m/Y', strtotime($p['data_pagamento'])); ?></td>
+                                    <td class="p-3" data-order="<?php echo strtotime($p['data_pagamento']) . str_pad($p['id'], 10, '0', STR_PAD_LEFT); ?>">
+                                        <?php echo date('d/m/Y H:i', strtotime($p['data_pagamento'])); ?>
+                                    </td>
                                     <td class="p-3 fw-bold text-dark"><?php echo $p['tipo_nome']; ?></td>
                                     <td class="p-3 small text-muted"><?php echo strtoupper($p['metodo_pagamento']); ?> / DEP-<?php echo $p['id']; ?></td>
                                     <td class="p-3 text-end fw-bold"><?php echo number_format($p['valor_pago'], 0, ',', '.'); ?> CFA</td>
@@ -89,5 +147,20 @@ $payments = $stmt->fetchAll();
         </div>
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#financeTable').DataTable({
+                "order": [[ 0, "desc" ]],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-PT.json"
+                },
+                "pageLength": 10,
+                "lengthMenu": [5, 10, 25, 50]
+            });
+        });
+    </script>
 </body>
 </html>

@@ -11,7 +11,7 @@ if ($id > 0) {
         
         if ($row) {
             $filename = $row['arquivo'];
-            $upload_path = __DIR__ . '/../../../../uploads/' . $filename;
+            $upload_path = __DIR__ . '/../../../uploads/' . $filename;
             
             $del_stmt = $pdo->prepare("DELETE FROM documentos_publicos WHERE id = ?");
             if ($del_stmt->execute([$id])) {

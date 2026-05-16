@@ -1,0 +1,98 @@
+# Apache Configuration for OAGB Website
+RewriteEngine On
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# Remove index.php from URLs
+RewriteCond %{THE_REQUEST} /index\.php[?\s] [NC]
+RewriteRule ^index\.php$ / [R=301,L]
+
+# Redirect specific pages to their PHP equivalents
+RewriteRule ^orgaos-sociais/?$ orgaos-sociais.php [L]
+RewriteRule ^comissoes-especializadas/?$ comissoes-especializadas.php [L]
+RewriteRule ^cooperacao-institucional/?$ cooperacao-institucional.php [L]
+RewriteRule ^pareceres-deliberacoes/?$ pareceres-deliberacoes.php [L]
+RewriteRule ^comunicados/?$ comunicados.php [L]
+RewriteRule ^publicacoes/?$ publicacoes.php [L]
+RewriteRule ^orcamento/?$ orcamento.php [L]
+
+# Friendly URLs for articles
+RewriteRule ^artigo/([^/]+)/?$ artigo.php?slug=$1 [L,QSA]
+RewriteRule ^noticias/categoria/([^/]+)/?$ noticias.php?categoria=$1 [L,QSA]
+RewriteRule ^advogados/([A-Z])/?$ advogados-inscritos.php?letra=$1 [L,QSA]
+
+# Admin area protection
+<Files "connect.php">
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Protect sensitive files
+<FilesMatch "\.(sql|log|conf|ini)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Compress text files
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Browser Caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/ico "access plus 1 year"
+    ExpiresByType image/icon "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType application/pdf "access plus 1 month"
+</IfModule>
+
+# Error Pages
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php
+
+# PHP Configuration
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+</IfModule>
+
+# Prevent access to .htaccess itself
+<Files .htaccess>
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Directory browsing protection
+Options -Indexes
+
+# Force HTTPS (uncomment when SSL is configured)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# WWW redirect (uncomment to force www or non-www)
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule ^(.*)$ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

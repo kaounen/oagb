@@ -19,12 +19,12 @@ try { $items = $pdo->query("SELECT * FROM glossario_juridico ORDER BY letra ASC,
             <?php if(empty($items)): ?><tr><td colspan="4" class="text-center py-5 text-muted">Sem termos.</td></tr>
             <?php else: foreach($items as $i): ?>
                 <tr>
-                    <td class="ps-4"><span class="badge bg-dark"><?php echo $i->letra; ?></span></td>
-                    <td><div class="fw-bold small"><?php echo htmlspecialchars($i->termo); ?></div><div class="text-muted x-small" style="max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?php echo htmlspecialchars(substr($i->definicao, 0, 80)); ?>...</div></td>
-                    <td><span class="badge bg-light text-dark border"><?php echo $i->categoria; ?></span></td>
+                    <td class="ps-4"><span class="badge bg-dark"><?php echo $i['letra']; ?></span></td>
+                    <td><div class="fw-bold small"><?php echo htmlspecialchars($i['termo']); ?></div><div class="text-muted x-small" style="max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?php echo htmlspecialchars(substr($i['definicao'] ?? '', 0, 80)); ?>...</div></td>
+                    <td><span class="badge bg-light text-dark border"><?php echo $i['categoria'] ?? ''; ?></span></td>
                     <td class="text-center"><div class="btn-group">
-                        <a href="edit.php?id=<?php echo $i->id; ?>" class="btn btn-sm btn-outline-secondary p-2 me-1"><i class="far fa-edit"></i></a>
-                        <a href="delete.php?id=<?php echo $i->id; ?>" class="btn btn-sm btn-outline-danger p-2" onclick="return confirm('Eliminar?');"><i class="far fa-trash-alt"></i></a>
+                        <a href="edit.php?id=<?php echo $i['id']; ?>" class="btn btn-sm btn-outline-secondary p-2 me-1"><i class="far fa-edit"></i></a>
+                        <a href="delete.php?id=<?php echo $i['id']; ?>" class="btn btn-sm btn-outline-danger p-2" onclick="return confirm('Eliminar?');"><i class="far fa-trash-alt"></i></a>
                     </div></td>
                 </tr>
             <?php endforeach; endif; ?>

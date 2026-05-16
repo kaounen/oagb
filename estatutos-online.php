@@ -35,7 +35,7 @@ foreach ($art_rows as $artigo) {
 
 $page_title = "Estatutos da OAGB";
 $meta_description = "Consulte online os Estatutos da Ordem dos Advogados da Guiné-Bissau.";
-$header_image = 'uploads/close-up-scales-justice-original-azul.jpg';
+$header_image = 'uploads/justice-symbol-legal-law.jpg';
 $has_header_image = !empty($header_image);
 ?>
 <!DOCTYPE html>

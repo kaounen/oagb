@@ -2,9 +2,9 @@
 // admin/includes/AttachmentHelper.php
 
 class AttachmentHelper {
-    private static $upload_dir = __DIR__ . '/../../../uploads/attachments/';
+    private static $upload_dir = __DIR__ . '/../../uploads/attachments/';
 
-    public static function save($pdo, $entity_type, $entity_id, $files) {
+    public static function save($pdo, $entity_type, $entity_id, $files, $descriptions = []) {
         if (!file_exists(self::$upload_dir)) mkdir(self::$upload_dir, 0777, true);
 
         foreach ($files['name'] as $i => $name) {
@@ -14,13 +14,19 @@ class AttachmentHelper {
                 $new_name = $entity_type . '_' . $entity_id . '_' . uniqid() . '.' . $ext;
                 $mime = $files['type'][$i];
                 $size = $files['size'][$i];
+                $desc = isset($descriptions[$i]) ? $descriptions[$i] : '';
 
                 if (move_uploaded_file($tmp_name, self::$upload_dir . $new_name)) {
-                    $stmt = $pdo->prepare("INSERT INTO ficheiros_anexos (tipo_entidade, entidade_id, nome_ficheiro, nome_original, tipo_mime, tamanho) VALUES (?, ?, ?, ?, ?, ?)");
-                    $stmt->execute([$entity_type, $entity_id, $new_name, $name, $mime, $size]);
+                    $stmt = $pdo->prepare("INSERT INTO ficheiros_anexos (tipo_entidade, entidade_id, nome_ficheiro, nome_original, tipo_mime, tamanho, descricao) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$entity_type, $entity_id, $new_name, $name, $mime, $size, $desc]);
                 }
             }
         }
+    }
+
+    public static function update($pdo, $id, $descricao) {
+        $stmt = $pdo->prepare("UPDATE ficheiros_anexos SET descricao = ? WHERE id = ?");
+        return $stmt->execute([$descricao, $id]);
     }
 
     public static function get($pdo, $entity_type, $entity_id) {

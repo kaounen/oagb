@@ -5,18 +5,27 @@ require_once __DIR__ . '/../connect.php';
 $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 $lid = $_SESSION['lawyer_id'];
+$mtype = $_SESSION['member_type'] ?? 'advogado';
+$tipo_quota_id = ($mtype == 'estagiario') ? 2 : 1; 
 
 // Check Quota Status
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM finan_pagamentos 
-                       WHERE advogado_id = ? AND tipo_pagamento_id = 1 
+                       WHERE advogado_id = ? AND tipo_pagamento_id = ? 
                        AND status = 'confirmado' AND MONTH(data_pagamento) = MONTH(NOW()) AND YEAR(data_pagamento) = YEAR(NOW())");
-$stmt->execute([$lid]);
+$stmt->execute([$lid, $tipo_quota_id]);
 if ($stmt->fetchColumn() == 0) { exit("Acesso Bloqueado: Quotas em atraso."); }
 
 // Fetch Lawyer Info
-$stmt = $pdo->prepare("SELECT * FROM advogados WHERE id = ?");
+$table = ($mtype == 'estagiario') ? 'advogados_estagiarios' : 'advogados';
+$stmt = $pdo->prepare("SELECT * FROM $table WHERE id = ?");
 $stmt->execute([$lid]);
 $row = $stmt->fetch();
+
+// Fetch Financial Config
+$stmt = $pdo->query("SELECT chave, valor FROM finan_config");
+$fconfig = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$titulo_profissional = ($mtype == 'estagiario') ? 'Advogado(a) Estagiário(a)' : 'Advogado(a)';
 
 $data_emissao = date('d \d\e F \d\e Y');
 $meses_pt = [
@@ -77,7 +86,7 @@ $data_emissao = strtr($data_emissao, $meses_pt);
 
     <div class="cert-page">
         <div class="header">
-            <img src="/oagb/img/logo3.png" alt="OAGB LOGO">
+            <img src="<?php echo ROOT_URL; ?>/img/logo3.png" alt="OAGB LOGO">
             <div class="org-name">Ordem dos Advogados da Guiné-Bissau</div>
         </div>
         
@@ -86,7 +95,7 @@ $data_emissao = strtr($data_emissao, $meses_pt);
         </div>
         
         <div class="content">
-            Certifica-se, para os devidos efeitos e a pedido do interessado, que o(a) <b>Dr(a). <?php echo $row['nome_completo']; ?></b>, 
+            Certifica-se, para os devidos efeitos e a pedido do interessado, que o(a) <b><?php echo $titulo_profissional; ?> <?php echo $row['nome_completo']; ?></b>, 
             portador(a) da Cédula Profissional número <b><?php echo $row['numero_registo']; ?></b>, com inscrição em vigor nesta Ordem, 
             encontra-se na presente data com a sua situação contributiva perfeitamente <b>REGULARIZADA</b> perante a Tesouraria desta Instituição.
             <br><br>
@@ -98,9 +107,14 @@ $data_emissao = strtr($data_emissao, $meses_pt);
         
         <div class="footer-sig">
             <div class="date mb-5">Bissau, <?php echo $data_emissao; ?></div>
-            <br><br><br>
+            <br>
+            <?php if(!empty($fconfig['bastonario_assinatura'])): ?>
+                <img src="<?php echo ROOT_URL; ?>/img/<?php echo $fconfig['bastonario_assinatura']; ?>" style="max-height: 80px; margin-bottom: -10px;">
+            <?php else: ?>
+                <br><br>
+            <?php endif; ?>
             <div class="sig-line"></div>
-            <div class="sig-name">O Bastonário</div>
+            <div class="sig-name"><?php echo $fconfig['bastonario_nome'] ?? 'O Bastonário'; ?></div>
             <div class="sig-role">Ordem dos Advogados da Guiné-Bissau</div>
         </div>
         

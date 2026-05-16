@@ -15,6 +15,25 @@ $meses_pt = [
     'July' => 'Julho', 'August' => 'Agosto', 'September' => 'Setembro', 'October' => 'Outubro', 'November' => 'Novembro', 'December' => 'Dezembro'
 ];
 $data_emissao = strtr($data_emissao, $meses_pt);
+
+// Fetch Assigned Signer for Certificate
+$sig_certidao = $pdo->query("SELECT valor FROM configuracoes_site WHERE chave = 'sig_certidao'")->fetchColumn();
+$signer = null;
+if ($sig_certidao) {
+    list($type, $sid) = explode(':', $sig_certidao);
+    if ($type === 'b') {
+        $st = $pdo->prepare("SELECT nome_completo as nome, assinatura_url as assinatura, 'Bastonário da Ordem dos Advogados' as cargo FROM bastonarios WHERE id = ?");
+    } else {
+        $st = $pdo->prepare("SELECT nome, assinatura, cargo FROM orgaos_sociais WHERE id = ?");
+    }
+    $st->execute([$sid]);
+    $signer = $st->fetch(PDO::FETCH_ASSOC);
+}
+
+// Fallback to Current Bastonario if no specific signer assigned
+if (!$signer) {
+    $signer = $pdo->query("SELECT nome_completo as nome, assinatura_url as assinatura, 'Bastonário da Ordem dos Advogados' as cargo FROM bastonarios WHERE is_atual = 1 LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -29,8 +48,9 @@ $data_emissao = strtr($data_emissao, $meses_pt);
             margin: 20mm auto; background: white; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             position: relative; box-sizing: border-box;
-            background-image: url('https://oagb.gw/img/watermark.png'); 
+            background-image: url('../../../img/logo-oa-big.png'); 
             background-repeat: no-repeat; background-position: center; background-size: 50%;
+            background-blend-mode: overlay; opacity: 0.96;
         }
         .header { text-align: center; margin-bottom: 50px; }
         .header img { height: 75px; margin-bottom: 10px; }
@@ -68,7 +88,7 @@ $data_emissao = strtr($data_emissao, $meses_pt);
 
     <div class="cert-page">
         <div class="header">
-            <img src="/oagb/img/logo3.png" alt="OAGB LOGO">
+            <img src="../../../img/logo3.png" alt="OAGB LOGO">
             <div class="org-name">Ordem dos Advogados da Guiné-Bissau</div>
         </div>
         
@@ -88,11 +108,19 @@ $data_emissao = strtr($data_emissao, $meses_pt);
         </div>
         
         <div class="footer-sig">
-            <div class="date mb-5">Bissau, <?php echo $data_emissao; ?></div>
-            <br><br><br>
+            <div class="date mb-4">Bissau, <?php echo $data_emissao; ?></div>
+            
+            <?php if ($signer && !empty($signer['assinatura'])): ?>
+                <div class="sig-image-wrap" style="margin-bottom: -15px;">
+                    <img src="../../../uploads/assinaturas/<?php echo $signer['assinatura']; ?>" style="max-height: 80px; width: auto; margin: 0 auto;">
+                </div>
+            <?php else: ?>
+                <br><br><br>
+            <?php endif; ?>
+
             <div class="sig-line"></div>
-            <div class="sig-name">A Tesouraria / O Bastonário</div>
-            <div class="sig-role">Ordem dos Advogados da Guiné-Bissau</div>
+            <div class="sig-name"><?php echo $signer ? $signer['nome'] : 'O Bastonário'; ?></div>
+            <div class="sig-role"><?php echo $signer ? $signer['cargo'] : 'Ordem dos Advogados'; ?></div>
         </div>
         
         <div class="meta-info">

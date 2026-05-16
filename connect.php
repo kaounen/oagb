@@ -61,8 +61,19 @@ try {
     }
 }
 
-// Configurações globais do site
-define('SITE_URL', 'https://oagb.gw');
+// Configurações globais do site e caminhos dinâmicos
+if (!defined('ROOT_URL')) {
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $script = $_SERVER['SCRIPT_NAME'] ?? '';
+    $dir = str_replace('\\', '/', dirname($script));
+    // Limpar caminhos de subpastas conhecidas para obter a raiz do projeto
+    $dir = preg_replace('#/(portal|admin|ajax|modules|includes).*$#', '', $dir);
+    $dir = rtrim($dir, '/');
+    define('ROOT_URL', $protocol . "://" . $host . $dir);
+}
+
+define('SITE_URL', 'https://oagb.gw'); // URL de produção fixa
 define('SITE_NAME', 'Ordem dos Advogados da Guiné-Bissau');
 define('UPLOADS_DIR', 'uploads');
 define('MAX_UPLOAD_SIZE', 5242880); // 5MB

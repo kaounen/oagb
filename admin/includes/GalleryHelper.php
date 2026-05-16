@@ -2,7 +2,7 @@
 // admin/includes/GalleryHelper.php
 
 class GalleryHelper {
-    private static $upload_dir = __DIR__ . '/../../../uploads/';
+    private static $upload_dir = __DIR__ . '/../../uploads/';
 
     public static function save($pdo, $type, $entity_id, $files, $titles = [], $descriptions = []) {
         if (!file_exists(self::$upload_dir)) mkdir(self::$upload_dir, 0777, true);

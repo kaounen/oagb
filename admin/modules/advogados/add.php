@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Photo handling
     $foto = '';
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../uploads/';
+        $upload_dir = __DIR__ . '/../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);

@@ -161,14 +161,18 @@ if ($ajax) {
             case 'faq': $link = "contacto.php#faq-{$resultado->id}"; $badge_class = 'bg-warning text-dark'; $label = "FAQ"; break;
         }
         ?>
-        <div class="result-card mb-4">
+        <div class="result-card mb-4 shadow-sm">
             <div class="row g-0">
                 <?php if (!empty($resultado->imagem) && !in_array($resultado->tipo, ['faq', 'documento', 'parecer'])): ?>
                 <div class="col-md-3">
                     <div class="result-img-wrapper">
                         <?php 
                         $img_src = trim($resultado->imagem);
-                        if (!str_contains($img_src, 'http') && !str_starts_with($img_src, 'uploads/') && !str_starts_with($img_src, 'img/')) { 
+                        // Compatibilidade com PHP < 8 (str_contains/str_starts_with)
+                        $is_absolute = (strpos($img_src, 'http') !== false);
+                        $has_path = (strpos($img_src, 'uploads/') === 0 || strpos($img_src, 'img/') === 0);
+                        
+                        if (!$is_absolute && !$has_path) { 
                             $img_src = 'uploads/' . ltrim($img_src, '/'); 
                         }
                         ?>
@@ -184,11 +188,11 @@ if ($ajax) {
                             <div>
                                 <span class="badge-custom <?php echo $badge_class; ?> mb-3"><?php echo $label; ?></span>
                                 <h4 class="result-title">
-                                    <a href="<?php echo $link; ?>" <?php echo (in_array($resultado->tipo, ['documento', 'parecer'])) ? 'target="_blank"' : ''; ?>>
+                                    <a href="<?php echo $link; ?>">
                                         <?php 
                                         // Fix encoding if needed (for Mojibake cases)
                                         $display_title = $resultado->titulo;
-                                        if (str_contains($display_title, 'ß') || str_contains($display_title, 'Ý')) {
+                                        if (strpos($display_title, 'ß') !== false || strpos($display_title, 'Ý') !== false) {
                                             $search  = ['þÒ', 'þ', 'Ú', 'Ò', 'Ý', 'ß', '¾'];
                                             $replace = ['ção', 'ç', 'é', 'ã', 'í', 'á', 'ó'];
                                             $display_title = str_replace($search, $replace, $display_title);
@@ -198,12 +202,12 @@ if ($ajax) {
                                     </a>
                                 </h4>
                             </div>
-                            <a href="<?php echo $link; ?>" class="btn-detail-circle" <?php echo (in_array($resultado->tipo, ['documento', 'parecer'])) ? 'target="_blank"' : ''; ?>><i class="bi bi-arrow-right"></i></a>
+                            <a href="<?php echo $link; ?>" class="btn-detail-circle"><i class="bi bi-arrow-right"></i></a>
                         </div>
                         <p class="result-desc mb-3">
                             <?php 
                             $display_desc = strip_tags($resultado->descricao);
-                            if (str_contains($display_desc, 'ß') || str_contains($display_desc, 'Ý')) {
+                            if (strpos($display_desc, 'ß') !== false || strpos($display_desc, 'Ý') !== false) {
                                 $search  = ['þÒ', 'þ', 'Ú', 'Ò', 'Ý', 'ß', '¾'];
                                 $replace = ['ção', 'ç', 'é', 'ã', 'í', 'á', 'ó'];
                                 $display_desc = str_replace($search, $replace, $display_desc);
@@ -414,14 +418,18 @@ $header_image = 'uploads/close-up-scales-justice-original-azul.jpg';
                                 case 'faq': $link = "contacto.php#faq-{$resultado->id}"; $badge_class = 'bg-warning text-dark'; $label = "FAQ"; break;
                             }
                             ?>
-                            <div class="result-card mb-4 wow fadeInUp">
+                            <div class="result-card mb-4 shadow-sm">
                                 <div class="row g-0">
                                     <?php if (!empty($resultado->imagem) && !in_array($resultado->tipo, ['faq', 'documento', 'parecer'])): ?>
                                     <div class="col-md-3">
                                         <div class="result-img-wrapper">
                                             <?php 
                                             $img_src = trim($resultado->imagem);
-                                            if (!str_contains($img_src, 'http') && !str_starts_with($img_src, 'uploads/') && !str_starts_with($img_src, 'img/')) { 
+                                            // Compatibilidade com PHP < 8
+                                            $is_absolute = (strpos($img_src, 'http') !== false);
+                                            $has_path = (strpos($img_src, 'uploads/') === 0 || strpos($img_src, 'img/') === 0);
+                                            
+                                            if (!$is_absolute && !$has_path) { 
                                                 $img_src = 'uploads/' . ltrim($img_src, '/'); 
                                             }
                                             ?>
@@ -440,7 +448,7 @@ $header_image = 'uploads/close-up-scales-justice-original-azul.jpg';
                                                         <a href="<?php echo $link; ?>" <?php echo (in_array($resultado->tipo, ['documento', 'parecer'])) ? 'target="_blank"' : ''; ?>>
                                                             <?php 
                                                             $display_title = $resultado->titulo;
-                                                            if (str_contains($display_title, 'ß') || str_contains($display_title, 'Ý')) {
+                                                            if (strpos($display_title, 'ß') !== false || strpos($display_title, 'Ý') !== false) {
                                                                 $search_moj  = ['þÒ', 'þ', 'Ú', 'Ò', 'Ý', 'ß', '¾'];
                                                                 $replace_moj = ['ção', 'ç', 'é', 'ã', 'í', 'á', 'ó'];
                                                                 $display_title = str_replace($search_moj, $replace_moj, $display_title);
@@ -455,7 +463,7 @@ $header_image = 'uploads/close-up-scales-justice-original-azul.jpg';
                                             <p class="result-desc mb-3">
                                                 <?php 
                                                 $display_desc = strip_tags($resultado->descricao);
-                                                if (str_contains($display_desc, 'ß') || str_contains($display_desc, 'Ý')) {
+                                                if (strpos($display_desc, 'ß') !== false || strpos($display_desc, 'Ý') !== false) {
                                                     $search_moj  = ['þÒ', 'þ', 'Ú', 'Ò', 'Ý', 'ß', '¾'];
                                                     $replace_moj = ['ção', 'ç', 'é', 'ã', 'í', 'á', 'ó'];
                                                     $display_desc = str_replace($search_moj, $replace_moj, $display_desc);

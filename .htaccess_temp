@@ -1,6 +1,0 @@
-# Apache Configuration for OAGB Website - Versão Simplificada para Teste
-# Permitir acesso direto a todos os ficheiros PHP
-DirectoryIndex index.php index.html
-
-# Desativar todas as regras de rewrite temporariamente
-# RewriteEngine Off

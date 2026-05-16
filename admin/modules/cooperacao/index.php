@@ -11,8 +11,8 @@ try {
 
 <div class="row mb-5 align-items-center">
     <div class="col-md-6">
-        <h2 class="page-title">Cooperação Internacional</h2>
-        <div class="text-muted small">Gestão de protocolos, parcerias e acordos internacionais da OAGB.</div>
+        <h2 class="page-title">Cooperação Institucional</h2>
+        <div class="text-muted small">Gestão de protocolos, parcerias e acordos institucionais e internacionais da OAGB.</div>
     </div>
     <div class="col-md-6 text-md-end">
         <a href="add.php" class="btn btn-login w-auto px-4"><i class="fas fa-file-contract me-2"></i> Novo Acordo / Protocolo</a>

@@ -1,0 +1,146 @@
+/* ===== TEMPLATE CSS PARA HEADERS - PÁGINAS INTERNAS ===== */
+/* Para usar em todas as páginas EXCETO index.php */
+
+/* Header com Background Image PADRÃO */
+.bg-header {
+    background: linear-gradient(rgba(9, 30, 62, .7), rgba(9, 30, 62, .7)), url(img/brass-scales-justice-close-up-view.jpg) center center no-repeat;
+    background-size: cover;
+    margin-bottom: 30px !important;
+}
+
+/* Ajustes responsivos para mobile */
+@media (max-width: 768px) {
+    .navbar-brand img {
+        width: 150px !important;
+        max-width: 60% !important;
+    }
+    
+    .navbar-toggler {
+        position: relative !important;
+        right: auto !important;
+        top: auto !important;
+        transform: none !important;
+    }
+    
+    .bg-header {
+        margin-bottom: 20px !important;
+    }
+}
+
+/* Menu dropdowns no mouseover para desktop */
+@media (min-width: 992px) {
+    .navbar-nav .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+    
+    .navbar-nav .dropdown .dropdown-menu {
+        margin-top: 0;
+    }
+}
+
+/* Breadcrumbs com separador circular */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "•";
+    color: rgba(255,255,255,0.7);
+    padding: 0 8px;
+    font-size: 8px;
+    vertical-align: middle;
+}
+
+.breadcrumb-item a {
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: white;
+}
+
+/* Botões de ação com cores castanho/dourado */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    padding: 15px 0;
+    margin-bottom: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+    background-color: transparent;
+    color: #8B6B47;
+    border: 1px solid #8B6B47;
+    transition: all 0.3s;
+    margin: 0 5px;
+}
+
+.action-buttons .btn:hover {
+    background-color: #8B6B47;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Links com underline no hover */
+a.linkSublinhado:hover,
+a.text-decoration-none:hover {
+    text-decoration: underline !important;
+}
+
+/* Paleta de cores padrão */
+.bg-color-1 { background-color: #c18046; }
+.bg-color-2 { background-color: #f37263; }
+.bg-color-3 { background-color: #a5684e; }
+.bg-color-4 { background-color: #a98c78; }
+.bg-color-5 { background-color: #5a443d; }
+
+/* Tipografia padrão */
+.texto-conteudo {
+    color: #111923;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+}
+
+.titulo-artigo {
+    color: #4D1C21;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 180%;
+}
+
+/* Botões arrow padrão */
+.btn-arrow-only {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 250px;
+    border-bottom: 1px solid #111923;
+    padding-top: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-arrow-only i {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #111923;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.btn-arrow-only:hover {
+    transform: translateX(5px);
+}
+
+.btn-arrow-only:hover i {
+    transform: translateX(5px);
+}

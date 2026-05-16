@@ -344,10 +344,6 @@ if (isset($_GET['ajax'])) {
                 background: rgba(0,0,0,0.02) !important; 
             }
             #topbar .topbar-btn i { color: var(--primary-maroon) !important; }
-            #topbar .topbar-btn:hover { 
-                background: rgba(77,28,33,0.05) !important; 
-                border-color: var(--primary-maroon) !important; 
-            }
 
             /* Navbar: Dark links on cream */
             .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
@@ -433,7 +429,7 @@ if (isset($_GET['ajax'])) {
     </style>
 </head>
 
-<body>
+<body class="header-light-page">
 
     <?php include 'includes/topbar.php'; ?>
 
@@ -547,7 +543,7 @@ if (isset($_GET['ajax'])) {
                                     <?php if (!empty($raw_noticia_imagem)): ?>
                                     <div class="blog-img position-relative overflow-hidden">
                                         <?php $img_noticia = oagb_resolve_media_path($raw_noticia_imagem, ''); ?>
-                                        <img class="img-fluid w-100" style="height:200px; object-fit:cover;" src="<?php echo htmlspecialchars($img_noticia); ?>" alt="<?php echo htmlspecialchars($noticia->titulo); ?>">
+                                        <img class="img-fluid w-100" style="height:220px; object-fit:cover;" src="<?php echo htmlspecialchars($img_noticia); ?>" alt="<?php echo htmlspecialchars($noticia->titulo); ?>">
                                     </div>
                                     <?php endif; ?>
                                     <div class="p-4 d-flex flex-column flex-grow-1">

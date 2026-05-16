@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = "Contacto";
-$header_image = 'uploads/justice-velho.jpg'; // Mesma imagem para consistência ou mude se necessário
+$header_image = 'uploads/symbol-legal-law.jpg'; // Mesma imagem para consistência ou mude se necessário
 ?>
 <!DOCTYPE html>
 <html lang="pt">

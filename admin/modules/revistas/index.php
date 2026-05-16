@@ -36,15 +36,15 @@ try {
                     <?php else: ?>
                         <?php foreach($items as $item): ?>
                             <tr>
-                                <td class="ps-4"><span class="badge bg-light text-muted border">#<?php echo $item->id; ?></span></td>
-                                <td><div class="fw-bold small"><?php echo htmlspecialchars($item->titulo); ?></div></td>
-                                <td class="small"><?php echo htmlspecialchars($item->edicao); ?></td>
-                                <td class="small"><?php echo $item->ano; ?></td>
-                                <td><span class="badge <?php echo $item->status === 'ativo' ? 'bg-success' : 'bg-secondary'; ?>"><?php echo ucfirst($item->status); ?></span></td>
+                                <td class="ps-4"><span class="badge bg-light text-muted border">#<?php echo $item['id']; ?></span></td>
+                                <td><div class="fw-bold small"><?php echo htmlspecialchars($item['titulo']); ?></div></td>
+                                <td class="small"><?php echo htmlspecialchars($item['edicao']); ?></td>
+                                <td class="small"><?php echo $item['ano']; ?></td>
+                                <td><span class="badge <?php echo ($item['status'] ?? 'ativo') === 'ativo' ? 'bg-success' : 'bg-secondary'; ?>"><?php echo ucfirst($item['status'] ?? 'ativo'); ?></span></td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <a href="edit.php?id=<?php echo $item->id; ?>" class="btn btn-sm btn-outline-secondary p-2 me-1" title="Editar"><i class="far fa-edit"></i></a>
-                                        <a href="delete.php?id=<?php echo $item->id; ?>" class="btn btn-sm btn-outline-danger p-2" onclick="return confirm('Eliminar esta edição?');" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                                        <a href="edit.php?id=<?php echo $item['id']; ?>" class="btn btn-sm btn-outline-secondary p-2 me-1" title="Editar"><i class="far fa-edit"></i></a>
+                                        <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-sm btn-outline-danger p-2" onclick="return confirm('Eliminar esta edição?');" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                                     </div>
                                 </td>
                             </tr>

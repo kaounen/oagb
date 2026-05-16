@@ -1,6 +1,7 @@
 <?php
 require_once 'connect.php';
 require_once 'includes/functions.php';
+require_once 'admin/includes/AttachmentHelper.php';
 
 // Obter ID do evento
 $evento_id = $_GET['id'] ?? 0;
@@ -26,6 +27,8 @@ try {
     $stmt = $pdo->prepare("SELECT * FROM agenda_imagens WHERE agenda_id = ? ORDER BY ordem_exibicao ASC");
     $stmt->execute([$evento->id]);
     $imagens_evento = $stmt->fetchAll();
+
+    $attachments = AttachmentHelper::get($pdo, 'evento', $evento->id);
 
     // Buscar eventos relacionados
     $stmt = $pdo->prepare("SELECT * FROM agenda WHERE id != ? AND ativo = 1 ORDER BY data_evento DESC LIMIT 3");
@@ -151,10 +154,6 @@ $page_title = "Agenda";
                 background: rgba(0,0,0,0.02) !important; 
             }
             #topbar .topbar-btn i { color: var(--primary-maroon) !important; }
-            #topbar .topbar-btn:hover { 
-                background: rgba(77,28,33,0.05) !important; 
-                border-color: var(--primary-maroon) !important; 
-            }
 
             /* Navbar: Dark links on cream */
             .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
@@ -217,7 +216,7 @@ $page_title = "Agenda";
     </style>
 </head>
 
-<body>
+<body class="header-light-page">
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner"></div>
@@ -312,23 +311,7 @@ $page_title = "Agenda";
     </div>
     <!-- Navbar & Header End -->
 
-    <!-- Full Screen Search Start -->
-    <div class="modal fade" id="searchModal" tabindex="-1">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content" style="background: rgba(9, 30, 62, .7);">
-                <div class="modal-header border-0">
-                    <button type="button" class="btn bg-white btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex align-items-center justify-content-center">
-                    <form action="pesquisa.php" method="GET" class="input-group" style="max-width: 600px;">
-                        <input type="text" name="q" class="form-control bg-transparent border-primary p-3" placeholder="Digite a palavra de pesquisa" required>
-                        <button class="btn btn-primary px-4" type="submit"><i class="bi bi-search"></i></button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Full Screen Search End -->
+
 
 
     <!-- Event Detail Start -->
@@ -392,6 +375,39 @@ $page_title = "Agenda";
                         <div class="content texto-conteudo" style="line-height: 1.8;">
                             <?php echo nl2br(htmlspecialchars($evento->descricao)); ?>
                         </div>
+
+                        <!-- Documentos Anexos -->
+                        <?php if (!empty($attachments)): ?>
+                        <div class="mt-5 p-4 rounded-3" style="background: #fcfbf8; border: 1px dashed #B1A276;">
+                            <h5 class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21;">
+                                <i class="fas fa-paperclip me-2" style="color: var(--primary-gold);"></i> Documentos Anexos
+                            </h5>
+                            <div class="list-group list-group-flush bg-transparent">
+                                <?php foreach ($attachments as $att): ?>
+                                <a href="uploads/attachments/<?php echo $att['nome_ficheiro']; ?>" class="list-group-item list-group-item-action bg-transparent d-flex justify-content-between align-items-center py-3 px-0 border-bottom" target="_blank">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-white p-2 rounded shadow-sm me-3">
+                                            <?php if(strpos($att['tipo_mime'], 'pdf') !== false): ?>
+                                                <i class="far fa-file-pdf fa-2x text-danger"></i>
+                                            <?php elseif(strpos($att['tipo_mime'], 'image') !== false): ?>
+                                                <i class="far fa-file-image fa-2x text-primary"></i>
+                                            <?php else: ?>
+                                                <i class="far fa-file-alt fa-2x text-muted"></i>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark"><?php echo htmlspecialchars($att['nome_original']); ?></div>
+                                            <div class="small text-muted"><?php echo number_format($att['tamanho'] / 1024, 0); ?> KB</div>
+                                        </div>
+                                    </div>
+                                    <span class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                        <i class="fas fa-download me-1"></i> Descarregar
+                                    </span>
+                                </a>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                         
                         <?php if (!empty($evento->contacto_info)): ?>
                         <div class="mt-4 p-3 bg-white rounded">

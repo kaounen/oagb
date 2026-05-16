@@ -30,14 +30,28 @@ $actas = $stmt->fetchAll();
                             <?php echo strtoupper($a['status']); ?>
                         </span>
                     </div>
-                    <h5 class="fw-bold mb-1"><?php echo $a['titulo']; ?></h5>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <h5 class="fw-bold m-0"><?php echo $a['titulo']; ?></h5>
+                        <?php if($a['codigo']): ?>
+                            <span class="badge bg-light text-dark border small"><?php echo $a['codigo']; ?></span>
+                        <?php endif; ?>
+                    </div>
                     <div class="text-muted small mb-3">Data da Reunião: <b><?php echo date('d/m/Y', strtotime($a['data_reuniao'])); ?></b></div>
                     <div class="text-truncate-3 small text-muted opacity-75 mb-4"><?php echo strip_tags($a['conteudo']); ?></div>
-                    <div class="d-flex gap-2">
-                        <a href="view.php?id=<?php echo $a['id']; ?>" class="btn btn-sm btn-dark px-3 fw-bold rounded-pill">LER COMPLETA</a>
-                        <?php if($a['status'] == 'rascunho'): ?>
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <div class="d-flex gap-2">
+                            <a href="../../view-acta.php?id=<?php echo $a['id']; ?>" target="_blank" class="btn btn-sm btn-dark px-3 fw-bold rounded-pill">LER COMPLETA</a>
                             <a href="edit.php?id=<?php echo $a['id']; ?>" class="btn btn-sm btn-outline-dark px-3 fw-bold rounded-pill border-0 shadow-none"><i class="fas fa-edit me-1"></i>EDITAR</a>
-                        <?php endif; ?>
+                            <a href="share.php?id=<?php echo $a['id']; ?>" class="btn btn-sm btn-outline-login px-3 fw-bold rounded-pill border-0 shadow-none"><i class="fas fa-share-alt me-1"></i>PARTILHAR</a>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <?php if($a['partilha_ordem']): ?>
+                                <i class="fas fa-building text-warning" title="Partilhada com a Estrutura da Ordem"></i>
+                            <?php endif; ?>
+                            <?php if($a['ficheiro_url']): ?>
+                                <a href="/oagb/<?php echo $a['ficheiro_url']; ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill border-0"><i class="fas fa-file-download me-1"></i> ANEXO</a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>

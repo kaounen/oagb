@@ -34,39 +34,82 @@ function sharePage() {
  * Initialize Google Translate
  */
 window.googleTranslateElementInit = function() {
+    // Ensure element exists
+    if (!document.getElementById('google_translate_element')) {
+        const div = document.createElement('div');
+        div.id = 'google_translate_element';
+        div.style.display = 'none';
+        document.body.appendChild(div);
+    }
+
     new google.translate.TranslateElement({
         pageLanguage: 'pt',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
     }, 'google_translate_element');
 };
+
+// Auto-load Google Translate if cookie exists
+(function() {
+    if (document.cookie.indexOf('googtrans') !== -1 && !document.getElementById('google-translate-script')) {
+        const script = document.createElement('script');
+        script.id = 'google-translate-script';
+        script.type = 'text/javascript';
+        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        document.head.appendChild(script);
+    }
+})();
 
 /**
  * Changes the site language using Google Translate
  * @param {string} langCode - The ISO code of the language (en, fr, es, etc.)
  */
 function changeLanguage(langCode) {
+    console.log('Changing language to:', langCode);
+    
     // If it's portuguese, we want to clear translation
     if (langCode === 'pt') {
         const clearBtn = document.querySelector('.goog-close-link');
         if (clearBtn) {
             clearBtn.click();
-        } else {
-            // Fallback: clear cookie and reload
-            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + location.hostname;
-            location.reload();
         }
+        
+        // Clear all possible cookies
+        const domains = [location.hostname, "." + location.hostname, ""];
+        domains.forEach(domain => {
+            const domainAttr = domain ? "; domain=" + domain : "";
+            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;" + domainAttr;
+        });
+        
+        location.reload();
         return;
     }
 
-    // Try to find the google translate combo box
+    // Set cookie first as a reliable fallback for reload
+    const setGoogTransCookie = (val) => {
+        const domain = location.hostname;
+        const cookieBase = "googtrans=" + val + "; path=/; SameSite=Lax";
+        document.cookie = cookieBase;
+        document.cookie = cookieBase + "; domain=" + domain;
+        document.cookie = cookieBase + "; domain=." + domain;
+    };
+
+    setGoogTransCookie("/pt/" + langCode);
+    setGoogTransCookie("/auto/" + langCode);
+
+    // Try to find the google translate combo box for instant change
     const selectElement = document.querySelector('select.goog-te-combo');
     if (selectElement) {
         selectElement.value = langCode;
         selectElement.dispatchEvent(new Event('change'));
+        
+        // If it doesn't change in 500ms, reload as backup
+        setTimeout(() => {
+            if (document.documentElement.lang !== langCode && !document.querySelector('.goog-te-banner-frame')) {
+                // location.reload(); // Removed to avoid infinite loop if it's working but invisible
+            }
+        }, 1000);
     } else {
-        // If script not loaded, load it and then try to translate
+        // If script not loaded, load it
         if (!document.getElementById('google-translate-script')) {
             const script = document.createElement('script');
             script.id = 'google-translate-script';
@@ -82,11 +125,17 @@ function changeLanguage(langCode) {
                 document.body.appendChild(div);
             }
 
-            // Wait for script to load and then try again
-            setTimeout(() => changeLanguage(langCode), 1000);
+            // Wait for script and then reload or try again
+            setTimeout(() => {
+                const select = document.querySelector('select.goog-te-combo');
+                if (select) {
+                    changeLanguage(langCode);
+                } else {
+                    location.reload();
+                }
+            }, 1500);
         } else {
-            // Script is there but maybe widget not ready
-            document.cookie = "googtrans=/pt/" + langCode + "; path=/";
+            // Script is there but widget not ready, reload will use the cookie
             location.reload();
         }
     }
@@ -96,19 +145,37 @@ function changeLanguage(langCode) {
  * Legacy support for translate toggle
  */
 function translatePage() {
-    const translateElement = document.getElementById('google_translate_element');
-    if (translateElement) {
-        translateElement.style.display = translateElement.style.display === 'none' ? 'block' : 'none';
-        translateElement.style.position = 'fixed';
-        translateElement.style.top = '80px';
-        translateElement.style.right = '20px';
-        translateElement.style.zIndex = '10000';
-        translateElement.style.background = 'white';
-        translateElement.style.padding = '10px';
-        translateElement.style.borderRadius = '5px';
-        translateElement.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    // Se o modal do Bootstrap estiver disponível, abre-o
+    if (typeof bootstrap !== 'undefined' && document.getElementById('translateModal')) {
+        const translateModal = new bootstrap.Modal(document.getElementById('translateModal'));
+        translateModal.show();
     } else {
-        changeLanguage('en'); // Default to English if toggled and not exists
+        // Fallback para comportamento antigo se o modal não existir
+        const translateElement = document.getElementById('google_translate_element');
+        if (translateElement) {
+            const isHidden = translateElement.style.display === 'none';
+            translateElement.style.display = isHidden ? 'block' : 'none';
+            if (isHidden) {
+                translateElement.style.position = 'fixed';
+                translateElement.style.top = '120px';
+                translateElement.style.right = '20px';
+                translateElement.style.zIndex = '999999';
+                translateElement.style.background = 'white';
+                translateElement.style.padding = '15px';
+                translateElement.style.borderRadius = '12px';
+                translateElement.style.boxShadow = '0 15px 50px rgba(0,0,0,0.3)';
+            }
+        }
+    }
+
+    // Garante que o script do Google seja carregado
+    if (!window.google || !window.google.translate) {
+        if (!document.getElementById('google-translate-script')) {
+            const script = document.createElement('script');
+            script.id = 'google-translate-script';
+            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            document.head.appendChild(script);
+        }
     }
 }
 

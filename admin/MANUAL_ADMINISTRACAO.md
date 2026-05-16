@@ -3,61 +3,64 @@
 Este manual descreve o funcionamento do novo painel administrativo da Ordem dos Advogados da Guiné-Bissau (OAGB), projetado para gestão institucional e financeira.
 
 ## 1. Acesso ao Sistema
-*   **URL**: `http://localhost/oagb/admin` (ou o domínio oficial `/admin`)
-*   **Credenciais de Teste**:
-    *   **Utilizador**: `admin@oagb.gw`
-    *   **Senha**: `admin123` (Alterar no primeiro acesso)
+
+| Perfil | Utilizador | Senha Padrão | Nível de Acesso |
+|---|---|---|---|
+| **Superadmin** | `admin@oagb.gw` | `admin123` | Total (Sistema e Logs) |
+| **Administrador** | `editor@oagb.gw` | `teste123` | Conteúdos e Membros |
+
+> ⚠️ **Segurança:** Recomenda-se a alteração das senhas no primeiro acesso em **Configurações > Utilizadores**.
 
 ---
 
 ## 2. Visão Geral do Dashboard
-Ao entrar, verá um resumo analítico com:
-*   **KPIs Financeiros**: Total arrecadado em CFA.
-*   **Corpo de Membros**: Contagem de advogados e estagiários ativos.
-*   **Alertas de Quotas**: Notificação de membros com pagamentos em atraso.
-*   **Log de Auditoria**: Histórico de ações recentes no sistema.
+O Dashboard centraliza as métricas vitais da Ordem:
+
+| Indicador | Descrição | Utilidade |
+|---|---|---|
+| **KPI Financeiro** | Receita total em CFA | Controlo de tesouraria |
+| **Membros Ativos** | Contagem de Advogados/Estagiários | Gestão do capital humano |
+| **Alertas de Quotas** | Membros em incumprimento | Recuperação de créditos |
+| **Logs de Auditoria** | Últimas 10 ações | Segurança e rastreabilidade |
 
 ---
 
-## 3. Gestão de Conteúdos (Módulos de Media)
+## 3. Gestão de Conteúdos (Media)
 
 ### 3.1. Notícias e Comunicados
-*   **Criação**: Defina título, categoria (Notícia, Aviso, Edital) e conteúdo via editor rico.
-*   **Imagem de Destaque**: A imagem principal que aparece nas listagens.
-*   **Anexos (PDF)**: Carregue documentos para download rápido.
-*   **Galeria (Slider)**: Adicione múltiplas fotos. Para cada foto, pode definir um **Título** e uma **Descrição** que aparecerão no carrossel do site.
+*   **Criação**: Título, categoria e conteúdo rico.
+*   **Imagens**: Destaque e Galerias (Slider).
+*   **Anexos**: Suporte total a PDF e Documentos.
 
 ### 3.2. Agenda de Eventos
-*   **Datas**: Configure data/hora de início e fim.
-*   **Localização**: Defina o local ou sala do evento.
-*   **Visibilidade**: Escolha se o evento aparece imediatamente na agenda pública.
-*   **Galeria**: Siga o mesmo processo das notícias para criar um álbum do evento.
+*   **Controlo de Datas**: Início, fim e validade pública.
+*   **Localização**: Salas e mapas integrados.
 
 ---
 
-## 4. Gestão de Membros e Inscrições
+## 4. Gestão de Membros
 
-### 4.1. Base de Advogados e Estagiários
-*   Pesquise membros por nome ou cédula profissional.
-*   Edite dados de contacto e status profissional (Ativo/Inativo/Suspenso).
-*   Gira fotografias de perfil para o diretório público.
-
-### 4.2. Validação de Candidaturas
-*   Módulo para rever novos pedidos de inscrição submetidos via site.
-*   Aprovação gera automaticamente os acessos ao Portal do Membro.
+| Ação | Descrição | Resultado no Site |
+|---|---|---|
+| **Ativar** | Membro com quotas em dia | Visível no Diretório |
+| **Suspender** | Membro com processo ou dívida | Oculto do Diretório |
+| **Inativar** | Falecimento ou abandono | Removido do Diretório |
 
 ---
 
-## 5. Módulo Financeiro (Quotas e Taxas)
-*   **Registo de Pagamentos**: Lançamento manual de transferências bancárias ou depósitos.
-*   **Confirmação**: Valide comprovativos enviados pelos membros.
-*   **Certidões**: O sistema só permite a emissão de certidões a membros com quotas regularizadas no mês corrente.
+## 5. Módulo Financeiro
+O sistema integra a validação de pagamentos com a emissão automática de certidões.
+
+| Documento | Requisito Financeiro | Emissão |
+|---|---|---|
+| **Certidão de Quotas** | Mês atual pago | Automática (PDF) |
+| **Comprovativo** | Vínculo ativo | Manual/Automática |
 
 ---
 
-## 6. Configurações e Segurança
-*   **Utilizadores Admin**: Gestão de quem pode aceder ao backoffice.
-*   **Logs**: Rastro completo de quem alterou o quê e quando.
+## 6. Configurações e Logs
+Rastro completo de todas as alterações. Nenhuma notícia ou dado de membro é alterado sem que o sistema registe o autor, a data e o endereço IP da operação.
 
 ---
 © 2026 Ordem dos Advogados da Guiné-Bissau.
+

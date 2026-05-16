@@ -85,18 +85,23 @@ $meta_image = !empty($anuncio->imagem) ? 'uploads/' . $anuncio->imagem : 'img/As
             .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span { font-size: 0.72rem; color: #666 !important; }
             .mobile-breadcrumb-bar .bc-active { color: var(--primary-maroon) !important; font-weight: 600; font-size: 0.72rem !important; }
             .mobile-breadcrumb-bar .quick-links a { border-color: var(--primary-maroon) !important; color: var(--primary-maroon) !important; width: 28px; height: 28px; font-size: 0.65rem; }
-            #mobile-header-simple { background: #fafafa !important; padding-bottom: 10px; overflow: hidden; }
+            #mobile-header-simple { background: #fafafa !important; padding-bottom: 10px; width: 100%; overflow: hidden; }
             #mobile-header-simple .mobile-header-contacts { background: #fafafa !important; }
             #mobile-header-simple .mobile-header-contacts small { color: var(--primary-maroon) !important; font-size: 0.70rem; }
+            #mobile-header-simple .mobile-header-contacts i { color: var(--primary-maroon) !important; }
             #mobile-header-simple .mobile-pill-btn { color: var(--primary-maroon) !important; border-color: var(--primary-maroon) !important; background: transparent !important; }
+            #mobile-header-simple .mobile-pill-btn i { color: var(--primary-maroon) !important; }
+            #mobile-header-simple .mobile-pill-btn:hover, #mobile-header-simple .mobile-pill-btn:focus { background: rgba(77,28,33,0.08) !important; border-color: var(--primary-gold) !important; }
             #mobile-header-simple .navbar-toggler, #mobile-header-simple .navbar-toggler * { color: var(--primary-gold) !important; border-color: var(--primary-gold) !important; }
+            #mobile-header-simple .navbar-toggler::after { color: var(--primary-gold) !important; }
             #mobile-header-simple .dropdown-item:hover { background: rgba(77,28,33,0.05) !important; color: var(--primary-gold) !important; }
             #mobile-header-simple .navbar-brand { margin: 10px auto !important; display: block; filter: brightness(0.95); }
         }
 
         @media (min-width: 992px) {
-            #topbar .topbar-contacts small { color: #333 !important; }
+            #topbar .topbar-contacts small, #topbar .topbar-contacts small i { color: #333 !important; }
             #topbar .topbar-btn { color: #333 !important; border-color: rgba(0,0,0,0.15) !important; background: rgba(0,0,0,0.02) !important; }
+            #topbar .topbar-btn i { color: var(--primary-maroon) !important; }
             .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
             .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link.active { color: var(--primary-maroon) !important; }
         }
@@ -110,7 +115,7 @@ $meta_image = !empty($anuncio->imagem) ? 'uploads/' . $anuncio->imagem : 'img/As
         .article-meta-item { display: flex; align-items: center; gap: 0.5rem; color: #666; font-size: 0.95rem; }
     </style>
 </head>
-<body>
+<body class="header-light-page">
     <?php include 'includes/topbar.php'; ?>
 
     <div class="container-fluid position-relative p-0 d-none d-lg-block">
@@ -139,6 +144,41 @@ $meta_image = !empty($anuncio->imagem) ? 'uploads/' . $anuncio->imagem : 'img/As
 
     <div class="d-block d-lg-none">
         <div id="mobile-header-simple" style="position: relative; overflow: hidden;">
+            <div class="mobile-header-contacts container-fluid px-1 pt-3 pb-1">
+                <div class="row g-0 mb-3">
+                    <div class="col-12 d-flex justify-content-center align-items-center gap-2 overflow-auto" style="white-space: nowrap;">
+                        <small class="text-nowrap"><i class="fa fa-map-marker-alt me-1"></i>Bissau, Guiné-Bissau</small>
+                        <small class="text-nowrap"><i class="fa fa-phone-alt me-1"></i>+245 955 475 889</small>
+                        <small class="text-nowrap"><i class="fa fa-envelope-open me-1"></i>info@oagb.gw</small>
+                    </div>
+                </div>
+
+                <div class="row g-0 mb-1">
+                    <div class="col-12 d-flex justify-content-center align-items-center gap-3">
+                        <button type="button" class="btn btn-sm mobile-pill-btn px-2 fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#searchModal">
+                             <i class="fa fa-search" style="font-size: 1rem;"></i>
+                        </button>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-sm mobile-pill-btn px-2 fw-bold d-flex align-items-center" data-bs-toggle="dropdown" data-bs-display="static">
+                                <i class="fa fa-globe" style="font-size: 1rem;"></i>
+                            </button>
+                            <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2050; margin-top: 10px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: absolute; left: 50%; transform: translateX(-50%); right: auto;">
+                                <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
+                                <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
+                                <a href="#" onclick="changeLanguage('fr'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
+                                <a href="#" onclick="changeLanguage('es'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
+                                <a href="#" onclick="changeLanguage('ar'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
+                                <a href="#" onclick="changeLanguage('zh-CN'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
+                                <a href="#" onclick="changeLanguage('ru'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
+                            </div>
+                        </div>
+                        <a href="portal/login.php" class="btn btn-sm mobile-pill-btn px-2 fw-bold text-uppercase d-flex align-items-center">
+                            <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Área Reservada
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div class="mobile-navbar-wrapper container-fluid p-0" style="margin-top: 5px;">
                 <?php include 'includes/navbar.php'; ?>
             </div>
@@ -153,6 +193,8 @@ $meta_image = !empty($anuncio->imagem) ? 'uploads/' . $anuncio->imagem : 'img/As
                     </div>
                     <div class="quick-links d-flex gap-1">
                         <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+                        <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
                     </div>
                 </div>
             </div>
@@ -177,9 +219,9 @@ $meta_image = !empty($anuncio->imagem) ? 'uploads/' . $anuncio->imagem : 'img/As
                         </div>
                         
                         <?php if (!empty($anuncio->imagem)): ?>
-                            <?php $img_path = oagb_resolve_media_path($anuncio->imagem, 'uploads/OAGB-Placeholder.jpg'); ?>
-                            <div class="mb-4 position-relative">
-                                <img src="<?php echo htmlspecialchars($img_path); ?>" class="img-fluid rounded w-100" style="max-height: 500px; object-fit: cover;" alt="<?php echo htmlspecialchars($anuncio->titulo); ?>">
+                            <?php $img_path = oagb_resolve_media_path($anuncio->imagem, ''); ?>
+                            <div class="mb-4 position-relative" style="border-radius: 14px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12);">
+                                <img src="<?php echo htmlspecialchars($img_path); ?>" class="img-fluid w-100" style="height: 500px; object-fit: cover; display: block;" alt="<?php echo htmlspecialchars($anuncio->titulo); ?>">
                             </div>
                         <?php endif; ?>
                     </div>
@@ -197,7 +239,7 @@ $meta_image = !empty($anuncio->imagem) ? 'uploads/' . $anuncio->imagem : 'img/As
                     
                     <?php if (!empty($anuncio->link_url)): ?>
                     <div class="mt-4">
-                        <a href="<?php echo htmlspecialchars($anuncio->link_url); ?>" target="_blank" class="btn btn-outline-primary px-4 py-2" style="border-radius: 50px;">
+                        <a href="<?php echo htmlspecialchars($anuncio->link_url); ?>" class="btn btn-outline-primary px-4 py-2" style="border-radius: 50px;">
                             <?php echo htmlspecialchars($anuncio->link_texto ?: 'Saiba mais'); ?> <i class="fas fa-external-link-alt ms-2"></i>
                         </a>
                     </div>

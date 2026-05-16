@@ -134,6 +134,8 @@ $header_image = 'uploads/lady-justice-holding-scales-sword.jpg';
             color: rgba(255,255,255,0.9); transition: .3s; font-size: 0.8rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
         .quick-links a:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: var(--primary-gold); }
+        .lawyer-email-link { color: var(--primary-maroon) !important; font-weight: 600; transition: .3s; }
+        .lawyer-email-link:hover { color: var(--primary-gold) !important; text-decoration: underline !important; }
     </style>
 </head>
 
@@ -238,7 +240,7 @@ $header_image = 'uploads/lady-justice-holding-scales-sword.jpg';
                                 <?php if ($est->email): ?>
                                     <div class="lawyer-item">
                                         <i class="fas fa-envelope"></i>
-                                        <a href="mailto:<?php echo $est->email; ?>" class="text-decoration-none color-inherit"><?php echo htmlspecialchars($est->email); ?></a>
+                                        <a href="mailto:<?php echo $est->email; ?>" class="lawyer-email-link text-decoration-none"><?php echo htmlspecialchars($est->email); ?></a>
                                     </div>
                                 <?php endif; ?>
                             </div>

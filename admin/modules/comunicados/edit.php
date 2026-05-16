@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $imagem = $anuncio['imagem'];
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../uploads/';
+        $upload_dir = __DIR__ . '/../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['imagem']['name'], INFO_EXTENSION);
@@ -70,6 +70,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="mb-4">
                         <label class="form-label text-uppercase fw-bold text-muted small">Descrição / Conteúdo Completo</label>
                         <textarea name="descricao" id="editor" class="form-control bg-light border-0" rows="10"><?php echo $anuncio['descricao']; ?></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label text-uppercase fw-bold text-muted small">Link de Destino (URL)</label>
+                            <input type="text" name="link_url" class="form-control bg-light border-0" value="<?php echo htmlspecialchars($anuncio['link_url']); ?>" placeholder="https://oagb.gw/anexo.pdf ou pagina.php">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label text-uppercase fw-bold text-muted small">Texto do Link</label>
+                            <input type="text" name="link_texto" class="form-control bg-light border-0" value="<?php echo htmlspecialchars($anuncio['link_texto']); ?>" placeholder="Ex: Ler Comunicado Completo">
+                        </div>
                     </div>
                 </div>
 

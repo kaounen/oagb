@@ -119,20 +119,47 @@ try {
     $noticia_imagens = $stmt->fetchAll();
 
     $todas_imagens = [];
+    // Verificar se a imagem de destaque já existe na galeria
+    $destaque_na_galeria = false;
     if (!empty($noticia->imagem_destaque)) {
+        foreach ($noticia_imagens as $img) {
+            if ($img->imagem === $noticia->imagem_destaque) {
+                $destaque_na_galeria = true;
+                break;
+            }
+        }
+    }
+    // Se a imagem de destaque NÃO está na galeria, adicioná-la como primeira (usando o resumo como legenda)
+    if (!empty($noticia->imagem_destaque) && !$destaque_na_galeria) {
         $todas_imagens[] = (object)[
             'imagem' => $noticia->imagem_destaque,
-            'legenda' => $noticia->titulo
+            'legenda' => $noticia->resumo ?? '',
+            'descricao' => ''
         ];
     }
+    // Adicionar todas as imagens da galeria (incluindo a de destaque se lá estiver)
     foreach ($noticia_imagens as $img) {
-        if (empty($noticia->imagem_destaque) || $img->imagem !== $noticia->imagem_destaque) {
-            $todas_imagens[] = (object)[
-                'imagem' => $img->imagem,
-                'legenda' => $img->legenda,
-                'descricao' => $img->descricao ?? ''
-            ];
-        }
+        $todas_imagens[] = (object)[
+            'imagem' => $img->imagem,
+            'legenda' => $img->legenda ?? '',
+            'descricao' => $img->descricao ?? ''
+        ];
+    }
+    
+    // Buscar ficheiros anexos adicionais (tabela ficheiros_anexos)
+    $attachments = [];
+    try {
+        $stmt = $pdo->prepare("
+            SELECT nome_ficheiro, nome_original, tipo_mime, tamanho, descricao 
+            FROM ficheiros_anexos 
+            WHERE tipo_entidade = 'noticia' AND entidade_id = ? 
+            ORDER BY id ASC
+        ");
+        $stmt->execute([$noticia->id]);
+        $attachments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        // Tabela pode não existir — ignorar silenciosamente
+        error_log("ficheiros_anexos query: " . $e->getMessage());
     }
     
 } catch (Exception $e) {
@@ -152,12 +179,18 @@ $meta_image = !empty($noticia->imagem_destaque) ?
 <head>
     <?php include 'includes/meta_tags_include.php'; ?>
     
+<?php 
+$full_url = SITE_URL . '/artigo.php?id=' . $noticia->id . '&slug=' . urlencode($noticia->slug);
+$absolute_meta_image = SITE_URL . '/' . $meta_image;
+?>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="<?php echo $page_title; ?>">
     <meta property="og:description" content="<?php echo $meta_description; ?>">
-    <meta property="og:image" content="<?php echo $meta_image; ?>">
-    <meta property="og:url" content="<?php echo $_SERVER['REQUEST_URI']; ?>">
+    <meta property="og:image" content="<?php echo $absolute_meta_image; ?>">
+    <meta property="og:url" content="<?php echo $full_url; ?>">
     <meta property="og:type" content="article">
+    <meta property="og:site_name" content="OAGB - Ordem dos Advogados da Guiné-Bissau">
+    <meta property="fb:app_id" content="123456789"> <!-- Opcional: ID da App Facebook da Ordem -->
     
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -254,10 +287,6 @@ $meta_image = !empty($noticia->imagem_destaque) ?
                 background: rgba(0,0,0,0.02) !important; 
             }
             #topbar .topbar-btn i { color: var(--primary-maroon) !important; }
-            #topbar .topbar-btn:hover { 
-                background: rgba(77,28,33,0.05) !important; 
-                border-color: var(--primary-maroon) !important; 
-            }
 
             /* Navbar: Dark links on cream */
             .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
@@ -354,10 +383,132 @@ $meta_image = !empty($noticia->imagem_destaque) ?
             height: 200px;
             object-fit: cover;
         }
+
+        /* ======= PREMIUM ARTICLE SLIDER ======= */
+        #artigoCarousel {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+        #artigoCarousel .carousel-item {
+            position: relative;
+        }
+        #artigoCarousel .carousel-item img {
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        /* Caption gradient bar */
+        .artigo-slide-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(0deg, rgba(17,25,35,0.82) 0%, rgba(17,25,35,0.45) 60%, transparent 100%);
+            padding: 50px 28px 18px 28px;
+            z-index: 3;
+        }
+        .artigo-slide-caption p {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.95);
+            margin: 0;
+            letter-spacing: 0.2px;
+            line-height: 1.5;
+        }
+        .artigo-slide-caption .slide-desc {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 4px;
+        }
+        /* Custom nav arrows */
+        .artigo-slider-nav {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.6);
+            background: rgba(17,25,35,0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            opacity: 0.7;
+            padding: 0;
+        }
+        .artigo-slider-nav:hover {
+            background: rgba(77,28,33,0.85);
+            border-color: rgba(177,162,118,0.8);
+            opacity: 1;
+            transform: translateY(-50%) scale(1.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .artigo-slider-nav i {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        .artigo-slider-nav.prev { left: 16px; }
+        .artigo-slider-nav.next { right: 16px; }
+        /* Slide counter badge */
+        .artigo-slide-counter {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: rgba(17,25,35,0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: rgba(255,255,255,0.9);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            z-index: 5;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        /* Dot indicators */
+        #artigoCarousel .carousel-indicators {
+            margin-bottom: 10px;
+            z-index: 4;
+        }
+        #artigoCarousel .carousel-indicators button {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.7);
+            background: transparent;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            margin: 0 4px;
+        }
+        #artigoCarousel .carousel-indicators button.active {
+            background: #B1A276;
+            border-color: #B1A276;
+            opacity: 1;
+            transform: scale(1.15);
+        }
+        /* Single image container */
+        .artigo-single-img {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .artigo-slider-nav { width: 40px; height: 40px; }
+            .artigo-slider-nav.prev { left: 10px; }
+            .artigo-slider-nav.next { right: 10px; }
+            .artigo-slide-caption { padding: 40px 18px 14px 18px; }
+            .artigo-slide-caption p { font-size: 0.85rem; }
+            .artigo-slide-counter { top: 10px; right: 10px; font-size: 0.7rem; padding: 4px 10px; }
+            #artigoCarousel .carousel-item img,
+            .artigo-single-img img { height: 320px !important; }
+        }
     </style>
 </head>
 
-<body>
+<body class="header-light-page">
     <?php include 'includes/topbar.php'; ?>
 
     <!-- Desktop Header -->
@@ -476,51 +627,68 @@ $meta_image = !empty($noticia->imagem_destaque) ?
                             <?php endif; ?>
                         </div>
                         
-                        <!-- Slider / Imagem -->
+                        <!-- Slider / Imagem Premium -->
                         <?php if (count($todas_imagens) > 1): ?>
-                            <div id="artigoCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
-                                <div class="carousel-inner rounded">
+                            <?php $total_slides = count($todas_imagens); ?>
+                            <div id="artigoCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="6000">
+                                <!-- Slide Counter -->
+                                <div class="artigo-slide-counter">
+                                    <i class="far fa-images me-1"></i>
+                                    <span id="slideCurrentNum">1</span> / <?php echo $total_slides; ?>
+                                </div>
+                                <div class="carousel-inner">
                                     <?php foreach ($todas_imagens as $index => $img): ?>
                                     <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
                                         <?php $img_path = oagb_resolve_media_path($img->imagem, 'uploads/OAGB-Placeholder.jpg'); ?>
-                                        <img src="<?php echo htmlspecialchars($img_path); ?>" class="d-block w-100" style="object-fit: cover; max-height: 500px;" alt="<?php echo htmlspecialchars($img->legenda ?? $noticia->titulo); ?>">
+                                        <img src="<?php echo htmlspecialchars($img_path); ?>" class="d-block w-100" style="object-fit: cover; height: 500px;" alt="<?php echo htmlspecialchars(!empty($img->legenda) ? $img->legenda : $noticia->titulo); ?>">
                                         <?php if (!empty($img->legenda)): ?>
-                                        <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.6); border-radius: 5px; bottom: 20px; left: 10%; right: 10%; padding: 10px;">
-                                            <h6 class="text-white mb-0" style="font-family: 'Open Sans', sans-serif; font-weight: 700;"><?php echo htmlspecialchars($img->legenda); ?></h6>
+                                        <div class="artigo-slide-caption">
+                                            <p><?php echo htmlspecialchars($img->legenda); ?></p>
                                             <?php if (!empty($img->descricao)): ?>
-                                            <p class="text-white small mb-0 mt-1" style="font-size: 0.85rem; opacity: 0.9;"><?php echo htmlspecialchars($img->descricao); ?></p>
+                                            <p class="slide-desc"><?php echo htmlspecialchars($img->descricao); ?></p>
                                             <?php endif; ?>
                                         </div>
                                         <?php endif; ?>
                                     </div>
                                     <?php endforeach; ?>
                                 </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#artigoCarousel" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 15px;"></span>
-                                    <span class="visually-hidden">Anterior</span>
+                                <!-- Dot Indicators -->
+                                <div class="carousel-indicators">
+                                    <?php for ($i = 0; $i < $total_slides; $i++): ?>
+                                    <button type="button" data-bs-target="#artigoCarousel" data-bs-slide-to="<?php echo $i; ?>" <?php echo $i === 0 ? 'class="active" aria-current="true"' : ''; ?>></button>
+                                    <?php endfor; ?>
+                                </div>
+                                <!-- Custom Arrow Prev -->
+                                <button class="artigo-slider-nav prev" type="button" data-bs-target="#artigoCarousel" data-bs-slide="prev" aria-label="Anterior">
+                                    <i class="fas fa-chevron-left"></i>
                                 </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#artigoCarousel" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 15px;"></span>
-                                    <span class="visually-hidden">Próximo</span>
+                                <!-- Custom Arrow Next -->
+                                <button class="artigo-slider-nav next" type="button" data-bs-target="#artigoCarousel" data-bs-slide="next" aria-label="Próximo">
+                                    <i class="fas fa-chevron-right"></i>
                                 </button>
                             </div>
+                            <!-- Slide counter JS -->
+                            <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var carousel = document.getElementById('artigoCarousel');
+                                if (carousel) {
+                                    carousel.addEventListener('slid.bs.carousel', function(e) {
+                                        var counter = document.getElementById('slideCurrentNum');
+                                        if (counter) counter.textContent = e.to + 1;
+                                    });
+                                }
+                            });
+                            </script>
                         <?php elseif (count($todas_imagens) === 1): ?>
                             <?php $img_path = oagb_resolve_media_path($todas_imagens[0]->imagem, 'uploads/OAGB-Placeholder.jpg'); ?>
-                            <div class="mb-4 position-relative">
-                                <img src="<?php echo htmlspecialchars($img_path); ?>" class="img-fluid rounded w-100" style="max-height: 500px; object-fit: cover;" alt="<?php echo htmlspecialchars($todas_imagens[0]->legenda ?? $noticia->titulo); ?>">
-                                <?php if (!empty($todas_imagens[0]->legenda) && $todas_imagens[0]->legenda !== $noticia->titulo): ?>
-                                <div class="position-absolute bottom-0 start-0 w-100 p-2 text-center" style="background: rgba(0,0,0,0.6); border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem;">
-                                    <span class="text-white" style="font-size: 0.9rem;"><?php echo htmlspecialchars($todas_imagens[0]->legenda); ?></span>
+                            <div class="artigo-single-img mb-4">
+                                <img src="<?php echo htmlspecialchars($img_path); ?>" class="img-fluid w-100" style="height: 500px; object-fit: cover; display: block;" alt="<?php echo htmlspecialchars(!empty($todas_imagens[0]->legenda) ? $todas_imagens[0]->legenda : $noticia->titulo); ?>">
+                                <?php if (!empty($todas_imagens[0]->legenda)): ?>
+                                <div class="artigo-slide-caption">
+                                    <p><?php echo htmlspecialchars($todas_imagens[0]->legenda); ?></p>
                                 </div>
                                 <?php endif; ?>
                             </div>
-                        <?php endif; ?>
-                        
-                        <!-- Article Summary/Lead -->
-                        <?php if (!empty($noticia->resumo)): ?>
-                        <div class="lead mb-4" style="font-size: 1.25rem; color: #666; font-style: italic;">
-                            <?php echo nl2br(htmlspecialchars($noticia->resumo)); ?>
-                        </div>
                         <?php endif; ?>
                     </div>
                     
@@ -530,7 +698,7 @@ $meta_image = !empty($noticia->imagem_destaque) ?
                         // Processar conteúdo - permitir HTML seguro
                         $conteudo = $noticia->conteudo;
                         // Converter quebras de linha em parágrafos se necessário
-                        if (!strpos($conteudo, '<p>')) {
+                        if (strpos($conteudo, '<p>') === false) {
                             $paragraphs = explode("\n\n", $conteudo);
                             $conteudo = '<p>' . implode('</p><p>', array_filter($paragraphs)) . '</p>';
                         }
@@ -555,6 +723,94 @@ $meta_image = !empty($noticia->imagem_destaque) ?
                             endif;
                         endforeach; 
                         ?>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <!-- Documento Principal (Quick Download) -->
+                    <?php if (!empty($noticia->ficheiro_anexo)): ?>
+                    <div class="mt-5 mb-0">
+                        <a href="uploads/<?php echo $noticia->ficheiro_anexo; ?>" class="text-decoration-none d-block" target="_blank" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(77,28,33,0.12)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
+                            <div class="d-flex align-items-center justify-content-between p-4 rounded-3" style="background: linear-gradient(135deg, #fdfcfa 0%, #f8f5ef 100%); border: 1px solid #ebe6da; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center me-3" style="width: 52px; height: 52px; background: linear-gradient(135deg, #4D1C21 0%, #6b2a30 100%); border-radius: 12px; flex-shrink: 0;">
+                                        <i class="far fa-file-pdf" style="font-size: 1.4rem; color: #fff;"></i>
+                                    </div>
+                                    <div>
+                                        <?php 
+                                            if (!empty($noticia->legenda_anexo)) {
+                                                $display_name = $noticia->legenda_anexo;
+                                            } else {
+                                                // Extract filename without extension first
+                                                $basename = pathinfo($noticia->ficheiro_anexo, PATHINFO_FILENAME);
+                                                
+                                                // Detect system-generated patterns: doc_1_hash, noticia_1_hash, news_hash
+                                                if (preg_match('/^(doc|noticia|news|evento|att)_\d+_[a-f0-9]+$/i', $basename)) {
+                                                    $display_name = 'Documento Anexo';
+                                                } elseif (preg_match('/^[a-f0-9]{10,}$/i', $basename)) {
+                                                    // Pure hash filename
+                                                    $display_name = 'Documento Anexo';
+                                                } else {
+                                                    // Has readable name — clean timestamp prefix and underscores
+                                                    $clean = preg_replace('/^\d{6,}_/', '', $basename);
+                                                    $display_name = str_replace('_', ' ', $clean);
+                                                }
+                                                
+                                                // Override with original name from ficheiros_anexos if available
+                                                if (!empty($attachments)) {
+                                                    foreach ($attachments as $a) {
+                                                        if ($a['nome_ficheiro'] === $noticia->ficheiro_anexo && !empty($a['nome_original'])) {
+                                                            $display_name = str_replace('_', ' ', pathinfo($a['nome_original'], PATHINFO_FILENAME));
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                        <div class="fw-bold" style="font-family: 'Open Sans', sans-serif; font-size: 1rem; color: #333;"><?php echo htmlspecialchars($display_name); ?></div>
+                                        <small style="color: #999; font-family: 'Open Sans', sans-serif; font-size: 0.78rem;">Documento PDF — Clique para abrir</small>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; border-radius: 50%; background: rgba(177,162,118,0.12); flex-shrink: 0; transition: all 0.3s;">
+                                    <i class="fas fa-download" style="color: #B1A276; font-size: 0.9rem;"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <?php endif; ?>
+
+                    <!-- Documentos Anexos -->
+                    <?php if (!empty($attachments)): ?>
+                    <div class="mt-4">
+                        <h6 class="mb-3" style="font-family: 'Open Sans', sans-serif; color: #999; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;"><i class="fas fa-paperclip me-2"></i>Documentos Anexos</h6>
+                        <?php foreach ($attachments as $att): ?>
+                        <a href="uploads/<?php echo htmlspecialchars($att['nome_ficheiro']); ?>" class="text-decoration-none d-block mb-2" target="_blank" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(77,28,33,0.12)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
+                            <div class="d-flex align-items-center justify-content-between p-3 rounded-3" style="background: linear-gradient(135deg, #fdfcfa 0%, #f8f5ef 100%); border: 1px solid #ebe6da; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center me-3" style="width: 44px; height: 44px; background: linear-gradient(135deg, #4D1C21 0%, #6b2a30 100%); border-radius: 10px; flex-shrink: 0;">
+                                        <?php if(strpos($att['tipo_mime'], 'pdf') !== false): ?>
+                                            <i class="far fa-file-pdf" style="font-size: 1.2rem; color: #fff;"></i>
+                                        <?php elseif(strpos($att['tipo_mime'], 'image') !== false): ?>
+                                            <i class="far fa-file-image" style="font-size: 1.2rem; color: #fff;"></i>
+                                        <?php else: ?>
+                                            <i class="far fa-file-alt" style="font-size: 1.2rem; color: #fff;"></i>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div>
+                                        <?php 
+                                            $att_display = !empty($att['descricao']) ? $att['descricao'] : $att['nome_original'];
+                                            // Clean up original filename 
+                                            $att_display = str_replace('_', ' ', pathinfo($att_display, PATHINFO_FILENAME));
+                                        ?>
+                                        <div class="fw-bold" style="font-family: 'Open Sans', sans-serif; font-size: 0.92rem; color: #333;"><?php echo htmlspecialchars($att_display); ?></div>
+                                        <small style="color: #999; font-family: 'Open Sans', sans-serif; font-size: 0.72rem;"><?php echo number_format($att['tamanho'] / 1024, 0); ?> KB</small>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; border-radius: 50%; background: rgba(177,162,118,0.12); flex-shrink: 0;">
+                                    <i class="fas fa-download" style="color: #B1A276; font-size: 0.8rem;"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
                     

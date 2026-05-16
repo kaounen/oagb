@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../includes/header.php';
 
 // Fetch Commissions
 try {
-    $stmt = $pdo->query("SELECT c.*, (SELECT COUNT(*) FROM gestao_comissoes_membros WHERE comissao_id = c.id) as total_membros FROM gestao_comissoes c ORDER BY c.nome ASC");
+    $stmt = $pdo->query("SELECT * FROM comissoes ORDER BY nome ASC");
     $list = $stmt->fetchAll();
 } catch (PDOException $e) { $list = []; }
 ?>
@@ -39,8 +39,11 @@ try {
                     <h5 class="fw-bold mb-2"><?php echo $c['nome']; ?></h5>
                     <p class="small text-muted mb-4 opacity-75"><?php echo $c['descricao']; ?></p>
                     <div class="d-flex justify-content-between align-items-center mt-auto">
-                        <span class="badge bg-light text-dark fw-bold border p-2 px-3 small"><?php echo $c['total_membros']; ?> MEMBROS</span>
-                        <a href="membros.php?id=<?php echo $c['id']; ?>" class="btn btn-sm btn-dark px-3 fw-bold rounded-pill">GERIR EQUIPA</a>
+                        <?php 
+                        $m_count = !empty($c['membros']) ? count(explode(',', $c['membros'])) : 0;
+                        ?>
+                        <span class="badge bg-light text-dark fw-bold border p-2 px-3 small"><?php echo $m_count; ?> MEMBROS</span>
+                        <a href="edit.php?id=<?php echo $c['id']; ?>" class="btn btn-sm btn-dark px-3 fw-bold rounded-pill">EDITAR</a>
                     </div>
                 </div>
             </div>

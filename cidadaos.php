@@ -52,7 +52,7 @@ try {
         .info-card a { color: var(--primary-gold); font-weight: 600; }
         .info-card a:hover { color: var(--primary-maroon); }
         .cta-banner { background: linear-gradient(135deg, var(--primary-maroon), #3a1218); border-radius: 20px; padding: 40px; color: #fff; text-align: center; }
-        .cta-banner h4 { font-family: 'Libre Baskerville', serif; margin-bottom: 15px; }
+        .cta-banner h4 { font-family: 'Libre Baskerville', serif; margin-bottom: 15px; color: #fff; }
         .cta-banner .btn { background: var(--primary-gold); color: #fff; border-radius: 50px; padding: 10px 30px; font-weight: 600; border: none; transition: .3s; }
         .cta-banner .btn:hover { background: #fff; color: var(--primary-maroon); }
         .empty-state { text-align: center; padding: 60px 20px; background: #fff; border-radius: 16px; border: 1px dashed #dcd8cf; }
@@ -67,17 +67,18 @@ try {
             <div class="subpage-breadcrumb-bar w-100" style="margin-bottom: 20px;">
                 <div class="container d-flex justify-content-between">
                     <div class="d-flex align-items-center" style="margin-top: 12px;">
-                        <a href="index.php">Início</a><span class="bc-sep"></span><a href="#">Comunicação</a><span class="bc-sep"></span><span class="bc-active"><?php echo $page_title; ?></span>
+                        <a href="index.php">Início</a><span class="bc-sep"></span><a href="#">Público</a><span class="bc-sep"></span><span class="bc-active"><?php echo $page_title; ?></span>
                     </div>
                     <div class="quick-links d-flex align-items-center gap-2">
                         <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
                         <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <?php $mobile_breadcrumbs = [['label'=>'Início','url'=>'index.php'],['label'=>'Comunicação','url'=>'#'],['label'=>$page_title,'active'=>true]]; include 'includes/mobile-header-subpage.php'; ?>
+    <?php $mobile_breadcrumbs = [['label'=>'Início','url'=>'index.php'],['label'=>'Público','url'=>'#'],['label'=>$page_title,'active'=>true]]; include 'includes/mobile-header-subpage.php'; ?>
 
     <section class="py-5" style="background: #f7f5f0;">
         <div class="container py-lg-3">

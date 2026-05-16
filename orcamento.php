@@ -93,6 +93,8 @@ try {
         
         .empty-state { text-align: center; padding: 60px 20px; background: #fff; border-radius: 16px; border: 1px dashed #dcd8cf; }
         .empty-state i { font-size: 3rem; color: #dcd8cf; margin-bottom: 20px; }
+        .btn-contact-sidebar { border: 1px solid var(--primary-maroon); color: var(--primary-maroon); font-weight: 700; border-radius: 50px; transition: .3s; }
+        .btn-contact-sidebar:hover { background: var(--primary-maroon); color: #fff !important; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(77, 28, 33, 0.2); }
     </style>
 </head>
 <body>
@@ -155,7 +157,7 @@ try {
                                         <?php if($doc->descricao): ?>
                                             <p class="text-muted" style="font-size:0.9rem; margin-bottom:15px;"><?php echo nl2br(htmlspecialchars($doc->descricao)); ?></p>
                                         <?php endif; ?>
-                                        <a href="<?php echo (!empty($doc->arquivo) && $doc->arquivo != '#') ? 'uploads/documentos/' . htmlspecialchars($doc->arquivo) : '#'; ?>" target="_blank" class="btn-download"><i class="fas fa-download"></i> Descarregar Ficheiro</a>
+                                        <a href="<?php echo (!empty($doc->arquivo) && $doc->arquivo != '#') ? 'uploads/documentos/' . htmlspecialchars($doc->arquivo) : '#'; ?>" class="btn-download"><i class="fas fa-download"></i> Descarregar Ficheiro</a>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -182,7 +184,7 @@ try {
                         <div class="mt-5 p-4 rounded" style="background: rgba(177, 162, 118, 0.05); border: 1px solid rgba(177, 162, 118, 0.2);">
                             <h6 class="fw-bold mb-3" style="color: var(--primary-maroon);">Precisa de informações?</h6>
                             <p class="small text-muted mb-3">Se procura um documento específico que não se encontra listado, por favor contacte a secretaria da Ordem.</p>
-                            <a href="contacto.php" class="btn btn-sm btn-outline-dark w-100 rounded-pill">Contactar Ordem</a>
+                            <a href="contacto.php" class="btn btn-sm btn-contact-sidebar w-100 py-2">Contactar Ordem</a>
                         </div>
                     </div>
                 </div>

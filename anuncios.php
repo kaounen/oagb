@@ -143,7 +143,10 @@ if (isset($_GET['ajax'])) {
             display: inline-flex; align-items: center; justify-content: center;
             color: var(--primary-maroon) !important; transition: .3s; font-size: 0.8rem;
         }
-        .quick-links a:hover { background: rgba(77,28,33,0.08); color: var(--primary-gold) !important; border-color: var(--primary-gold); }
+
+        .section-label { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; color: var(--primary-gold); display: block; margin-bottom: 12px; }
+        .section-heading { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 2.2rem; line-height: 1.3; margin-bottom: 20px; }
+        .section-heading::after { content: ''; display: block; width: 50px; height: 3px; background: var(--primary-gold); margin-top: 15px; }
 
         @media (max-width: 991px) {
             .mobile-breadcrumb-bar { background: #fafafa !important; padding: 10px 0; border-bottom: 1px solid #e0dcd2; }
@@ -153,15 +156,15 @@ if (isset($_GET['ajax'])) {
             #mobile-header-simple { background: #fafafa !important; padding-bottom: 10px; width: 100%; overflow: hidden; }
             #mobile-header-simple .mobile-header-contacts { background: #fafafa !important; }
             #mobile-header-simple .mobile-header-contacts small { color: var(--primary-maroon) !important; font-size: 0.70rem; }
+            #mobile-header-simple .mobile-header-contacts i { color: var(--primary-maroon) !important; }
             #mobile-header-simple .mobile-pill-btn { color: var(--primary-maroon) !important; border-color: var(--primary-maroon) !important; background: transparent !important; }
+            #mobile-header-simple .mobile-pill-btn i { color: var(--primary-maroon) !important; }
+            #mobile-header-simple .mobile-pill-btn:hover, #mobile-header-simple .mobile-pill-btn:focus { background: rgba(77,28,33,0.08) !important; border-color: var(--primary-gold) !important; }
             #mobile-header-simple .navbar-toggler, #mobile-header-simple .navbar-toggler * { color: var(--primary-gold) !important; border-color: var(--primary-gold) !important; }
+            #mobile-header-simple .navbar-toggler::after { color: var(--primary-gold) !important; }
             #mobile-header-simple .dropdown-item:hover { background: rgba(77,28,33,0.05) !important; color: var(--primary-gold) !important; }
             #mobile-header-simple .navbar-brand { margin: 10px auto !important; display: block; filter: brightness(0.95); }
         }
-
-        .section-label { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; color: var(--primary-gold); display: block; margin-bottom: 12px; }
-        .section-heading { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 2.2rem; line-height: 1.3; margin-bottom: 20px; }
-        .section-heading::after { content: ''; display: block; width: 50px; height: 3px; background: var(--primary-gold); margin-top: 15px; }
 
         @media (max-width: 991.98px) {
             html, body { overflow-x: hidden !important; }
@@ -172,13 +175,14 @@ if (isset($_GET['ajax'])) {
         @media (min-width: 992px) {
             #topbar .topbar-contacts small { color: #333 !important; }
             #topbar .topbar-btn { color: #333 !important; border-color: rgba(0,0,0,0.15) !important; background: rgba(0,0,0,0.02) !important; }
+            #topbar .topbar-btn i { color: var(--primary-maroon) !important; }
             .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
             .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link.active { color: var(--primary-maroon) !important; }
         }
     </style>
 </head>
 
-<body>
+<body class="header-light-page">
 
     <?php include 'includes/topbar.php'; ?>
 
@@ -208,18 +212,58 @@ if (isset($_GET['ajax'])) {
     <!-- Mobile Header -->
     <div class="d-block d-lg-none">
         <div id="mobile-header-simple" style="position: relative; overflow: hidden;">
+            <div class="mobile-header-contacts container-fluid px-1 pt-3 pb-1">
+                <div class="row g-0 mb-3">
+                    <div class="col-12 d-flex justify-content-center align-items-center gap-2 overflow-auto" style="white-space: nowrap;">
+                        <small class="text-nowrap"><i class="fa fa-map-marker-alt me-1"></i>Bissau, Guiné-Bissau</small>
+                        <small class="text-nowrap"><i class="fa fa-phone-alt me-1"></i>+245 955 475 889</small>
+                        <small class="text-nowrap"><i class="fa fa-envelope-open me-1"></i>info@oagb.gw</small>
+                    </div>
+                </div>
+
+                <div class="row g-0 mb-1">
+                    <div class="col-12 d-flex justify-content-center align-items-center gap-3">
+                        <button type="button" class="btn btn-sm mobile-pill-btn px-2 fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#searchModal">
+                             <i class="fa fa-search" style="font-size: 1rem;"></i>
+                        </button>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-sm mobile-pill-btn px-2 fw-bold d-flex align-items-center" data-bs-toggle="dropdown" data-bs-display="static">
+                                <i class="fa fa-globe" style="font-size: 1rem;"></i>
+                            </button>
+                            <div class="dropdown-menu m-0 border-0 rounded-3 shadow-lg p-1 dropdown-menu-center" style="min-width: 150px; z-index: 2050; margin-top: 10px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: absolute; left: 50%; transform: translateX(-50%); right: auto;">
+                                <a href="#" onclick="changeLanguage('pt'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇵🇹</span> <span class="text-dark">Português</span></a>
+                                <a href="#" onclick="changeLanguage('en'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇺🇸</span> <span class="text-dark">English</span></a>
+                                <a href="#" onclick="changeLanguage('fr'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇫🇷</span> <span class="text-dark">Français</span></a>
+                                <a href="#" onclick="changeLanguage('es'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇪🇸</span> <span class="text-dark">Español</span></a>
+                                <a href="#" onclick="changeLanguage('ar'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇸🇦</span> <span class="text-dark">العربية</span></a>
+                                <a href="#" onclick="changeLanguage('zh-CN'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2 mb-0" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇨🇳</span> <span class="text-dark">中文</span></a>
+                                <a href="#" onclick="changeLanguage('ru'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
+                            </div>
+                        </div>
+                        <a href="portal/login.php" class="btn btn-sm mobile-pill-btn px-2 fw-bold text-uppercase d-flex align-items-center">
+                            <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Área Reservada
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div class="mobile-navbar-wrapper container-fluid p-0" style="margin-top: 5px;">
                 <?php include 'includes/navbar.php'; ?>
             </div>
+
             <div class="mobile-breadcrumb-bar">
                 <div class="container d-flex align-items-center justify-content-between py-2">
                     <div style="font-size: 0.72rem;">
                         <a href="index.php">Início</a>
                         <span class="bc-sep"></span>
+                        <a href="#">Comunicação</a>
+                        <span class="bc-sep"></span>
                         <span class="bc-active"><?php echo $page_title; ?></span>
                     </div>
                     <div class="quick-links d-flex gap-1">
                         <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+                        <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}"><i class="fas fa-share-alt"></i></a>
                     </div>
                 </div>
             </div>

@@ -39,6 +39,24 @@ class NotifyHelper {
     }
     
     /**
+     * Envia e-mail institucional.
+     */
+    public static function sendEmail($pdo, $to_email, $subject, $body) {
+        try {
+            $headers = "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            $headers .= "From: OAGB Institucional <comunicacao@oagb.gw>" . "\r\n";
+
+            // Queue for audit
+            $stmt = $pdo->prepare("INSERT INTO gestao_notificacoes (destinatario_id, tipo, mensagem, status) VALUES (0, 'email', ?, 'pendente')");
+            $stmt->execute(["Para: $to_email | Assunto: $subject"]);
+            
+            // Send
+            return @mail($to_email, $subject, $body, $headers);
+        } catch (Exception $e) { return false; }
+    }
+
+    /**
      * Envia Alerta de Eleições.
      */
     public static function notifyElection($pdo, $adv_id, $eleicao_nome) {

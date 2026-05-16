@@ -5,7 +5,7 @@ require_once 'connect.php';
 
 $page_title = "Deontologia e Ética";
 $meta_description = "Código Deontológico, princípios éticos, regime disciplinar e honorários da advocacia na Guiné-Bissau — OAGB.";
-$header_image = 'uploads/truth-concept-arrangement-with-balance-ouro.jpg';
+$header_image = 'uploads/justice-symbol-legal-law.jpg';
 
 try {
     $stmt = $pdo->prepare("SELECT * FROM conteudos_paginas WHERE pagina = 'deontologia' AND status = 'ativo' ORDER BY ordem ASC");

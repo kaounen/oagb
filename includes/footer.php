@@ -97,9 +97,7 @@ if (document.getElementById('newsletter-form')) {
             }
         })
         .catch(error => {
-            messageDiv.innerHTML = '<span class="text-success" style="font-size: 0.8rem;">Enviado.</span>';
-            this.reset();
-            setTimeout(() => { messageDiv.innerHTML = ''; }, 5000);
+            messageDiv.innerHTML = '<span class="text-danger" style="font-size: 0.8rem;">Erro na ligação ao servidor.</span>';
         });
     });
 }
@@ -122,6 +120,27 @@ if (document.getElementById('newsletter-form')) {
     </div>
 </div>
 <!-- Full Screen Search End -->
+
+<!-- Modal de Tradução -->
+<div class="modal fade" id="translateModal" tabindex="-1" aria-labelledby="translateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="border-radius: 15px; border: none; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+            <div class="modal-header" style="border-bottom: 1px solid #eee; background: #fdfbf7; border-radius: 15px 15px 0 0;">
+                <h5 class="modal-title" id="translateModalLabel" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-size: 1.1rem; font-weight: 700;">
+                    <i class="bi bi-globe me-2" style="color: #B1A276;"></i> Traduzir Site
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <p class="text-muted small mb-3">Escolha o idioma para tradução automática:</p>
+                <div id="google_translate_element"></div>
+            </div>
+            <div class="modal-footer" style="border-top: none; justify-content: center; padding-bottom: 20px;">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Header Functions (Componente Reutilizável) -->
 <script src="js/header-functions.js?v=<?php echo time(); ?>"></script>

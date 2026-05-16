@@ -43,35 +43,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $desc = $_POST['descricao'] ?? '';
     $ativo = isset($_POST['ativo']) ? 1 : 0;
     
-    $imagem = $event['imagem_destaque'];
-    if (isset($_FILES['imagem_destaque']) && $_FILES['imagem_destaque']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../uploads/';
-        if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
-        
-        $file_ext = pathinfo($_FILES['imagem_destaque']['name'], PATHINFO_EXTENSION);
-        $new_filename = 'event_' . time() . '.' . $file_ext;
-        
-        if (move_uploaded_file($_FILES['imagem_destaque']['tmp_name'], $upload_dir . $new_filename)) {
-            // Delete old file if exists
-            if (!empty($event['imagem_destaque']) && file_exists($upload_dir . $event['imagem_destaque'])) {
-                unlink($upload_dir . $event['imagem_destaque']);
-            }
-            $imagem = $new_filename;
         }
     }
 
+    // Handle Quick PDF Attachment (ficheiro_anexo column if exists)
+    $legenda_pdf = $_POST['legenda_anexo'] ?? '';
+    $pdf_col_sql = "";
+    $pdf_params = [];
+    if (isset($_FILES['pdf_anexo']) && $_FILES['pdf_anexo']['error'] === UPLOAD_ERR_OK) {
+        $upload_dir = __DIR__ . '/../../../uploads/';
+        $original_name = basename($_FILES['pdf_anexo']['name']);
+        $safe_name = preg_replace('/[^A-Za-z0-9.\-_]/', '_', $original_name);
+        $pdf_name = time() . '_' . $safe_name;
+        
+        if (move_uploaded_file($_FILES['pdf_anexo']['tmp_name'], $upload_dir . $pdf_name)) {
+            // Eliminar o PDF antigo se existir
+            if (!empty($event['ficheiro_anexo']) && file_exists($upload_dir . $event['ficheiro_anexo'])) {
+                unlink($upload_dir . $event['ficheiro_anexo']);
+            }
+            $pdf_col_sql = ", ficheiro_anexo = ?, legenda_anexo = ?";
+            $pdf_params = [$pdf_name, $legenda_pdf];
+        }
+    } else {
+        $pdf_col_sql = ", legenda_anexo = ?";
+        $pdf_params = [$legenda_pdf];
+    }
+
     try {
-        $stmt = $pdo->prepare("UPDATE agenda SET titulo = ?, data_evento = ?, data_fim_evento = ?, hora_inicio = ?, hora_fim = ?, local_evento = ?, descricao = ?, imagem_destaque = ?, ativo = ? WHERE id = ?");
-        $stmt->execute([$titulo, $start_dt, $end_dt, $hora_inicio, $hora_fim, $local_ev, $desc, $imagem, $ativo, $id]);
+        $stmt = $pdo->prepare("UPDATE agenda SET titulo = ?, data_evento = ?, data_fim_evento = ?, hora_inicio = ?, hora_fim = ?, local_evento = ?, descricao = ?, imagem_destaque = ?, ativo = ? $pdf_col_sql WHERE id = ?");
+        $all_params = array_merge([$titulo, $start_dt, $end_dt, $hora_inicio, $hora_fim, $local_ev, $desc, $imagem, $ativo], $pdf_params, [$id]);
+        $stmt->execute($all_params);
         
         // Handle Multiple Attachments
         if (isset($_FILES['attachments'])) {
-            AttachmentHelper::save($pdo, 'evento', $id, $_FILES['attachments']);
+            AttachmentHelper::save($pdo, 'evento', $id, $_FILES['attachments'], $_POST['attachment_descriptions'] ?? []);
+        }
+
+        // Update existing attachments metadata
+        if (isset($_POST['att_desc'])) {
+            foreach ($_POST['att_desc'] as $att_id => $desc_meta) {
+                AttachmentHelper::update($pdo, $att_id, $desc_meta);
+            }
         }
 
         // Handle Gallery Uploads
         if (isset($_FILES['gallery_files'])) {
-            GalleryHelper::save($pdo, 'evento', $id, $_FILES['gallery_files']);
+            GalleryHelper::save($pdo, 'evento', $id, $_FILES['gallery_files'], $_POST['new_gal_title'] ?? [], $_POST['new_gal_desc'] ?? []);
         }
 
         // Update Gallery Metadata
@@ -157,11 +174,50 @@ require_once __DIR__ . '/../../includes/header.php';
 
                         <div class="mb-4">
                             <label class="form-label text-uppercase fw-bold text-muted small">Cartaz Digital (Atual Evento)</label>
-                            <img id="preview" src="/oagb/uploads/<?php echo $event['imagem_destaque']; ?>" class="img-fluid rounded shadow-sm mb-3 <?php echo empty($event['imagem_destaque']) ? 'd-none':''; ?>">
+                            <div class="position-relative mb-3">
+                                <img id="preview" src="/oagb/uploads/<?php echo $event['imagem_destaque']; ?>" class="img-fluid rounded shadow-sm <?php echo empty($event['imagem_destaque']) ? 'd-none':''; ?>">
+                                <?php if(!empty($event['imagem_destaque'])): ?>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm position-absolute" style="top: 10px; right: 10px; z-index: 10; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;" onclick="deleteMedia(<?php echo $id; ?>, 'highlight_evento', this);">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
                             <div class="border rounded p-3 text-center bg-white cursor-pointer border-dashed" onclick="document.getElementById('img_input').click();">
                                 <i class="fas fa-sync-alt fa-2x text-muted mb-2"></i>
                                 <div class="small text-muted">Trocar Cartaz</div>
                                 <input type="file" name="imagem_destaque" id="img_input" class="d-none" accept="image/*">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-uppercase fw-bold text-muted small">Documento PDF (Quick Download)</label>
+                            <div class="p-3 border rounded bg-white shadow-sm mb-2">
+                                <?php if(!empty($event['ficheiro_anexo'])): ?>
+                                    <div class="d-flex align-items-center mb-3 p-2 bg-light rounded border position-relative">
+                                        <div class="me-3">
+                                            <i class="far fa-file-pdf fa-2x text-danger"></i>
+                                        </div>
+                                        <div class="flex-grow-1 min-width-0" style="overflow: hidden;">
+                                            <div class="small fw-bold text-truncate" title="<?php echo htmlspecialchars($event['ficheiro_anexo']); ?>" style="max-width: 100%;"><?php echo htmlspecialchars(preg_replace('/^[0-9]+_/', '', $event['ficheiro_anexo'])); ?></div>
+                                            <a href="/oagb/uploads/<?php echo $event['ficheiro_anexo']; ?>?v=<?php echo time(); ?>" target="_blank" class="x-small text-primary text-decoration-none">Ver Ficheiro Atual</a>
+                                        </div>
+                                        <div class="flex-shrink-0 ms-2">
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger border-0" onclick="deleteMedia(<?php echo $id; ?>, 'quick_pdf_evento', this); document.querySelector('[name=legenda_anexo]').value='';">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <div class="mb-3">
+                                    <label class="x-small fw-bold text-muted text-uppercase d-block mb-1">Substituir ou Carregar Novo:</label>
+                                    <input type="file" name="pdf_anexo" class="form-control form-control-sm border-0 bg-light" accept=".pdf">
+                                </div>
+                                
+                                <div>
+                                    <label class="x-small fw-bold text-muted text-uppercase d-block mb-1">Título/Legenda do PDF:</label>
+                                    <input type="text" name="legenda_anexo" class="form-control form-control-sm border-0 bg-light" placeholder="Ex: Programa do Evento" value="<?php echo htmlspecialchars($event['legenda_anexo'] ?? ''); ?>">
+                                </div>
                             </div>
                         </div>
 

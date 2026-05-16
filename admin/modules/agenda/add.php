@@ -16,28 +16,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ativo = isset($_POST['ativo']) ? 1 : 0;
     
     // Image handling omitted for brevity, but stays same...
-    $imagem = '';
-    if (isset($_FILES['imagem_destaque']) && $_FILES['imagem_destaque']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../../uploads/';
-        if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
-        
-        $file_ext = pathinfo($_FILES['imagem_destaque']['name'], PATHINFO_EXTENSION);
-        $new_filename = 'event_' . time() . '.' . $file_ext;
-        
-        if (move_uploaded_file($_FILES['imagem_destaque']['tmp_name'], $upload_dir . $new_filename)) {
-            $imagem = $new_filename;
-        }
+    }
+    
+    // Handle Quick PDF Attachment (if exists)
+    $legenda_pdf = $_POST['legenda_anexo'] ?? '';
+    $pdf_name = NULL;
+    if (isset($_FILES['pdf_anexo']) && $_FILES['pdf_anexo']['error'] === UPLOAD_ERR_OK) {
+        $upload_dir = __DIR__ . '/../../../uploads/';
+        $original_name = basename($_FILES['pdf_anexo']['name']);
+        $safe_name = preg_replace('/[^A-Za-z0-9.\-_]/', '_', $original_name);
+        $pdf_name = time() . '_' . $safe_name;
+        move_uploaded_file($_FILES['pdf_anexo']['tmp_name'], $upload_dir . $pdf_name);
     }
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO agenda (titulo, data_evento, data_fim_evento, hora_inicio, hora_fim, local_evento, descricao, imagem_destaque, ativo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$titulo, $start_dt, $end_dt, $hora_inicio, $hora_fim, $local_ev, $desc, $imagem, $ativo]);
+        $stmt = $pdo->prepare("INSERT INTO agenda (titulo, data_evento, data_fim_evento, hora_inicio, hora_fim, local_evento, descricao, imagem_destaque, ficheiro_anexo, legenda_anexo, ativo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$titulo, $start_dt, $end_dt, $hora_inicio, $hora_fim, $local_ev, $desc, $imagem, $pdf_name, $legenda_pdf, $ativo]);
         $new_id = $pdo->lastInsertId();
 
         // Handle Multiple Attachments
-        require_once __DIR__ . '/../../includes/AttachmentHelper.php';
         if (isset($_FILES['attachments'])) {
-            AttachmentHelper::save($pdo, 'evento', $new_id, $_FILES['attachments']);
+            AttachmentHelper::save($pdo, 'evento', $new_id, $_FILES['attachments'], $_POST['attachment_descriptions'] ?? []);
+        }
+
+        // Handle Gallery Uploads
+        if (isset($_FILES['gallery_files'])) {
+            require_once __DIR__ . '/../../includes/GalleryHelper.php';
+            GalleryHelper::save($pdo, 'evento', $new_id, $_FILES['gallery_files'], $_POST['new_gal_title'] ?? [], $_POST['new_gal_desc'] ?? []);
         }
         
         header("Location: index.php?success=1");
@@ -122,7 +127,28 @@ require_once __DIR__ . '/../../includes/header.php';
                             <img id="preview" class="img-fluid mt-3 rounded shadow-sm d-none">
                         </div>
 
-                        <!-- Gallery & Attachments -->
+                        <div class="mb-4">
+                            <label class="form-label text-uppercase fw-bold text-muted small">Documento PDF (Quick Download)</label>
+                            <div class="p-3 border rounded bg-white shadow-sm mb-2">
+                                <div class="mb-3">
+                                    <label class="x-small fw-bold text-muted text-uppercase d-block mb-1">Carregar Novo PDF:</label>
+                                    <input type="file" name="pdf_anexo" class="form-control form-control-sm border-0 bg-light" accept=".pdf">
+                                </div>
+                                <div>
+                                    <label class="x-small fw-bold text-muted text-uppercase d-block mb-1">Título/Legenda do PDF:</label>
+                                    <input type="text" name="legenda_anexo" class="form-control form-control-sm border-0 bg-light" placeholder="Ex: Programa do Evento">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Galeria Slider Component -->
+                        <?php 
+                        $type = 'evento';
+                        $gallery = [];
+                        require __DIR__ . '/../../includes/partials/gallery_form.php'; 
+                        ?>
+
+                        <!-- Múltiplos Anexos Component -->
                         <?php 
                         $entity_type = 'evento';
                         $entity_id = 0;

@@ -472,6 +472,10 @@
         color: white !important;
     }
 
+    .header-light-page .mobile-navbar-wrapper .navbar-toggler::after {
+        color: #B1A276 !important;
+    }
+
     .mobile-navbar-wrapper .navbar-collapse {
         order: 3;
         position: static !important;
@@ -736,10 +740,32 @@
         color: white !important;
     }
 
+    /* Override for pages with light header (no background image) */
+    .header-light-page #topbar:not(.topbar-scrolled) .topbar-btn:hover {
+        background: rgba(177, 162, 118, 0.1) !important;
+        color: #4D1C21 !important;
+        border-color: #B1A276 !important;
+    }
+
+    /* Mobile "MENU" text color for light pages */
+    .header-light-page #mobile-header-simple .navbar-toggler::after,
+    .header-light-page .mobile-navbar-wrapper .navbar-toggler::after {
+        color: #B1A276 !important;
+    }
+
     #topbar:not(.topbar-scrolled) .topbar-btn:hover i,
     #topbar:not(.topbar-scrolled) .topbar-btn:active i,
     #topbar:not(.topbar-scrolled) .topbar-btn:focus i {
         color: white !important;
+    }
+
+    .header-light-page #topbar:not(.topbar-scrolled) .topbar-btn:hover i {
+        color: #4D1C21 !important;
+    }
+
+    .header-light-page #mobile-header-simple .navbar-toggler i,
+    .header-light-page .mobile-navbar-wrapper .navbar-toggler i {
+        color: #B1A276 !important;
     }
 
     /* Ajustar padding do conteúdo para não ficar sobreposto pelo navbar fixo */
@@ -747,3 +773,52 @@
         padding-top: 8rem !important;
     }
 }
+
+/* ===== GOOGLE TRANSLATE FIXES ===== */
+/* Esconder a barra nativa do Google que empurra o site para baixo */
+.goog-te-banner-frame.skiptranslate, 
+.goog-te-banner-frame {
+    display: none;
+}
+
+body {
+    top: 0px !important;
+}
+
+/* Ajustar posição de elementos fixos quando o Google Translate está ativo */
+.translated-ltr .navbar-dark,
+.translated-ltr .bg-dark,
+.translated-ltr #topbar {
+    top: 0 !important;
+}
+
+/* Customizar o widget de tradução para dentro do Modal */
+#google_translate_element {
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#google_translate_element select {
+    border-radius: 8px !important;
+    border: 1px solid #B1A276 !important;
+    padding: 8px 12px !important;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 0.9rem !important;
+    background-color: #fff !important;
+    color: #333 !important;
+    cursor: pointer;
+    width: 100%;
+    max-width: 250px;
+}
+
+.goog-te-gadget span {
+    display: none !important; /* Esconder o "Powered by Google" */
+}
+
+.goog-te-gadget {
+    color: transparent !important;
+}
+
+

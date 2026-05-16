@@ -5,7 +5,7 @@ require_once 'connect.php';
 
 $page_title = "Centro de Estágio e Formação";
 $meta_description = "Centro de Estágio da OAGB — requisitos de inscrição, fases do estágio, papel do patrono e formação contínua para advogados na Guiné-Bissau.";
-$header_image = 'uploads/truth-concept-arrangement-with-balance-ouro.jpg';
+$header_image = 'uploads/justice-symbol-legal-law.jpg';
 
 try {
     $stmt = $pdo->prepare("SELECT * FROM conteudos_paginas WHERE pagina = 'estagio' AND status = 'ativo' ORDER BY ordem ASC");

@@ -96,21 +96,18 @@ if (isset($pdo)) {
             ];
         }
 
-        // Buscar notícias em destaque (com fallback)
         try {
-            // Primeiro tentar com campo destaque
-            $stmt = $pdo->prepare("SELECT * FROM noticias WHERE destaque = 1 AND ativo = 1 ORDER BY data_publicacao DESC LIMIT 3");
+            // Buscar as 3 notícias mais recentes (data é prioridade, destaque como desempate)
+            $stmt = $pdo->prepare("
+                SELECT * FROM noticias 
+                WHERE ativo = 1 
+                ORDER BY data_publicacao DESC 
+                LIMIT 3
+            ");
             $stmt->execute();
             $noticias_destaque = $stmt->fetchAll();
-            
-            // Se não encontrar com destaque, buscar as 3 mais recentes
-            if (empty($noticias_destaque)) {
-                $stmt = $pdo->prepare("SELECT * FROM noticias ORDER BY data_publicacao DESC LIMIT 3");
-                $stmt->execute();
-                $noticias_destaque = $stmt->fetchAll();
-            }
         } catch (Exception $e) {
-            // Campos destaque/ativo podem não existir
+            // Campo destaque pode não existir
             try {
                 $stmt = $pdo->prepare("SELECT * FROM noticias ORDER BY data_publicacao DESC LIMIT 3");
                 $stmt->execute();

@@ -161,10 +161,6 @@ $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bis
                 background: rgba(0,0,0,0.02) !important; 
             }
             #topbar .topbar-btn i { color: var(--primary-maroon) !important; }
-            #topbar .topbar-btn:hover { 
-                background: rgba(77,28,33,0.05) !important; 
-                border-color: var(--primary-maroon) !important; 
-            }
 
             /* Navbar: Dark links on cream */
             .navbar-dark .navbar-nav .nav-link { color: #333 !important; font-weight: 600; }
@@ -174,7 +170,7 @@ $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bis
     </style>
 </head>
 
-<body>
+<body class="header-light-page">
 
     <?php include 'includes/topbar.php'; ?>
 
@@ -278,7 +274,7 @@ $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bis
                 <div class="col-lg-12">
                     <div class="bast-profile-card d-flex flex-column flex-md-row">
                         <div class="bast-img-container p-4">
-                            <img class="img-fluid rounded-3 shadow" src="<?php echo $bastonario_atual->foto_url ?: 'img/placeholder-staff.jpg'; ?>" alt="Foto Bastonário">
+                            <img class="img-fluid rounded-3 shadow" src="<?php echo $bastonario_atual->foto_url ? 'uploads/bastonarios/' . $bastonario_atual->foto_url : 'img/placeholder-staff.jpg'; ?>" alt="Foto Bastonário">
                         </div>
                         <div class="bast-content">
                             <h2><?php echo htmlspecialchars(oagb_fix_encoding($bastonario_atual->nome_completo)); ?></h2>
@@ -307,7 +303,7 @@ $meta_description = "Conheça o Bastonário da Ordem dos Advogados da Guiné-Bis
                 <div class="col-6 col-md-3">
                     <div class="bastonario-card text-center p-3 h-100">
                         <?php if(!empty($antigo->foto_url)): ?>
-                            <img class="rounded-circle mb-3" src="<?php echo $antigo->foto_url; ?>" alt="Antigo Bastonário">
+                            <img class="rounded-circle mb-3" src="<?php echo 'uploads/bastonarios/' . $antigo->foto_url; ?>" alt="Antigo Bastonário">
                         <?php endif; ?>
                         <h6><?php echo htmlspecialchars(oagb_fix_encoding($antigo->nome_completo)); ?></h6>
                         <small class="periodo d-block mb-2"><?php echo date('Y', strtotime($antigo->data_inicio_mandato)); ?> — <?php echo (!empty($antigo->data_fim_mandato) && $antigo->data_fim_mandato != '0000-00-00') ? date('Y', strtotime($antigo->data_fim_mandato)) : '—'; ?></small>

@@ -13,14 +13,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle Photo Upload
     $foto = '';
     if (isset($_FILES['foto_url']) && $_FILES['foto_url']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../uploads/bastonarios/';
-        if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
+        $upload_dir_photo = __DIR__ . '/../../../uploads/bastonarios/';
+        if (!file_exists($upload_dir_photo)) mkdir($upload_dir_photo, 0777, true);
         
         $file_ext = pathinfo($_FILES['foto_url']['name'], PATHINFO_EXTENSION);
         $new_filename = 'bastonario_' . time() . '.' . $file_ext;
         
-        if (move_uploaded_file($_FILES['foto_url']['tmp_name'], $upload_dir . $new_filename)) {
+        if (move_uploaded_file($_FILES['foto_url']['tmp_name'], $upload_dir_photo . $new_filename)) {
             $foto = $new_filename;
+        }
+    }
+
+    // Handle Signature Upload
+    $assinatura = '';
+    if (isset($_FILES['assinatura_url']) && $_FILES['assinatura_url']['error'] === UPLOAD_ERR_OK) {
+        $upload_dir_sig = __DIR__ . '/../../../uploads/assinaturas/';
+        if (!file_exists($upload_dir_sig)) mkdir($upload_dir_sig, 0777, true);
+        
+        $file_ext = pathinfo($_FILES['assinatura_url']['name'], PATHINFO_EXTENSION);
+        $new_filename = 'assinatura_bastonario_' . time() . '.' . $file_ext;
+        
+        if (move_uploaded_file($_FILES['assinatura_url']['tmp_name'], $upload_dir_sig . $new_filename)) {
+            $assinatura = $new_filename;
         }
     }
 
@@ -29,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->query("UPDATE bastonarios SET is_atual = 0");
         }
 
-        $stmt = $pdo->prepare("INSERT INTO bastonarios (nome_completo, biografia, foto_url, data_inicio_mandato, data_fim_mandato, email_contacto, is_atual) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$nome, $biografia, $foto, $inicio, $fim, $email, $is_atual]);
+        $stmt = $pdo->prepare("INSERT INTO bastonarios (nome_completo, biografia, foto_url, assinatura_url, data_inicio_mandato, data_fim_mandato, email_contacto, is_atual) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$nome, $biografia, $foto, $assinatura, $inicio, $fim, $email, $is_atual]);
         
         header("Location: index.php?success=1");
         exit;
@@ -93,6 +107,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <img id="preview" class="img-fluid mt-3 rounded shadow-sm d-none">
                         </div>
 
+                        <div class="mb-4">
+                            <label class="form-label text-uppercase fw-bold text-muted small d-block">Assinatura Digitalized</label>
+                            <div class="border rounded p-3 text-center bg-white cursor-pointer border-dashed" onclick="document.getElementById('sig_input').click();">
+                                <i class="fas fa-pen-nib fa-2x text-muted mb-2"></i>
+                                <div class="small text-muted">Aperte aqui para upload</div>
+                                <input type="file" name="assinatura_url" id="sig_input" class="d-none" accept="image/*">
+                            </div>
+                            <img id="preview_sig" class="img-fluid mt-3 rounded shadow-sm d-none bg-white p-2 border">
+                        </div>
+
                         <hr class="my-4">
 
                         <button type="submit" class="btn btn-login w-100 py-3 mb-2 shadow-sm">Publicar Registo</button>
@@ -113,6 +137,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (file) {
             document.getElementById('preview').src = URL.createObjectURL(file);
             document.getElementById('preview').classList.remove('d-none');
+        }
+    }
+    document.getElementById('sig_input').onchange = evt => {
+        const [file] = document.getElementById('sig_input').files;
+        if (file) {
+            document.getElementById('preview_sig').src = URL.createObjectURL(file);
+            document.getElementById('preview_sig').classList.remove('d-none');
         }
     }
 </script>

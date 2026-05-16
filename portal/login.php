@@ -84,10 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="mb-4">
                 <label class="form-label">Senha de Acesso</label>
                 <input type="password" name="password" class="form-control" required placeholder="••••••••">
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <a href="recuperar_senha.php" class="text-decoration-none" style="font-size: 0.8rem; color: var(--primary-gold); font-weight: 600;">Esqueceu-se da Senha?</a>
+                <div class="text-end mt-2">
+                    <a href="recuperar_senha.php" class="text-decoration-none" style="font-size: 0.8rem; color: var(--primary-gold); font-weight: 600;">Esqueceu-se da Senha?</a>
+                </div>
             </div>
             
             <button type="submit" class="btn btn-portal">ENTRAR NO PORTAL</button>

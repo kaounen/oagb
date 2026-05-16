@@ -6,13 +6,13 @@ $pagina_atual = basename($_SERVER['PHP_SELF']);
 $ordem_pages = ['ordem-dos-advogados.php', 'bastonario-ordem.php', 'orgaos-sociais.php', 'comissoes-especializadas.php', 'cooperacao-institucional.php', 'deontologia-etica.php', 'centro-estagio.php'];
 
 // Páginas do menu ADVOGADOS
-$advogados_pages = ['pesquisa-advogados.php', 'advogados-inscritos.php', 'pesquisa-estagiarios.php', 'estagiarios-inscritos.php', 'solicitacao-advogados.php', 'inscricao-ordem.php'];
+$advogados_pages = ['pesquisa-advogados.php', 'advogados-inscritos.php', 'pesquisa-estagiarios.php', 'estagiarios-inscritos.php', 'solicitacao-advogados.php', 'inscricao-ordem.php', 'formacao.php'];
 
 // Páginas do menu PÚBLICO
-$publico_pages = ['pareceres-deliberacoes.php', 'comunicados.php', 'publicacoes.php', 'orcamento.php', 'revista-oagb.php', 'legislacao-nacional.php', 'legislacao-internacional.php', 'glossario-juridico.php', 'biblioteca-oagb.php'];
+$publico_pages = ['pareceres-deliberacoes.php', 'comunicados.php', 'publicacoes.php', 'orcamento.php', 'revista-oagb.php', 'legislacao-nacional.php', 'legislacao-internacional.php', 'glossario-juridico.php', 'biblioteca-oagb.php', 'cidadaos.php'];
 
 // Páginas do menu COMUNICAÇÃO
-$comunicacao_pages = ['agenda.php', 'noticias.php', 'anuncios.php', 'cidadaos.php'];
+$comunicacao_pages = ['agenda.php', 'noticias.php', 'anuncios.php'];
 
 
 // Verificar se está em uma página de dropdown
@@ -54,6 +54,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="estagiarios-inscritos.php" class="dropdown-item">Estagiários Inscritos em vigor</a>
                     <a href="solicitacao-advogados.php" class="dropdown-item">Solicitação de Advogados</a>
                     <a href="inscricao-ordem.php" class="dropdown-item">Inscrição na Ordem</a>
+                    <a href="formacao.php" class="dropdown-item">Formação & Cursos</a>
                 </div>
             </div>
             <div class="nav-item dropdown">
@@ -68,6 +69,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="legislacao-internacional.php" class="dropdown-item">Legislação Internacional</a>
                     <a href="glossario-juridico.php" class="dropdown-item">Glossário Jurídico</a>
                     <a href="biblioteca-oagb.php" class="dropdown-item">Biblioteca OAGB</a>
+                    <a href="cidadaos.php" class="dropdown-item">Cidadãos</a>
                 </div>
             </div>
             <div class="nav-item dropdown">
@@ -76,7 +78,6 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="agenda.php" class="dropdown-item">Agenda</a>
                     <a href="noticias.php" class="dropdown-item">Notícias</a>
                     <a href="anuncios.php" class="dropdown-item">Anúncios</a>
-                    <a href="cidadaos.php" class="dropdown-item">Cidadãos</a>
                 </div>
             </div>
             <a href="contacto.php" class="nav-item nav-link pe-lg-0 <?php echo (basename($_SERVER['PHP_SELF']) == 'contacto.php') ? 'active' : ''; ?>">CONTACTO</a>

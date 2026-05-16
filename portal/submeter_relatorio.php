@@ -2,6 +2,7 @@
 session_start();
 if(!isset($_SESSION['lawyer_id']) || $_SESSION['member_type'] != 'estagiario') { header("Location: index.php"); exit; }
 require_once __DIR__ . '/../connect.php';
+$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 $lid = $_SESSION['lawyer_id'];
 
@@ -21,9 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['relatorio'])) {
             if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
             
             if (move_uploaded_file($file['tmp_name'], $uploadDir . $newName)) {
-                $stmt = $pdo->prepare("INSERT INTO gestao_estagio_relatorios (estagiario_id, orientador_id, ficheiro_pdf) VALUES (?, ?, ?)");
-                $stmt->execute([$lid, $orientador_id, $newName]);
-                $success = "Relatório submetido com sucesso para validação do seu patrono.";
+                $tipo = $_POST['tipo_documento'] ?? 'Relatório Mensal';
+                $stmt = $pdo->prepare("INSERT INTO gestao_estagio_relatorios (estagiario_id, orientador_id, tipo_documento, ficheiro_pdf) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$lid, $orientador_id, $tipo, $newName]);
+                $success = "Documento submetido com sucesso para validação do seu patrono.";
             } else { $error = "Erro no upload do ficheiro."; }
         } else { $error = "Apenas ficheiros PDF são permitidos."; }
     }
@@ -54,7 +56,7 @@ $history = $stmt->fetchAll();
 
     <header class="hero-relatorio">
         <div class="container d-flex justify-content-between align-items-center">
-            <h2 class="fw-bold mb-0">Submissão de Relatórios</h2>
+            <h2 class="fw-bold mb-0">Documentos e Trabalhos</h2>
             <a href="index.php" class="text-white text-decoration-none opacity-50 small fw-bold"><i class="fas fa-arrow-left me-1"></i> VOLTAR AO PORTAL</a>
         </div>
     </header>
@@ -73,11 +75,20 @@ $history = $stmt->fetchAll();
 
             <form method="POST" enctype="multipart/form-data" class="p-4 bg-light rounded-4 border-dashed border mb-5">
                 <div class="mb-4">
-                    <label class="form-label small fw-bold text-muted text-uppercase">Ficheiro do Relatório (PDF)</label>
+                    <label class="form-label small fw-bold text-muted text-uppercase">Tipo de Documento</label>
+                    <select name="tipo_documento" class="form-select border-0 p-3" required>
+                        <option value="Relatório Mensal">Relatório Mensal de Estágio</option>
+                        <option value="Trabalho Científico">Trabalho Científico / Artigo</option>
+                        <option value="Documentação">Documentação de Apoio</option>
+                        <option value="Outros">Outros Documentos</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Ficheiro (PDF)</label>
                     <input type="file" name="relatorio" class="form-control border-0 p-3" required accept=".pdf">
                     <div class="x-small text-muted mt-2">Certifique-se que o documento está assinado e legível.</div>
                 </div>
-                <button type="submit" class="btn btn-dark w-100 p-3 fw-bold rounded-3 text-uppercase">Enviar para o Patrono</button>
+                <button type="submit" class="btn btn-dark w-100 p-3 fw-bold rounded-3 text-uppercase">Submeter para o Patrono</button>
             </form>
             
             <h5 class="fw-bold mb-4 mt-5">Histórico de Submissões</h5>
@@ -86,8 +97,9 @@ $history = $stmt->fetchAll();
                     <thead>
                         <tr class="bg-light">
                             <th class="border-0 p-3">Data Envio</th>
-                            <th class="border-0 p-3">Documento</th>
-                            <th class="border-0 p-3 text-center">Estado de Validação</th>
+                            <th class="border-0 p-3">Tipo / Categoria</th>
+                            <th class="border-0 p-3">Ficheiro</th>
+                            <th class="border-0 p-3 text-center">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,7 +109,8 @@ $history = $stmt->fetchAll();
                             <?php foreach($history as $h): ?>
                                 <tr>
                                     <td class="p-3"><?php echo date('d/m/Y', strtotime($h['data_submissao'])); ?></td>
-                                    <td class="p-3 fw-bold text-dark"><i class="far fa-file-pdf me-2 text-danger"></i> <?php echo $h['ficheiro_pdf']; ?></td>
+                                    <td class="p-3"><span class="badge bg-white text-dark border fw-normal"><?php echo $h['tipo_documento']; ?></span></td>
+                                    <td class="p-3 fw-bold text-dark"><a href="../uploads/estagio/relatorios/<?php echo $h['ficheiro_pdf']; ?>" target="_blank" class="text-danger text-decoration-none"><i class="far fa-file-pdf me-2"></i> PDF</a></td>
                                     <td class="p-3 text-center">
                                         <span class="badge py-2 px-3 <?php echo $h['status'] == 'validado' ? 'bg-success text-white' : ($h['status'] == 'pendente' ? 'bg-warning-subtle text-warning' : 'bg-danger text-white'); ?>">
                                             <?php echo strtoupper($h['status']); ?>
