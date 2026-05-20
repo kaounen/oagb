@@ -23,6 +23,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['admin_name'] = $user['full_name'];
             $_SESSION['admin_role'] = $user['role'];
             
+            // Remember Me Cookie & Session Persistence
+            if (isset($_POST['remember'])) {
+                // Set cookie for 30 days
+                setcookie('oagb_admin_remember_user', $username, time() + (30 * 24 * 60 * 60), '/', '', false, true);
+                
+                // Set session cookie parameters to last 30 days
+                if (session_id() !== '') {
+                    $params = session_get_cookie_params();
+                    setcookie(session_name(), session_id(), time() + (30 * 24 * 60 * 60), $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+                }
+            } else {
+                // Clear cookie
+                setcookie('oagb_admin_remember_user', '', time() - 3600, '/', '', false, true);
+            }
+            
             // Update last login
             $update = $pdo->prepare("UPDATE admin_users SET last_login = NOW() WHERE id = ?");
             $update->execute([$user['id']]);

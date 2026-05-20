@@ -182,12 +182,16 @@
             </div>
         <?php endif; ?>
 
+        <?php
+        $remembered_user = $_COOKIE['oagb_admin_remember_user'] ?? '';
+        $is_remembered = !empty($remembered_user);
+        ?>
         <form action="auth/login_process.php" method="POST">
             <div class="mb-4">
                 <label class="form-label">Email ou Utilizador</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="far fa-envelope"></i></span>
-                    <input type="text" name="username" class="form-control" placeholder="admin@oagb.gw" required autofocus>
+                    <input type="text" name="username" class="form-control" placeholder="admin@oagb.gw" value="<?php echo htmlspecialchars($remembered_user); ?>" required autofocus>
                 </div>
             </div>
 
@@ -201,7 +205,7 @@
 
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="remember" style="background-color: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember" <?php echo $is_remembered ? 'checked' : ''; ?> style="background-color: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
                     <label class="form-check-label text-secondary" for="remember" style="font-size: 0.8rem;">Lembrar-me</label>
                 </div>
                 <a href="auth/forgot_password.php" class="text-decoration-none" style="font-size: 0.8rem; color: var(--primary-gold);">Esqueci-me?</a>
