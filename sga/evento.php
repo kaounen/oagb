@@ -423,7 +423,7 @@ $page_title = "Agenda";
                                     </div>
                                 <?php endif; ?>
                                 <div class="w-100">
-                                    <div class="mb-2" style="color:#B1A276; font-family: 'Open Sans', sans-serif; font-weight: 700; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px;">
+                                    <div class="mb-2" style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
                                         <i class="far fa-calendar-alt me-1"></i> <?php echo format_date_pt($relacionado->data_evento); ?>
                                     </div>
                                     <h6 class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.45; color: #4D1C21; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">

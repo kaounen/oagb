@@ -55,9 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_campaign'])) {
     $total_to_send = count($all_emails);
     
     $success_count = 0;
+    $from_email = defined('FROM_EMAIL') ? FROM_EMAIL : 'comunicacao@oagb.gw';
+    $from_name = defined('FROM_NAME') ? FROM_NAME : 'OAGB Comunicações';
+
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= "From: OAGB Comunicações <comunicacao@oagb.gw>" . "\r\n";
+    $headers .= "From: $from_name <$from_email>" . "\r\n";
 
     foreach ($all_emails as $to) {
         if (filter_var($to, FILTER_VALIDATE_EMAIL)) {

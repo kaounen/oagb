@@ -48,9 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_newsletter'])) {
                 
                 // Handle Image Upload
                 if (!empty($_FILES['block_image']['name'][$index])) {
-                    $img_name = time() . '_' . $_FILES['block_image']['name'][$index];
-                    if(!is_dir("../../uploads/newsletter/")) mkdir("../../uploads/newsletter/", 0777, true);
-                    move_uploaded_file($_FILES['block_image']['tmp_name'][$index], "../../uploads/newsletter/" . $img_name);
+                    $img_name = time() . '_' . basename($_FILES['block_image']['name'][$index]);
+                    $upload_dir = dirname(dirname(dirname(__DIR__))) . '/uploads/newsletter/';
+                    if(!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+                    move_uploaded_file($_FILES['block_image']['tmp_name'][$index], $upload_dir . $img_name);
                     $block['image'] = $img_name;
                 } else {
                     $block['image'] = $_POST['existing_image'][$index] ?? '';
@@ -88,8 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_newsletter'])) {
     }
     .block-item:hover { border-color: var(--primary-gold); box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
     .block-handle { cursor: grab; position: absolute; left: -15px; top: 50%; transform: translateY(-50%); color: #ccc; font-size: 1.5rem; }
-    .block-remove { position: absolute; right: 15px; top: 15px; color: #dc3545; cursor: pointer; opacity: 0.3; transition: 0.3s; }
-    .block-remove:hover { opacity: 1; }
+    .block-remove { position: absolute; right: 15px; top: 15px; color: #dc3545; cursor: pointer; opacity: 0.5; transition: 0.3s; z-index: 999 !important; }
+    .block-remove:hover { opacity: 1; transform: scale(1.15); }
     .section-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-gold); font-weight: 800; margin-bottom: 8px; display: block; }
     .add-block-btn { 
         border: 2px dashed #B1A276; background: rgba(177, 162, 118, 0.05); padding: 25px; border-radius: 20px; 
@@ -97,6 +98,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_newsletter'])) {
     }
     .add-block-btn:hover { background: #fff; transform: translateY(-3px); }
     .color-picker-wrap { display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 10px; }
+
+    /* Premium Select2 Custom Arrow and Styling */
+    .select2-container--bootstrap-5 .select2-selection--multiple {
+        border: 1px solid #dee2e6 !important;
+        border-radius: 12px !important;
+        padding: 0.6rem 2.5rem 0.6rem 1rem !important;
+        background-color: #ffffff !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23B1A276' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 1rem center !important;
+        background-size: 16px 12px !important;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+        cursor: pointer !important;
+    }
+    .select2-container--bootstrap-5.select2-container--focus .select2-selection--multiple {
+        border-color: var(--primary-gold) !important;
+        box-shadow: 0 0 0 0.25rem rgba(177, 162, 118, 0.25) !important;
+    }
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+        background-color: rgba(177, 162, 118, 0.1) !important;
+        border: 1px solid rgba(177, 162, 118, 0.3) !important;
+        color: #8c7b4e !important;
+        border-radius: 8px !important;
+        padding: 4px 10px !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+        margin-top: 4px !important;
+        margin-bottom: 4px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+        color: #dc3545 !important;
+        margin-right: 5px !important;
+        border: none !important;
+        background: transparent !important;
+    }
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover {
+        color: #a71d2a !important;
+        background-color: transparent !important;
+    }
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-search__field {
+        margin-top: 6px !important;
+        font-family: inherit !important;
+        font-size: 0.95rem !important;
+    }
 </style>
 
 <div class="row mb-4 align-items-center">
@@ -161,11 +208,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_newsletter'])) {
                             </div>
 
                             <?php if($block['type'] === 'editorial' || $block['type'] === 'generic' || $block['type'] === 'site_content'): ?>
-                                <div class="mb-4">
+                                <div class="<?php echo $block['type'] === 'site_content' ? 'd-none' : ''; ?> mb-4">
                                     <label class="section-label">Conteúdo / Texto de Apoio</label>
                                     <textarea name="block_content[]" class="editor"><?php echo $block['content'] ?? ''; ?></textarea>
                                 </div>
-                                <div class="row g-3">
+                                <div class="<?php echo $block['type'] === 'site_content' ? 'd-none' : 'row g-3'; ?>">
                                     <div class="col-md-3">
                                         <label class="section-label">Ícone (FA)</label>
                                         <input type="text" name="block_icon[]" class="form-control border-0 bg-light small" value="<?php echo htmlspecialchars($block['icon'] ?? ''); ?>" placeholder="fas fa-star">
@@ -182,12 +229,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_newsletter'])) {
                                 </div>
                                 
                                 <?php if($block['type'] === 'site_content'): ?>
-                                    <div class="mt-4 p-3 bg-light rounded-4">
-                                        <label class="section-label">Vincular Conteúdos do Site (Serão exibidos na íntegra)</label>
+                                    <!-- Simplified Site Content Bloco (O que há de novo?) -->
+                                    <div class="mt-3 p-3 bg-light rounded-4 border border-info border-opacity-25 animate__animated animate__fadeIn">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="bg-info bg-opacity-10 p-2 rounded-3 me-3 text-info">
+                                                <i class="fas fa-globe fa-lg"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-0 text-dark">Mapeamento Direto do Website (O que há de novo?)</h6>
+                                                <small class="text-muted">Selecione abaixo as publicações que deseja incluir na Newsletter. O sistema carregará automaticamente fotos, títulos e textos na íntegra diretamente da base de dados!</small>
+                                            </div>
+                                        </div>
+                                        <label class="section-label">Vincular Conteúdos Publicados</label>
                                         <select name="block_site_items[<?php echo $idx; ?>][]" class="form-select select2" multiple>
                                             <?php foreach($all_site_items as $item): ?>
                                                 <option value="<?php echo $item['origin'].':'.$item['id']; ?>" <?php echo in_array($item['origin'].':'.$item['id'], $block['items'] ?? []) ? 'selected' : ''; ?>>
-                                                    [<?php echo strtoupper($item['origin']); ?>] <?php echo htmlspecialchars($item['titulo']); ?>
+                                                    [<?php echo strtoupper($item['origin'] == 'noticia' ? 'Notícia' : ($item['origin'] == 'anuncio' ? 'Anúncio' : ($item['origin'] == 'agenda' ? 'Agenda/Evento' : ($item['origin'] == 'pagina' ? 'Página' : ucfirst($item['origin']))))); ?>] <?php echo htmlspecialchars($item['titulo']); ?>
                                                 </option>
                                             <?php endforeach; ?>
                                         </select>
@@ -280,18 +337,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_newsletter'])) {
                 <div class="col-md-2"><label class="section-label">Texto</label><div class="color-picker-wrap"><input type="color" name="block_text_color[]" class="form-control form-control-color border-0 p-0 bg-transparent" value="#333333"></div></div>
             </div>
 
-            <div class="mb-4"><label class="section-label">Conteúdo</label><textarea name="block_content[]" id="ed_${blockCount}" class="editor"></textarea></div>
-            <div class="row g-3">
+            <div class="${type === 'site_content' ? 'd-none' : ''} mb-4"><label class="section-label">Conteúdo</label><textarea name="block_content[]" id="ed_${blockCount}" class="editor"></textarea></div>
+            <div class="${type === 'site_content' ? 'd-none' : 'row g-3'}">
                 <div class="col-md-3"><label class="section-label">Ícone</label><input type="text" name="block_icon[]" class="form-control border-0 bg-light small" value="${icon}"></div>
-                <div class="col-md-4"><label class="section-label">Imagem</label><input type="file" name="block_image[]" class="form-control border-0 bg-light small"></div>
+                <div class="col-md-4">
+                    <label class="section-label">Imagem</label>
+                    <input type="file" name="block_image[]" class="form-control border-0 bg-light small">
+                    <input type="hidden" name="existing_image[]" value="">
+                </div>
                 <div class="col-md-5"><label class="section-label">Link</label><input type="text" name="block_link[]" class="form-control border-0 bg-light small" placeholder="https://"></div>
             </div>
             ${type === 'site_content' ? `
-            <div class="mt-4 p-3 bg-light rounded-4">
-                <label class="section-label">Selecionar Conteúdos</label>
+            <div class="mt-3 p-3 bg-light rounded-4 border border-info border-opacity-25 animate__animated animate__fadeIn">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-info bg-opacity-10 p-2 rounded-3 me-3 text-info">
+                        <i class="fas fa-globe fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-dark">Mapeamento Direto do Website (O que há de novo?)</h6>
+                        <small class="text-muted">Selecione abaixo as publicações que deseja incluir na Newsletter. O sistema carregará automaticamente fotos, títulos e textos na íntegra diretamente da base de dados!</small>
+                    </div>
+                </div>
+                <label class="section-label">Vincular Conteúdos Publicados</label>
                 <select name="block_site_items[${blockCount}][]" class="form-select select2" multiple>
                     <?php foreach($all_site_items as $item): ?>
-                        <option value="<?php echo $item['origin'].':'.$item['id']; ?>">[<?php echo strtoupper($item['origin']); ?>] <?php echo addslashes($item['titulo']); ?></option>
+                        <option value="<?php echo $item['origin'].':'.$item['id']; ?>">[<?php echo strtoupper($item['origin'] == 'noticia' ? 'Notícia' : ($item['origin'] == 'anuncio' ? 'Anúncio' : ($item['origin'] == 'agenda' ? 'Agenda/Evento' : ($item['origin'] == 'pagina' ? 'Página' : ucfirst($item['origin']))))); ?>] <?php echo addslashes($item['titulo']); ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>` : ''}
@@ -299,14 +369,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_newsletter'])) {
 
         container.appendChild(div);
         ClassicEditor.create(document.querySelector(`#ed_${blockCount}`)).catch(e => console.error(e));
-        if (type === 'site_content') $(div).find('.select2').select2({ theme: 'bootstrap-5' });
+        if (type === 'site_content') $(div).find('.select2').select2({
+            theme: 'bootstrap-5',
+            placeholder: 'Pesquise ou selecione as publicações para vincular...'
+        });
         blockCount++;
     }
 
     function removeBlock(el) { if(confirm('Eliminar este módulo?')) el.closest('.block-item').remove(); }
 
     $(document).ready(function() {
-        $('.select2').select2({ theme: 'bootstrap-5' });
+        $('.select2').select2({
+            theme: 'bootstrap-5',
+            placeholder: 'Pesquise ou selecione as publicações para vincular...'
+        });
         document.querySelectorAll('.editor').forEach(el => ClassicEditor.create(el).catch(e => console.error(e)));
         new Sortable(document.getElementById('blocks-container'), { handle: '.block-handle', animation: 150 });
     });

@@ -78,13 +78,26 @@ define('SITE_NAME', 'Ordem dos Advogados da Guiné-Bissau');
 define('UPLOADS_DIR', 'uploads');
 define('MAX_UPLOAD_SIZE', 5242880); // 5MB
 
-// Configurações de email (ajustar conforme necessário)
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-define('SMTP_USERNAME', 'info@oagb.gw');
-define('SMTP_PASSWORD', 'sua_senha_email');
-define('FROM_EMAIL', 'info@oagb.gw');
-define('FROM_NAME', 'OAGB - Ordem dos Advogados da Guiné-Bissau');
+// Configurações de email (ajustar conforme necessário, com overrides dinâmicos da base de dados)
+if (!function_exists('get_db_email_config')) {
+    function get_db_email_config($pdo, $key, $default) {
+        try {
+            $stmt = $pdo->prepare("SELECT valor FROM finan_config WHERE chave = ?");
+            $stmt->execute([$key]);
+            $val = $stmt->fetchColumn();
+            return ($val !== false && $val !== null && $val !== '') ? $val : $default;
+        } catch (Exception $e) {
+            return $default;
+        }
+    }
+}
+
+define('SMTP_HOST', get_db_email_config($pdo, 'email_smtp_host', 'smtp.gmail.com'));
+define('SMTP_PORT', (int)get_db_email_config($pdo, 'email_smtp_port', 587));
+define('SMTP_USERNAME', get_db_email_config($pdo, 'email_smtp_username', 'info@oagb.gw'));
+define('SMTP_PASSWORD', get_db_email_config($pdo, 'email_smtp_password', 'sua_senha_email'));
+define('FROM_EMAIL', get_db_email_config($pdo, 'email_from_email', 'info@oagb.gw'));
+define('FROM_NAME', get_db_email_config($pdo, 'email_from_name', 'OAGB - Ordem dos Advogados da Guiné-Bissau'));
 
 /**
  * Função para obter configuração do site

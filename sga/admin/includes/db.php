@@ -3,11 +3,11 @@ ob_start();
 // admin/includes/db.php
 
 // Reuse the existing main connection
-if (!file_exists(__DIR__ . '/../../connect.php')) {
+if (!file_exists(__DIR__ . '/../../../connect.php')) {
     die('Erro de configuração: connect.php não encontrado.');
 }
 
-require_once __DIR__ . '/../../connect.php';
+require_once __DIR__ . '/../../../connect.php';
 
 // Ensure $pdo is available and set PDO mode
 if (isset($pdo) && $pdo instanceof PDO) {

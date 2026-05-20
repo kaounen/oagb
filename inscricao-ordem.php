@@ -4,51 +4,64 @@ require_once 'connect.php';
 require_once 'includes/functions.php';
 
 $success_message = '';
-$error_message = '';
+$error_message   = '';
+$new_inscricao_id = 0;
+$show_payment     = false;
 
-// Captcha Logic - Generate if not exists
-if (!isset($_SESSION['captcha_a_ins']) || !isset($_SESSION['captcha_b_ins'])) {
-    $_SESSION['captcha_a_ins'] = rand(1, 9);
-    $_SESSION['captcha_b_ins'] = rand(1, 9);
+// ── Load payment config ───────────────────────────────────────────────────────
+try {
+    $pay_cfg = $pdo->query("SELECT chave, valor FROM finan_config WHERE chave IN (
+        'global_payments_enabled','stripe_public_key',
+        'joia_inscricao_advogado','joia_inscricao_estagiario','pagamento_moeda'
+    )")->fetchAll(PDO::FETCH_KEY_PAIR);
+} catch (Exception $e) { $pay_cfg = []; }
+
+$payments_enabled = ($pay_cfg['global_payments_enabled'] ?? '0') === '1';
+$stripe_pk        = $pay_cfg['stripe_public_key'] ?? '';
+$joia_adv         = (int)($pay_cfg['joia_inscricao_advogado'] ?? 50000);
+$joia_est         = (int)($pay_cfg['joia_inscricao_estagiario'] ?? 25000);
+$moeda_display    = $pay_cfg['pagamento_moeda'] ?? 'CFA';
+
+// ── Captcha ───────────────────────────────────────────────────────────────────
+if (!isset($_SESSION['captcha_a_ins'])) {
+    $_SESSION['captcha_a_ins']   = rand(1, 9);
+    $_SESSION['captcha_b_ins']   = rand(1, 9);
     $_SESSION['captcha_sum_ins'] = $_SESSION['captcha_a_ins'] + $_SESSION['captcha_b_ins'];
 }
 
+// ── Form Submission ───────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $tipo_inscricao = clean_input($_POST['tipo_inscricao']);
-    $nome_completo = clean_input($_POST['nome_completo']);
-    $genero = clean_input($_POST['genero']);
-    $data_nascimento = clean_input($_POST['data_nascimento']);
-    $nacionalidade = clean_input($_POST['nacionalidade']);
-    $bi_passaporte = clean_input($_POST['bi_passaporte']);
-    $regiao = clean_input($_POST['regiao']);
-    $localidade = clean_input($_POST['localidade']);
-    $morada = clean_input($_POST['morada']);
-    $telefone = clean_input($_POST['telefone']);
-    $email = clean_input($_POST['email']);
-    $formacao_academica = clean_input($_POST['formacao_academica']);
+    $tipo_inscricao         = clean_input($_POST['tipo_inscricao']);
+    $nome_completo          = clean_input($_POST['nome_completo']);
+    $genero                 = clean_input($_POST['genero']);
+    $data_nascimento        = clean_input($_POST['data_nascimento']);
+    $nacionalidade          = clean_input($_POST['nacionalidade']);
+    $bi_passaporte          = clean_input($_POST['bi_passaporte']);
+    $regiao                 = clean_input($_POST['regiao']);
+    $localidade             = clean_input($_POST['localidade']);
+    $morada                 = clean_input($_POST['morada']);
+    $telefone               = clean_input($_POST['telefone']);
+    $email                  = clean_input($_POST['email']);
+    $formacao_academica     = clean_input($_POST['formacao_academica']);
     $experiencia_profissional = clean_input($_POST['experiencia_profissional']);
-    $captcha_res = intval($_POST['captcha_res'] ?? 0);
-    
-    $errors = [];
-    if (empty($nome_completo)) $errors[] = "Nome completo é obrigatório.";
-    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Email inválido.";
-    if ($captcha_res !== $_SESSION['captcha_sum_ins']) $errors[] = "Resposta do Captcha incorreta.";
-    
-    // Process File Uploads
-    $uploaded_docs = [];
-    $upload_dir = 'uploads/inscricoes';
-    if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+    $captcha_res            = intval($_POST['captcha_res'] ?? 0);
 
-    foreach (['ficheiro_academica', 'ficheiro_experiencia'] as $field) {
+    $errors = [];
+    if (empty($nome_completo)) $errors[] = 'Nome completo é obrigatório.';
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email inválido.';
+    if ($captcha_res !== $_SESSION['captcha_sum_ins']) $errors[] = 'Resposta do Captcha incorreta.';
+
+    // File Uploads
+    $uploaded_docs = [];
+    $upload_dir    = 'uploads/inscricoes';
+    if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+    foreach (['ficheiro_academica', 'ficheiro_experiencia', 'ficheiro_foto', 'ficheiro_criminal', 'ficheiro_patrono'] as $field) {
         if (!empty($_FILES[$field]['name'])) {
-            $tmp_name = $_FILES[$field]['tmp_name'];
-            $name = basename($_FILES[$field]['name']);
-            $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+            $ext = strtolower(pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION));
             if (in_array($ext, ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'])) {
                 $new_name = $field . '_' . uniqid() . '_' . time() . '.' . $ext;
-                if (move_uploaded_file($tmp_name, "$upload_dir/$new_name")) {
+                if (move_uploaded_file($_FILES[$field]['tmp_name'], "$upload_dir/$new_name"))
                     $uploaded_docs[$field] = $new_name;
-                }
             }
         }
     }
@@ -56,33 +69,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         try {
             $docs_json = json_encode($uploaded_docs);
-            $stmt = $pdo->prepare("INSERT INTO inscricoes_ordem 
-                (tipo_inscricao, nome_completo, genero, data_nascimento, nacionalidade, bi_passaporte, 
-                 regiao, localidade, morada, telefone, email, formacao_academica, experiencia_profissional, documentos_anexos) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare(
+                'INSERT INTO inscricoes_ordem
+                (tipo_inscricao, nome_completo, genero, data_nascimento, nacionalidade, bi_passaporte,
+                 regiao, localidade, morada, telefone, email, formacao_academica, experiencia_profissional,
+                 documentos_anexos, pagamento_status)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+            );
             $stmt->execute([
-                $tipo_inscricao, $nome_completo, $genero, $data_nascimento, $nacionalidade, 
-                $bi_passaporte, $regiao, $localidade, $morada, $telefone, $email, 
-                $formacao_academica, $experiencia_profissional, $docs_json
+                $tipo_inscricao, $nome_completo, $genero, $data_nascimento, $nacionalidade,
+                $bi_passaporte, $regiao, $localidade, $morada, $telefone, $email,
+                $formacao_academica, $experiencia_profissional, $docs_json, 'nao_pago'
             ]);
-            $success_message = "Inscrição submetida com sucesso! A nossa equipa irá analisar a sua candidatura.";
-            
-            // Generate new captcha for security
-            $_SESSION['captcha_a_ins'] = rand(1, 9);
-            $_SESSION['captcha_b_ins'] = rand(1, 9);
+            $new_inscricao_id = (int)$pdo->lastInsertId();
+
+            // Renew captcha
+            $_SESSION['captcha_a_ins']   = rand(1, 9);
+            $_SESSION['captcha_b_ins']   = rand(1, 9);
             $_SESSION['captcha_sum_ins'] = $_SESSION['captcha_a_ins'] + $_SESSION['captcha_b_ins'];
-            
-            $_POST = [];
+
+            // Decide next step
+            if ($payments_enabled && !str_contains($stripe_pk, 'REPLACE')) {
+                $show_payment = true; // show payment step
+                $joia_val     = $tipo_inscricao === 'estagiario' ? $joia_est : $joia_adv;
+            } else {
+                $success_message = 'Inscrição submetida com sucesso! A nossa equipa irá analisar a sua candidatura.';
+                $_POST = [];
+            }
         } catch (Exception $e) {
-            $error_message = "Erro ao submeter inscrição. Por favor, tente novamente.";
+            $error_message = 'Erro ao submeter inscrição: ' . $e->getMessage();
         }
     } else {
         $error_message = implode('<br>', $errors);
     }
 } else {
-    // Generate captcha on initial load
-    $_SESSION['captcha_a_ins'] = rand(1, 9);
-    $_SESSION['captcha_b_ins'] = rand(1, 9);
+    $_SESSION['captcha_a_ins']   = rand(1, 9);
+    $_SESSION['captcha_b_ins']   = rand(1, 9);
     $_SESSION['captcha_sum_ins'] = $_SESSION['captcha_a_ins'] + $_SESSION['captcha_b_ins'];
 }
 
@@ -330,35 +352,239 @@ $header_image = 'uploads/lady-justice-holding-scales-sword.jpg';
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Certificado de Habilitações (PDF/Imagem)</label>
-                                    <input type="file" name="ficheiro_academica" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                    <input type="file" name="ficheiro_academica" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
+                                    <span class="x-small text-muted"><i class="fas fa-info-circle me-1"></i> Certificado de Licenciatura em Direito.</span>
                                 </div>
                                 <div class="col-md-12 mt-4">
                                     <label class="form-label">Experiência Profissional Preliminar</label>
                                     <textarea name="experiencia_profissional" class="form-control" rows="3" placeholder="Opcional: estágios, cargos anteriores..."><?php echo htmlspecialchars($_POST['experiencia_profissional'] ?? ''); ?></textarea>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12 mb-4">
                                     <label class="form-label">Comprovativos de Experiência (Opcional)</label>
                                     <input type="file" name="ficheiro_experiencia" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                </div>
+                                
+                                <div class="col-md-12 mt-3">
+                                    <div class="form-section-title"><i class="fas fa-file-signature"></i> Documentos Adicionais Obrigatórios</div>
+                                </div>
+                                
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Fotografia Tipo Passe (A cores, fundo liso)</label>
+                                    <input type="file" name="ficheiro_foto" class="form-control" accept="image/*" required>
+                                    <span class="x-small text-muted"><i class="fas fa-info-circle me-1"></i> Fotografia digital original para emissão da cédula profissional.</span>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Registo Criminal do País de Nacionalidade</label>
+                                    <input type="file" name="ficheiro_criminal" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
+                                    <span class="x-small text-muted"><i class="fas fa-info-circle me-1"></i> Registo Criminal original atualizado.</span>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3" id="patrono_wrapper">
+                                     <label class="form-label">Declaração de Patrono</label>
+                                     <input type="file" name="ficheiro_patrono" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                                     <span class="x-small text-muted"><i class="fas fa-info-circle me-1"></i> Assinada por Advogado Sénior. Recomendado para o estágio profissional.</span>
                                 </div>
 
                                 <div class="col-md-12 mt-4">
                                     <label class="form-label">Verificação de Segurança (Captcha)</label>
                                     <div class="captcha-box">
                                         <span class="captcha-q">Quanto é <?php echo $_SESSION['captcha_a_ins']; ?> + <?php echo $_SESSION['captcha_b_ins']; ?>?</span>
-                                        <input type="number" name="captcha_res" class="form-control" style="max-width: 120px;" required placeholder="Resultado">
+
+                                                        <input type="number" name="captcha_res" class="form-control" style="max-width: 120px;" required placeholder="Resultado">
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Payment Option (shown only if payments enabled) -->
+                            <?php if ($payments_enabled): ?>
+                            <div class="mt-4 mb-2 p-4 rounded-3" style="background:#fdfbf7;border:2px solid #f0ece4;">
+                                <div class="form-label mb-3" style="color:var(--primary-maroon);"><i class="fas fa-credit-card me-2" style="color:var(--primary-gold);"></i> Pagamento da Joia de Inscrição</div>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="pay-option pay-option--now active" id="opt_pagar" onclick="selectPayOption('agora')">
+                                            <div class="fw-bold" style="color:var(--primary-maroon);"><i class="fas fa-bolt me-1" style="color:var(--primary-gold);"></i> Pagar Online</div>
+                                            <div class="small text-muted mt-1" id="joia_label">Advogado: <?php echo number_format($joia_adv,0,',','.'); ?> <?php echo $moeda_display; ?></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="pay-option" id="opt_depois" onclick="selectPayOption('depois')">
+                                            <div class="fw-bold text-muted"><i class="fas fa-clock me-1"></i> Pagar Mais Tarde</div>
+                                            <div class="small text-muted mt-1">Regularize na sede da OAGB</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="pay_option" id="pay_option_val" value="agora">
+                            </div>
+                            <?php endif; ?>
+
                             <div class="mt-4">
-                                <button type="submit" class="btn-submit">SUBMETER CANDIDATURA <i class="fas fa-check-double ms-2"></i></button>
+                                <button type="submit" class="btn-submit" id="btn_submeter">SUBMETER CANDIDATURA <i class="fas fa-check-double ms-2"></i></button>
                                 <p class="text-center text-muted small mt-3">Ao submeter, declara que as informações são verdadeiras sob compromisso de honra.</p>
                             </div>
                         </form>
-                    </div>
-                </div>
 
-                <div class="col-lg-4">
+                        <!-- ══ PAYMENT STEP (shown after form submission) ══ -->
+                        <?php if ($show_payment): ?>
+                        <div id="payment_step" style="display:none; margin-top: 30px;">
+                            <div class="text-center mb-4">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:60px;height:60px;background:linear-gradient(135deg,var(--primary-maroon),#8B1A1A);">
+                                    <i class="fas fa-check text-white fa-lg"></i>
+                                </div>
+                                <h3 style="font-family:'Libre Baskerville',serif;color:var(--primary-maroon);font-size:1.2rem;">Inscrição Submetida!</h3>
+                                <p class="text-muted small">Referência <strong>#<?php echo $new_inscricao_id; ?></strong> registada com sucesso. Selecione o método de pagamento preferido para regularizar a joia de inscrição.</p>
+                            </div>
+
+                            <!-- Payment Tabs Selection -->
+                            <div class="row g-2 mb-4">
+                                <div class="col-6 col-md-3">
+                                    <div class="pay-method-tab active" id="tab_cartao" onclick="switchPayMethod('cartao')">
+                                        <i class="fas fa-credit-card d-block mb-1"></i>
+                                        <span class="small fw-bold">Cartão Bancário</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="pay-method-tab" id="tab_orange" onclick="switchPayMethod('orange_money')">
+                                        <i class="fas fa-mobile-alt d-block mb-1" style="color: #FF6600;"></i>
+                                        <span class="small fw-bold">Orange Money</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="pay-method-tab" id="tab_mtn" onclick="switchPayMethod('mtn_momo')">
+                                        <i class="fas fa-wallet d-block mb-1" style="color: #FFCC00;"></i>
+                                        <span class="small fw-bold">MTN MoMo</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="pay-method-tab" id="tab_sede" onclick="switchPayMethod('sede')">
+                                        <i class="fas fa-building d-block mb-1"></i>
+                                        <span class="small fw-bold">Pagar na Sede</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CARD PANEL -->
+                            <div id="panel_cartao" class="pay-panel active">
+                                <div class="p-4 rounded-3 bg-white border border-light shadow-sm">
+                                    <div class="form-label mb-3"><i class="fas fa-lock me-2 text-warning"></i> Dados do Cartão de Crédito / Débito</div>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label class="x-small text-muted fw-bold text-uppercase">Nome Impresso no Cartão</label>
+                                            <input type="text" id="card_name" class="form-control" placeholder="EX: ANSELMO VARELA" required>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="x-small text-muted fw-bold text-uppercase">Número do Cartão</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text border-0 bg-light"><i class="fas fa-credit-card text-muted" id="card_brand_icon"></i></span>
+                                                <input type="text" id="card_number" class="form-control border-0 bg-light" placeholder="4000 1234 5678 9010" maxlength="19" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="x-small text-muted fw-bold text-uppercase">Validade</label>
+                                            <input type="text" id="card_expiry" class="form-control" placeholder="MM/AA" maxlength="5" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="x-small text-muted fw-bold text-uppercase">CVC / CVV</label>
+                                            <input type="password" id="card_cvv" class="form-control" placeholder="123" maxlength="4" required>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 mt-3 mb-3">
+                                        <i class="fas fa-shield-alt text-success"></i>
+                                        <span class="x-small text-muted">A sua transação é encriptada e processada através de canais bancários seguros.</span>
+                                    </div>
+                                    <button class="btn-submit" id="btn_pay_cartao" onclick="processLocalPayment('cartao')" style="height:50px; font-size:.9rem;">
+                                        <i class="fas fa-lock me-2"></i> Pagar <?php echo number_format($joia_val??$joia_adv,0,',','.'); ?> <?php echo $moeda_display; ?>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ORANGE MONEY PANEL -->
+                            <div id="panel_orange_money" class="pay-panel">
+                                <div class="p-4 rounded-3 bg-white border border-light shadow-sm">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="badge p-2 text-uppercase fw-bold text-white me-3" style="background: #FF6600;">Orange Money</div>
+                                        <span class="small text-muted">Disponível para telemóveis Orange na Guiné-Bissau.</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Número de Telemóvel Orange</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text border-0 bg-light fw-bold text-muted">+245</span>
+                                            <input type="tel" id="orange_phone" class="form-control border-0 bg-light p-3" placeholder="95XXXXXXX" maxlength="9">
+                                        </div>
+                                        <div class="x-small text-muted mt-2"><i class="fas fa-info-circle me-1"></i> Digite os 9 algarismos do seu telemóvel Orange (ex: 955475889).</div>
+                                    </div>
+                                    <button class="btn-submit" id="btn_pay_orange" onclick="processLocalPayment('orange_money')" style="height:50px; font-size:.9rem; background: #FF6600;">
+                                        <i class="fas fa-mobile-alt me-2"></i> Solicitar Pagamento Orange Money
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- MTN MOMO PANEL -->
+                            <div id="panel_mtn_momo" class="pay-panel">
+                                <div class="p-4 rounded-3 bg-white border border-light shadow-sm">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="badge p-2 text-uppercase fw-bold text-dark me-3" style="background: #FFCC00;">MTN Mobile Money</div>
+                                        <span class="small text-muted">Disponível para telemóveis MTN na Guiné-Bissau.</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Número de Telemóvel MTN</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text border-0 bg-light fw-bold text-muted">+245</span>
+                                            <input type="tel" id="mtn_phone" class="form-control border-0 bg-light p-3" placeholder="96XXXXXXX" maxlength="9">
+                                        </div>
+                                        <div class="x-small text-muted mt-2"><i class="fas fa-info-circle me-1"></i> Digite os 9 algarismos do seu telemóvel MTN (ex: 966475889).</div>
+                                    </div>
+                                    <button class="btn-submit" id="btn_pay_mtn" onclick="processLocalPayment('mtn_momo')" style="height:50px; font-size:.9rem; background: #002D62; color: #fff;">
+                                        <i class="fas fa-wallet me-2"></i> Solicitar Pagamento MTN MoMo
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- SEDE PANEL -->
+                            <div id="panel_sede" class="pay-panel">
+                                <div class="text-center p-4 rounded-3 bg-white border border-light shadow-sm">
+                                    <i class="fas fa-university text-muted mb-3 d-block fa-3x"></i>
+                                    <h5 class="fw-bold" style="color:var(--primary-maroon);">Pagamento Presencial ou por Depósito</h5>
+                                    <p class="text-muted small mb-4">Pode efectuar o pagamento directamente na sede da Ordem dos Advogados (Bissau), ou realizar um depósito na conta oficial da OAGB e apresentar o respetivo talão para validação da sua inscrição.</p>
+                                    <a href="index.php" class="btn btn-outline-secondary rounded-pill px-5 py-2">Concluir e Apresentar Comprovativo na Sede</a>
+                                </div>
+                            </div>
+
+                            <!-- PROCESSING MODAL/STATE -->
+                            <div id="payment_processing_state" style="display:none;" class="text-center p-5 rounded-3 bg-white border shadow-sm mt-3">
+                                <div class="spinner-border text-warning mb-4" style="width: 3.5rem; height: 3.5rem;" role="status"></div>
+                                <h4 class="fw-bold" id="processing_title">A processar transação...</h4>
+                                <p class="text-muted small" id="processing_message">Por favor aguarde enquanto contactamos a instituição financeira.</p>
+                            </div>
+
+                            <!-- SUCCESS PANEL -->
+                            <div id="pay_success" style="display:none;" class="text-center p-5 rounded-3 bg-white border shadow-sm mt-3">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-4 bg-success-subtle text-success" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-check-circle fa-3x"></i>
+                                </div>
+                                <h3 class="fw-bold text-success">Pagamento Registado com Sucesso!</h3>
+                                <p class="text-muted small">O seu pagamento da joia de inscrição foi validado com sucesso na nossa plataforma financeira.</p>
+                                <div class="p-3 bg-light rounded-3 d-inline-block text-start mb-4 shadow-sm" style="min-width: 250px;">
+                                    <div class="x-small text-muted">Método: <strong id="succ_method">Cartão Bancário</strong></div>
+                                    <div class="x-small text-muted">ID Transação: <strong id="succ_ref">TX_123456</strong></div>
+                                    <div class="x-small text-muted">Valor Pago: <strong id="succ_val">50.000 CFA</strong></div>
+                                </div>
+                                <div class="d-block">
+                                    <a href="index.php" class="btn-submit d-inline-flex align-items-center justify-content-center shadow-lg" style="width:auto; padding:15px 40px; text-decoration: none;">Concluir e Ir para o Início <i class="fas fa-arrow-right ms-2"></i></a>
+                                </div>
+                            </div>
+
+                            <!-- ERROR STATE -->
+                            <div id="payment_error_state" style="display:none;" class="text-center p-4 rounded-3 bg-danger-subtle text-danger border border-danger-subtle mt-3">
+                                <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                                <div class="fw-bold" id="error_title">Falha no Processamento</div>
+                                <div class="small" id="error_message_text">Ocorreu um erro ao autorizar a transação. Verifique os dados e tente novamente.</div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                    </div>
+                </div><div class="col-lg-4">
                     <!-- MAIN INFO CARD (MAROON) -->
                     <div class="info-box shadow-lg mb-4">
                         <h3 class="text-white mb-4" style="font-family:'Libre Baskerville', serif; font-weight:700; font-size:1.3rem;">Documentos Necessários</h3>
@@ -426,6 +652,243 @@ $header_image = 'uploads/lady-justice-holding-scales-sword.jpg';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/wow/wow.min.js"></script>
     <script src="js/main.js?v=<?php echo time(); ?>"></script>
+    <?php if ($payments_enabled): ?>
+    <script>
+    const INSCRICAO_ID      = <?php echo $new_inscricao_id ?: 0; ?>;
+    const TIPO_INSCRICAO    = '<?php echo htmlspecialchars($tipo_inscricao ?? "advogado"); ?>';
+    const JOIA_ADV          = <?php echo $joia_adv; ?>;
+    const JOIA_EST          = <?php echo $joia_est; ?>;
+    const MOEDA_DISPLAY     = '<?php echo htmlspecialchars($moeda_display); ?>';
+
+    // ── Pre-form: Update joia label based on tipo selection (with jQuery/Label Click support) ──
+    function updateJoiaLabel() {
+        const selectedType = jQuery('input[name="tipo_inscricao"]:checked').val();
+        const lbl = document.getElementById('joia_label');
+        if (!lbl) return;
+        const val = selectedType === 'estagiario' ? JOIA_EST : JOIA_ADV;
+        lbl.textContent = (selectedType === 'estagiario' ? 'Estagiário: ' : 'Advogado: ') +
+            val.toLocaleString('pt-PT') + ' ' + MOEDA_DISPLAY;
+    }
+
+    // Bind change event and click on option wrappers
+    jQuery('input[name="tipo_inscricao"]').on('change', updateJoiaLabel);
+    jQuery('.type-option').on('click', function() {
+        setTimeout(updateJoiaLabel, 50); // slight delay to allow jQuery selection to register checked state
+    });
+
+    // Run once on load to ensure parity
+    jQuery(document).ready(updateJoiaLabel);
+
+    // Pre-form pay option selector
+    function selectPayOption(opt) {
+        document.getElementById('pay_option_val').value = opt;
+        document.querySelectorAll('.pay-option').forEach(el => el.classList.remove('active'));
+        document.getElementById(opt === 'agora' ? 'opt_pagar' : 'opt_depois').classList.add('active');
+    }
+
+    // ── Post-inscription: Local multi-method checkout ────────────────────────
+    <?php if ($show_payment): ?>
+    document.getElementById('payment_step').style.display = 'block';
+
+    // Switch Payment Tabs
+    function switchPayMethod(method) {
+        document.querySelectorAll('.pay-method-tab').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.pay-panel').forEach(el => el.classList.remove('active'));
+        
+        const tab = document.getElementById('tab_' + (method === 'orange_money' ? 'orange' : method === 'mtn_momo' ? 'mtn' : method));
+        const panel = document.getElementById('panel_' + method);
+        
+        if (tab) tab.classList.add('active');
+        if (panel) panel.classList.add('active');
+
+        // Reset state
+        document.getElementById('payment_error_state').style.display = 'none';
+    }
+
+    // Card Input Auto-formatting & Brand Detection
+    const cardInput = document.getElementById('card_number');
+    const brandIcon = document.getElementById('card_brand_icon');
+    
+    if (cardInput) {
+        cardInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            // Mask
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += value[i];
+            }
+            e.target.value = formatted;
+
+            // Simple Brand Detection
+            if (value.startsWith('4')) {
+                brandIcon.className = 'fab fa-cc-visa text-primary';
+            } else if (value.startsWith('5') || value.startsWith('2')) {
+                brandIcon.className = 'fab fa-cc-mastercard text-warning';
+            } else if (value.startsWith('3')) {
+                brandIcon.className = 'fab fa-cc-amex text-info';
+            } else {
+                brandIcon.className = 'fas fa-credit-card text-muted';
+            }
+        });
+    }
+
+    const expiryInput = document.getElementById('card_expiry');
+    if (expiryInput) {
+        expiryInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 2) {
+                e.target.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            } else {
+                e.target.value = value;
+            }
+        });
+    }
+
+    // Process Local Simulated Payments with Real Persistence
+    function processLocalPayment(method) {
+        const payload = {
+            inscricao_id: INSCRICAO_ID,
+            tipo_inscricao: TIPO_INSCRICAO,
+            metodo: method
+        };
+
+        // Form Validation
+        if (method === 'cartao') {
+            const name = document.getElementById('card_name').value.trim();
+            const num = document.getElementById('card_number').value.replace(/\s/g, '');
+            const exp = document.getElementById('card_expiry').value.trim();
+            const cvv = document.getElementById('card_cvv').value.trim();
+
+            if (!name || num.length < 15 || exp.length < 5 || cvv.length < 3) {
+                showPayError('Por favor preencha corretamente todos os dados do cartão.');
+                return;
+            }
+            payload.cartao_numero = num;
+        } else if (method === 'orange_money') {
+            const phone = document.getElementById('orange_phone').value.trim();
+            if (!phone.startsWith('95') || phone.length !== 9) {
+                showPayError('Por favor, insira um número Orange válido na Guiné-Bissau (deve começar por 95 e ter 9 algarismos).');
+                return;
+            }
+            payload.telefone = '+245' + phone;
+        } else if (method === 'mtn_momo') {
+            const phone = document.getElementById('mtn_phone').value.trim();
+            if ((!phone.startsWith('96') && !phone.startsWith('97')) || phone.length !== 9) {
+                showPayError('Por favor, insira um número MTN válido na Guiné-Bissau (deve começar por 96 ou 97 e ter 9 algarismos).');
+                return;
+            }
+            payload.telefone = '+245' + phone;
+        }
+
+        // Hide Panels, Show Processing State
+        document.querySelectorAll('.pay-panel').forEach(el => el.classList.remove('active'));
+        document.querySelector('.row.g-2.mb-4').style.display = 'none'; // hide tabs
+        const procState = document.getElementById('payment_processing_state');
+        procState.style.display = 'block';
+
+        const pTitle = document.getElementById('processing_title');
+        const pMsg = document.getElementById('processing_message');
+
+        // Simulation flow steps
+        setTimeout(() => {
+            pTitle.textContent = method === 'cartao' ? 'A validar cartão bancário...' : 'A inicializar ligação GSM...';
+            pMsg.textContent = method === 'cartao' ? 'A encriptar comunicação segura SSL...' : 'A enviar pedido push de autorização...';
+
+            setTimeout(() => {
+                pTitle.textContent = method === 'cartao' ? 'A autorizar valor...' : 'A aguardar resposta PIN...';
+                pMsg.textContent = method === 'cartao' ? 'A comunicar com a rede VISA/Mastercard...' : 'Por favor verifique o seu telemóvel e digite o seu PIN.';
+
+                setTimeout(() => {
+                    // Send to backend via AJAX for database synchronization
+                    const params = new URLSearchParams();
+                    for (const key in payload) {
+                        params.append(key, payload[key]);
+                    }
+
+                    fetch('processar_pagamento_local.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: params.toString()
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        procState.style.display = 'none';
+                        if (data.success) {
+                            document.getElementById('succ_method').textContent = data.metodo_label;
+                            document.getElementById('succ_ref').textContent = data.referencia;
+                            document.getElementById('succ_val').textContent = data.formatted;
+                            document.getElementById('pay_success').style.display = 'block';
+                        } else {
+                            showPayError(data.error || 'Ocorreu um erro ao registar o pagamento.');
+                            restorePanels(method);
+                        }
+                    })
+                    .catch(() => {
+                        procState.style.display = 'none';
+                        showPayError('Erro de ligação ao servidor da Ordem.');
+                        restorePanels(method);
+                    });
+
+                }, 2000);
+            }, 2500);
+        }, 1500);
+    }
+
+    function restorePanels(method) {
+        document.querySelector('.row.g-2.mb-4').style.display = 'flex';
+        switchPayMethod(method);
+    }
+
+    function showPayError(msg) {
+        const err = document.getElementById('payment_error_state');
+        document.getElementById('error_message_text').textContent = msg;
+        err.style.display = 'block';
+        err.scrollIntoView({ behavior: 'smooth' });
+    }
+    <?php endif; ?>
+    </script>
+    <?php endif; ?>
+
+    <style>
+    .pay-option { border: 2px solid #f0ece4; border-radius: 15px; padding: 16px 18px; cursor: pointer; transition: .3s; }
+    .pay-option:hover { border-color: var(--primary-gold); background: #fdfbf7; }
+    .pay-option.active, .pay-option--now.active { border-color: var(--primary-maroon); background: #fdfbf7; box-shadow: 0 6px 20px rgba(77,28,33,.08); }
+    
+    /* Premium Checkout Styling */
+    .pay-method-tab {
+        border: 2px solid #f0ece4;
+        border-radius: 12px;
+        padding: 12px 6px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    .pay-method-tab:hover {
+        border-color: var(--primary-gold);
+        background: #fdfbf7;
+    }
+    .pay-method-tab.active {
+        border-color: var(--primary-maroon);
+        background: #fdfbf7;
+        box-shadow: 0 4px 15px rgba(139, 26, 26, 0.08);
+    }
+    .pay-panel {
+        display: none;
+    }
+    .pay-panel.active {
+        display: block;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+    .x-small {
+        font-size: 0.75rem;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    </style>
 </div>
 </body>
 </html>

@@ -11,7 +11,7 @@ if ($id > 0) {
         
         if ($row) {
             $filename = $row['imagem'];
-            $upload_path = __DIR__ . '/../../../img/carousel/' . $filename;
+            $upload_path = __DIR__ . '/../../../uploads/' . $filename;
             
             $del_stmt = $pdo->prepare("DELETE FROM carousel_slides WHERE id = ?");
             if ($del_stmt->execute([$id])) {

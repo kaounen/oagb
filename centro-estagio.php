@@ -110,12 +110,11 @@ try {
                     <div class="sidebar-widget shadow-sm">
                         <h5 class="fw-bold mb-4" style="font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); border-bottom: 2px solid var(--primary-gold); padding-bottom: 10px; display: inline-block;">A Ordem</h5>
                         <div class="mt-3">
-                            <a href="ordem-advogados.php" class="sidebar-link"><i class="fas fa-landmark"></i> Apresentação</a>
+                            <a href="ordem-dos-advogados.php" class="sidebar-link"><i class="fas fa-landmark"></i> Apresentação</a>
                             <a href="orgaos-sociais.php" class="sidebar-link"><i class="fas fa-sitemap"></i> Órgãos Sociais</a>
                             <a href="deontologia-etica.php" class="sidebar-link"><i class="fas fa-balance-scale"></i> Deontologia e Ética</a>
                             <a href="centro-estagio.php" class="sidebar-link active"><i class="fas fa-graduation-cap"></i> Centro de Estágio</a>
-                            <a href="historia.php" class="sidebar-link"><i class="fas fa-history"></i> História</a>
-                            <a href="cooperacao.php" class="sidebar-link"><i class="fas fa-handshake"></i> Cooperação</a>
+                            <a href="cooperacao-institucional.php" class="sidebar-link"><i class="fas fa-handshake"></i> Cooperação</a>
                         </div>
                     </div>
                 </div>

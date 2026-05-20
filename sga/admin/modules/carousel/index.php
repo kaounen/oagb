@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../includes/header.php';
 
 // Fetch Slides
 try {
-    $stmt = $pdo->query("SELECT * FROM carousel_slides ORDER BY ordem ASC");
+    $stmt = $pdo->query("SELECT * FROM carousel_slides ORDER BY ordem_exibicao ASC");
     $list = $stmt->fetchAll();
 } catch (PDOException $e) { $list = []; }
 ?>
@@ -29,8 +29,8 @@ try {
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card border-0 shadow-sm h-100 overflow-hidden">
                     <div style="height: 180px; position:relative;">
-                        <img src="/oagb/img/carousel/<?php echo $slide['imagem']; ?>" class="card-img-top h-100 w-100" style="object-fit: cover;">
-                        <span class="badge bg-login border border-white position-absolute top-0 end-0 m-3 fw-bold rounded-pill p-2 px-3 shadow-lg">#<?php echo $slide['ordem']; ?></span>
+                        <img src="/oagb/uploads/<?php echo $slide['imagem']; ?>" class="card-img-top h-100 w-100" style="object-fit: cover;">
+                        <span class="badge bg-login border border-white position-absolute top-0 end-0 m-3 fw-bold rounded-pill p-2 px-3 shadow-lg">#<?php echo $slide['ordem_exibicao']; ?></span>
                     </div>
                     <div class="card-body p-4">
                         <div class="fw-bold mb-1"><?php echo $slide['titulo']; ?></div>

@@ -43,9 +43,12 @@ class NotifyHelper {
      */
     public static function sendEmail($pdo, $to_email, $subject, $body) {
         try {
+            $from_email = defined('FROM_EMAIL') ? FROM_EMAIL : 'comunicacao@oagb.gw';
+            $from_name = defined('FROM_NAME') ? FROM_NAME : 'OAGB Institucional';
+            
             $headers = "MIME-Version: 1.0" . "\r\n";
             $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $headers .= "From: OAGB Institucional <comunicacao@oagb.gw>" . "\r\n";
+            $headers .= "From: $from_name <$from_email>" . "\r\n";
 
             // Queue for audit
             $stmt = $pdo->prepare("INSERT INTO gestao_notificacoes (destinatario_id, tipo, mensagem, status) VALUES (0, 'email', ?, 'pendente')");

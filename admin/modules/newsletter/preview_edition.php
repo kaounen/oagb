@@ -10,6 +10,21 @@ $edicao = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $blocks = json_decode($edicao['conteudo_json'] ?? '[]', true);
 
+if (!function_exists('resolve_newsletter_img')) {
+    function resolve_newsletter_img($base_url, $rawPath) {
+        if (empty($rawPath)) return '';
+        $normalized = str_replace('\\', '/', trim((string)$rawPath));
+        if (preg_match('#^https?://#i', $normalized)) {
+            return $normalized;
+        }
+        $normalized = ltrim($normalized, '/');
+        if (strpos($normalized, 'uploads/') === 0 || strpos($normalized, 'img/') === 0) {
+            return $base_url . '/' . $normalized;
+        }
+        return $base_url . '/uploads/' . $normalized;
+    }
+}
+
 // Pre-render the HTML content
 ob_start();
 ?>
@@ -118,23 +133,27 @@ ob_start();
                                                         if($origin === 'noticia') {
                                                             $st = $pdo->prepare("SELECT * FROM noticias WHERE id = ?"); $st->execute([$item_id]); $item = $st->fetch(PDO::FETCH_ASSOC);
                                                             $label = 'Notícia';
-                                                            $img_path = !empty($item['imagem_destaque']) ? $base_url."/uploads/".$item['imagem_destaque'] : "";
+                                                            $img_path = resolve_newsletter_img($base_url, $item['imagem_destaque'] ?? '');
                                                         } elseif($origin === 'anuncio') {
                                                             $st = $pdo->prepare("SELECT titulo, descricao as conteudo, created_at, imagem FROM anuncios WHERE id = ?"); $st->execute([$item_id]); $item = $st->fetch(PDO::FETCH_ASSOC);
                                                             $label = 'Anúncio';
-                                                            $img_path = !empty($item['imagem']) ? $base_url."/uploads/".$item['imagem'] : "";
+                                                            $img_path = resolve_newsletter_img($base_url, $item['imagem'] ?? '');
                                                         } elseif($origin === 'agenda') {
                                                             $st = $pdo->prepare("SELECT titulo, descricao as conteudo, data_evento as created_at, imagem_destaque FROM agenda WHERE id = ?"); $st->execute([$item_id]); $item = $st->fetch(PDO::FETCH_ASSOC);
                                                             $label = 'Agenda / Evento';
-                                                            $img_path = !empty($item['imagem_destaque']) ? $base_url."/uploads/".$item['imagem_destaque'] : "";
+                                                            $img_path = resolve_newsletter_img($base_url, $item['imagem_destaque'] ?? '');
                                                         } elseif($origin === 'pagina') {
                                                             $st = $pdo->prepare("SELECT titulo, conteudo, created_at, imagem FROM paginas_ordem WHERE id = ?"); $st->execute([$item_id]); $item = $st->fetch(PDO::FETCH_ASSOC);
                                                             $label = 'Página Institucional';
-                                                            $img_path = !empty($item['imagem']) ? $base_url."/uploads/paginas/".$item['imagem'] : "";
+                                                            $raw_img = $item['imagem'] ?? '';
+                                                            if (!empty($raw_img) && strpos($raw_img, 'paginas/') === false && strpos($raw_img, 'uploads/') === false) {
+                                                                $raw_img = 'paginas/' . $raw_img;
+                                                            }
+                                                            $img_path = resolve_newsletter_img($base_url, $raw_img);
                                                         } else {
                                                             $st = $pdo->prepare("SELECT assunto as titulo, conteudo, data_emissao as created_at, imagem FROM pareceres_deliberacoes WHERE id = ?"); $st->execute([$item_id]); $item = $st->fetch(PDO::FETCH_ASSOC);
                                                             $label = ucfirst($origin);
-                                                            $img_path = !empty($item['imagem']) ? $base_url."/uploads/".$item['imagem'] : "";
+                                                            $img_path = resolve_newsletter_img($base_url, $item['imagem'] ?? '');
                                                         }
                                                         
                                                         if($item):
@@ -185,8 +204,7 @@ ob_start();
                                 <?php endif; ?>
                                 <img src="<?php echo $base_url; ?>/img/LogoOA.png" alt="OAGB" width="70" style="display: block; margin: 0 auto 20px;" />
                                 &copy; <?php echo date('Y'); ?> Ordem dos Advogados da Guiné-Bissau<br />
-                                Avenida Combatentes da Liberdade da Pátria, Bissau<br /><br />
-                                <a href="#">Ver no Browser</a> | <a href="#">Preferências</a>
+                                Avenida Combatentes da Liberdade da Pátria, Bissau
                             </td>
                         </tr>
                     </table>

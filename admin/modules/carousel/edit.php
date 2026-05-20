@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $imagem = $slide['imagem'];
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../img/carousel/';
+        $upload_dir = __DIR__ . '/../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['imagem']['name'], INFO_EXTENSION);
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $pdo->prepare("UPDATE carousel_slides SET titulo = ?, subtitulo = ?, imagem = ?, link_url = ?, ordem = ?, ativo = ? WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE carousel_slides SET titulo = ?, subtitulo = ?, imagem = ?, link_url = ?, ordem_exibicao = ?, ativo = ? WHERE id = ?");
         $stmt->execute([$titulo, $subtitulo, $imagem, $link_url, $ordem, $ativo, $id]);
         
         header("Location: index.php?updated=1");
@@ -73,12 +73,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="card bg-light border-0 p-4">
                         <div class="mb-4">
                             <label class="form-label text-uppercase fw-bold text-muted small">Ordem de Exibição</label>
-                            <input type="number" name="ordem" class="form-control border-0" value="<?php echo $slide['ordem']; ?>" required>
+                            <input type="number" name="ordem" class="form-control border-0" value="<?php echo $slide['ordem_exibicao']; ?>" required>
                         </div>
                         
                         <div class="mb-4">
                             <label class="form-label text-uppercase fw-bold text-muted small">Imagem Digital (Atual Banner)</label>
-                            <img id="preview" src="/oagb/img/carousel/<?php echo $slide['imagem']; ?>" class="img-fluid rounded shadow-sm mb-3">
+                            <img id="preview" src="/oagb/uploads/<?php echo $slide['imagem']; ?>" class="img-fluid rounded shadow-sm mb-3">
                             <div class="border rounded p-3 text-center bg-white cursor-pointer border-dashed" onclick="document.getElementById('img_input').click();">
                                 <i class="fas fa-sync-alt fa-2x text-muted mb-2"></i>
                                 <div class="small text-muted">Trocar Fichário Digital</div>

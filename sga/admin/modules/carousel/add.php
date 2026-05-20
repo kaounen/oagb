@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Banner Upload handling
     $imagem = '';
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../../img/carousel/';
+        $upload_dir = __DIR__ . '/../../../uploads/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         
         $file_ext = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO carousel_slides (titulo, subtitulo, imagem, link_url, ordem, ativo) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO carousel_slides (titulo, subtitulo, imagem, link_url, ordem_exibicao, ativo) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([$titulo, $subtitulo, $imagem, $link_url, $ordem, $ativo]);
         
         header("Location: index.php?success=1");
