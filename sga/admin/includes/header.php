@@ -142,10 +142,12 @@ require_once __DIR__ . '/auth_check.php';
         }
 
         /* Safeguard against ghost overlays and orphan modal backdrops */
-        body:not(.modal-open) .modal-backdrop {
+        .modal-backdrop, .modal-backdrop.show, .modal-backdrop.fade.show {
             display: none !important;
-            z-index: -1 !important;
+            opacity: 0 !important;
             pointer-events: none !important;
+            visibility: hidden !important;
+            z-index: -1000 !important;
         }
     </style>
 </head>
