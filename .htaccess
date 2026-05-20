@@ -4,3 +4,14 @@ DirectoryIndex index.php index.html
 
 # Desativar todas as regras de rewrite temporariamente
 # RewriteEngine Off
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Ponte de Compatibilidade Online:
+    # Se o painel administrativo online pedir caminhos iniciados por /oagb/
+    # (ex: /oagb/uploads/ ou /oagb/img/), reescrevemos internamente para a raiz.
+    RewriteRule ^oagb/uploads/(.*)$ uploads/$1 [L,NC]
+    RewriteRule ^oagb/img/(.*)$ img/$1 [L,NC]
+    RewriteRule ^oagb/assets/(.*)$ assets/$1 [L,NC]
+</IfModule>
