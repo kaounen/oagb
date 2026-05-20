@@ -140,6 +140,13 @@ require_once __DIR__ . '/auth_check.php';
             #sidebar-wrapper.show { margin-left: 0; }
             #page-content-wrapper { margin-left: 0; width: 100%; }
         }
+
+        /* Safeguard against ghost overlays and orphan modal backdrops */
+        body:not(.modal-open) .modal-backdrop {
+            display: none !important;
+            z-index: -1 !important;
+            pointer-events: none !important;
+        }
     </style>
 </head>
 <body>
