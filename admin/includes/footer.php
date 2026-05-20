@@ -43,7 +43,13 @@
             formData.append('id', id);
             formData.append('type', type);
 
-            fetch('/oagb/admin/includes/ajax_media_delete.php', {
+            let basePath = '/admin/';
+            if (window.location.pathname.includes('/sga/admin/')) {
+                basePath = window.location.pathname.substring(0, window.location.pathname.indexOf('/sga/admin/') + 11);
+            } else if (window.location.pathname.includes('/admin/')) {
+                basePath = window.location.pathname.substring(0, window.location.pathname.indexOf('/admin/') + 7);
+            }
+            fetch(basePath + 'includes/ajax_media_delete.php', {
                 method: 'POST',
                 body: formData
             })

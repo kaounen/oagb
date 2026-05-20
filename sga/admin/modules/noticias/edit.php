@@ -67,28 +67,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo)));
 
-    try {
-        $stmt = $pdo->prepare("UPDATE noticias SET titulo = ?, data_publicacao = ?, conteudo = ?, imagem_destaque = ?, resumo = ?, categoria_tipo = ?, slug = ? WHERE id = ?");
-        $stmt->execute([$titulo, $data_pub, $conteudo, $imagem, $legenda, $cat_tipo, $slug, $id]);
+    // Handle Quick PDF Attachment
+    $legenda_pdf = $_POST['legenda_anexo'] ?? '';
+    $pdf_col_sql = "";
+    $pdf_params = [];
+    if (isset($_FILES['pdf_anexo']) && $_FILES['pdf_anexo']['error'] === UPLOAD_ERR_OK) {
+        $upload_dir = __DIR__ . '/../../../../uploads/';
+        $original_name = basename($_FILES['pdf_anexo']['name']);
+        $safe_name = preg_replace('/[^A-Za-z0-9.\-_]/', '_', $original_name);
+        $pdf_name = time() . '_' . $safe_name;
         
-        // Handle Quick PDF Attachment (ficheiro_anexo column if exists)
-        if (isset($_FILES['pdf_anexo']) && $_FILES['pdf_anexo']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = __DIR__ . '/../../../../uploads/';
-            $ext = pathinfo($_FILES['pdf_anexo']['name'], PATHINFO_EXTENSION);
-            $pdf_name = 'doc_' . $id . '_' . uniqid() . '.' . $ext;
-            if (move_uploaded_file($_FILES['pdf_anexo']['tmp_name'], $upload_dir . $pdf_name)) {
-                $pdo->prepare("UPDATE noticias SET ficheiro_anexo = ? WHERE id = ?")->execute([$pdf_name, $id]);
+        if (move_uploaded_file($_FILES['pdf_anexo']['tmp_name'], $upload_dir . $pdf_name)) {
+            if (!empty($noticia['ficheiro_anexo']) && file_exists($upload_dir . $noticia['ficheiro_anexo'])) {
+                unlink($upload_dir . $noticia['ficheiro_anexo']);
             }
+            $pdf_col_sql = ", ficheiro_anexo = ?, legenda_anexo = ?";
+            $pdf_params = [$pdf_name, $legenda_pdf];
         }
+    } else {
+        $pdf_col_sql = ", legenda_anexo = ?";
+        $pdf_params = [$legenda_pdf];
+    }
+
+    try {
+        $sql = "UPDATE noticias SET titulo = ?, data_publicacao = ?, conteudo = ?, imagem_destaque = ?, resumo = ?, categoria_tipo = ?, slug = ? $pdf_col_sql WHERE id = ?";
+        $all_params = array_merge([$titulo, $data_pub, $conteudo, $imagem, $legenda, $cat_tipo, $slug], $pdf_params, [$id]);
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($all_params);
 
         // Handle Multiple Attachments
         if (isset($_FILES['attachments'])) {
-            AttachmentHelper::save($pdo, 'noticia', $id, $_FILES['attachments']);
+            AttachmentHelper::save($pdo, 'noticia', $id, $_FILES['attachments'], $_POST['attachment_descriptions'] ?? []);
+        }
+
+        // Update existing attachments metadata
+        if (isset($_POST['att_desc'])) {
+            foreach ($_POST['att_desc'] as $att_id => $desc) {
+                AttachmentHelper::update($pdo, $att_id, $desc);
+            }
         }
 
         // Handle Gallery Uploads
         if (isset($_FILES['gallery_files'])) {
-            GalleryHelper::save($pdo, 'noticia', $id, $_FILES['gallery_files']);
+            GalleryHelper::save($pdo, 'noticia', $id, $_FILES['gallery_files'], $_POST['new_gal_title'] ?? [], $_POST['new_gal_desc'] ?? []);
         }
 
         // Update Gallery Metadata
@@ -148,56 +169,87 @@ require_once __DIR__ . '/../../includes/header.php';
                                     <option value="Aviso" <?php echo $noticia['categoria_tipo'] == 'Aviso' ? 'selected' : ''; ?>>Aviso / Nota</option>
                                     <option value="Edital" <?php echo $noticia['categoria_tipo'] == 'Edital' ? 'selected' : ''; ?>>Edital / Concurso</option>
                                 </select>
-                            </div>
+                             </div>
 
-                            <div class="mb-4">
+                             <div class="mb-4">
                                 <label class="form-label text-uppercase fw-bold text-muted small">Data de Publicação</label>
                                 <input type="date" name="data" class="form-control border-0" value="<?php echo date('Y-m-d', strtotime($noticia['data_publicacao'])); ?>" required>
-                            </div>
+                             </div>
 
-                            <div class="mb-4">
+                             <div class="mb-4">
                                 <label class="form-label text-uppercase fw-bold text-muted small">Imagem de Destaque</label>
+                                <div class="position-relative mb-3">
+                                    <img id="preview" src="/oagb/uploads/<?php echo $noticia['imagem_destaque']; ?>" class="img-fluid rounded shadow-sm <?php echo empty($noticia['imagem_destaque']) ? 'd-none' : ''; ?>">
+                                    <?php if(!empty($noticia['imagem_destaque'])): ?>
+                                        <a href="javascript:void(0);" class="btn btn-danger btn-sm position-absolute" style="top: 10px; right: 10px; z-index: 10; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;" onclick="deleteMedia(<?php echo $id; ?>, 'highlight_noticia', this);">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
                                 <div class="border rounded p-3 text-center bg-white cursor-pointer" onclick="document.getElementById('foto1_input').click();">
                                     <i class="fas fa-sync-alt fa-2x text-muted mb-2"></i>
-                                    <div class="small text-muted">Trocar imagem atual</div>
+                                    <div class="small text-muted">Trocar ou carregar imagem</div>
                                     <input type="file" name="foto1" id="foto1_input" class="d-none" accept="image/*">
                                 </div>
-                                <img id="preview" src="/oagb/uploads/<?php echo $noticia['imagem_destaque']; ?>" class="img-fluid mt-3 rounded shadow-sm <?php echo empty($noticia['imagem_destaque']) ? 'd-none' : ''; ?>">
-                            </div>
+                             </div>
 
-                            <div class="mb-4">
+                             <div class="mb-4">
                                 <label class="form-label text-uppercase fw-bold text-muted small">Legenda da Imagem / Resumo</label>
                                 <input type="text" name="legendaFoto1" class="form-control border-0" value="<?php echo htmlspecialchars($noticia['resumo']); ?>">
-                            </div>
+                             </div>
 
-                            <div class="mb-4">
+                             <div class="mb-4">
                                 <label class="form-label text-uppercase fw-bold text-muted small">Documento PDF (Quick Download)</label>
-                                <input type="file" name="pdf_anexo" class="form-control border-0 bg-white shadow-sm" accept=".pdf">
-                                <?php if(!empty($noticia['ficheiro_anexo'])): ?>
-                                    <div class="mt-2 small"><i class="fas fa-file-pdf text-danger"></i> <?php echo $noticia['ficheiro_anexo']; ?></div>
-                                <?php endif; ?>
-                            </div>
+                                <div class="p-3 border rounded bg-white shadow-sm mb-2">
+                                    <?php if(!empty($noticia['ficheiro_anexo'])): ?>
+                                        <div class="d-flex align-items-center mb-3 p-2 bg-light rounded border position-relative">
+                                            <div class="me-3">
+                                                <i class="far fa-file-pdf fa-2x text-danger"></i>
+                                            </div>
+                                            <div class="flex-grow-1 min-width-0" style="overflow: hidden;">
+                                                <div class="small fw-bold text-truncate" title="<?php echo htmlspecialchars($noticia['ficheiro_anexo']); ?>" style="max-width: 100%;"><?php echo htmlspecialchars(preg_replace('/^[0-9]+_/', '', $noticia['ficheiro_anexo'])); ?></div>
+                                                <a href="/oagb/uploads/<?php echo $noticia['ficheiro_anexo']; ?>?v=<?php echo time(); ?>" target="_blank" class="x-small text-primary text-decoration-none">Ver Ficheiro Atual</a>
+                                            </div>
+                                            <div class="flex-shrink-0 ms-2">
+                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger border-0" onclick="deleteMedia(<?php echo $id; ?>, 'quick_pdf_noticia', this); document.querySelector('[name=legenda_anexo]').value='';">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <div class="mb-3">
+                                        <label class="x-small fw-bold text-muted text-uppercase d-block mb-1">Substituir ou Carregar Novo:</label>
+                                        <input type="file" name="pdf_anexo" class="form-control form-control-sm border-0 bg-light" accept=".pdf">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="x-small fw-bold text-muted text-uppercase d-block mb-1">Título/Legenda do PDF:</label>
+                                        <input type="text" name="legenda_anexo" class="form-control form-control-sm border-0 bg-light" placeholder="Ex: Baixar Edital Completo" value="<?php echo htmlspecialchars($noticia['legenda_anexo'] ?? ''); ?>">
+                                    </div>
+                                </div>
+                             </div>
 
-                            <!-- Galeria Slider Component -->
-                            <?php 
-                            $type = 'noticia';
-                            $gallery = GalleryHelper::get($pdo, 'noticia', $id);
-                            require __DIR__ . '/../../includes/partials/gallery_form.php'; 
-                            ?>
+                             <!-- Galeria Slider Component -->
+                             <?php 
+                             $type = 'noticia';
+                             $gallery = GalleryHelper::get($pdo, 'noticia', $id);
+                             require __DIR__ . '/../../includes/partials/gallery_form.php'; 
+                             ?>
 
-                            <!-- Múltiplos Anexos Component -->
-                            <?php 
-                            $entity_type = 'noticia';
-                            $entity_id = $id;
-                            require __DIR__ . '/../../includes/partials/attachments_form.php'; 
-                            ?>
+                             <!-- Múltiplos Anexos Component -->
+                             <?php 
+                             $entity_type = 'noticia';
+                             $entity_id = $id;
+                             require __DIR__ . '/../../includes/partials/attachments_form.php'; 
+                             ?>
 
-                            <hr class="my-4">
+                             <hr class="my-4">
 
-                            <button type="submit" class="btn btn-login w-100 py-3 shadow-sm">
-                                <i class="fas fa-save me-2"></i> Gravar Alterações
-                            </button>
-                            <a href="index.php" class="btn btn-light w-100 mt-2 py-3 border">Cancelar</a>
+                             <button type="submit" class="btn btn-login w-100 py-3 shadow-sm">
+                                 <i class="fas fa-save me-2"></i> Gravar Alterações
+                             </button>
+                             <a href="index.php" class="btn btn-light w-100 mt-2 py-3 border">Cancelar</a>
                         </div>
                     </div>
                 </div>
