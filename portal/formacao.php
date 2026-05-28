@@ -7,6 +7,19 @@ $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 $lid = $_SESSION['lawyer_id'];
 
 // Fetch Courses
+try {
+    $count = $pdo->query("SELECT COUNT(*) FROM gestao_cursos")->fetchColumn();
+    if ($count == 0) {
+        $pdo->exec("INSERT INTO gestao_cursos (titulo, descricao, data_inicio, preco, ativa) VALUES 
+            ('Seminário Avançado sobre o Código de Processo Penal', 'Análise aprofundada dos recursos penais, garantias fundamentais e tramitação sob o novo enquadramento jurídico guineense.', DATE_ADD(NOW(), INTERVAL 15 DAY), 10000, 1),
+            ('Prática de Contratos e Investimento Estrangeiro', 'Estudo e simulação de contratos de joint ventures, cláusulas de arbitragem internacional e incentivos fiscais na Guiné-Bissau.', DATE_ADD(NOW(), INTERVAL 30 DAY), 25000, 1),
+            ('Direito e Concessões de Terras', 'Análise prática da Lei de Terras, conflitos fundiários comunitários e regimes de concessões estatais para fins comerciais e industriais.', DATE_ADD(NOW(), INTERVAL 45 DAY), 15000, 1)
+        ");
+    }
+} catch (PDOException $e) {
+    // Table might not exist or be different, fail gracefully
+}
+
 $stmt = $pdo->query("SELECT * FROM gestao_cursos WHERE ativa = 1 AND data_inicio >= NOW() ORDER BY data_inicio ASC");
 $cursos = $stmt->fetchAll();
 

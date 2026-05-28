@@ -175,14 +175,19 @@ $history = $stmt->fetchAll();
 
                     <div class="col-md-6">
                         <div class="quick-box">
-                            <i class="fas fa-certificate fa-2x text-success mb-3"></i>
-                            <h5 class="fw-bold">Emissão de Certidões</h5>
-                            <p class="text-muted small">Descarregue a sua Certidão de Nada a Declarar assinada digitalmente de forma imediata.</p>
-                            <?php if($regularizado): ?>
-                                <a href="certidao.php" class="btn btn-portal-action">DESCARREGAR CERTIDÃO</a>
-                            <?php else: ?>
-                                <button class="btn btn-portal-action bg-light text-muted border" disabled><i class="fas fa-lock me-2"></i> ACESSO BLOQUEADO</button>
-                            <?php endif; ?>
+                            <i class="fas fa-file-invoice fa-2x text-success mb-3"></i>
+                            <h5 class="fw-bold">Requerimentos & Declarações</h5>
+                            <p class="text-muted small">Submeta requerimentos online e descarregue declarações de inscrição assinadas digitalmente de forma imediata.</p>
+                            <a href="pedidos.php" class="btn btn-portal-action bg-success text-white border-0">PEDIDOS & CERTIDÕES</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="quick-box">
+                            <i class="fas fa-id-card fa-2x text-info mb-3"></i>
+                            <h5 class="fw-bold">Carteira Profissional Digital</h5>
+                            <p class="text-muted small">Visualize a sua carteira de identidade oficial com QR Code de verificação integrado em tempo real.</p>
+                            <a href="carteira.php" class="btn btn-portal-action bg-info text-dark border-0">VER CARTEIRA DIGITAL</a>
                         </div>
                     </div>
 
@@ -228,6 +233,26 @@ $history = $stmt->fetchAll();
                             <a href="actas.php" class="btn btn-portal-action bg-danger-subtle text-danger border-danger-subtle">ACEDER ÀS ACTAS</a>
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <div class="quick-box">
+                            <i class="fas fa-briefcase fa-2x text-warning mb-3"></i>
+                            <h5 class="fw-bold">Oportunidades Profissionais</h5>
+                            <p class="text-muted small">Consulte editais de consultoria, concursos de contratação pública e oportunidades de arbitragem.</p>
+                            <a href="oportunidades.php" class="btn btn-portal-action bg-warning text-dark border-0">VER OPORTUNIDADES</a>
+                        </div>
+                    </div>
+
+                    <?php if($mtype !== 'estagiario'): ?>
+                    <div class="col-md-6">
+                        <div class="quick-box">
+                            <i class="fas fa-handshake fa-2x text-primary mb-3"></i>
+                            <h5 class="fw-bold">Mediação de Consultas</h5>
+                            <p class="text-muted small">Atenda pedidos de aconselhamento jurídico de cidadãos e investidores internacionais da diáspora.</p>
+                            <a href="consultas.php" class="btn btn-portal-action bg-primary text-white border-0">RECEBER CLIENTES</a>
+                        </div>
+                    </div>
+                    <?php endif; ?>
 
                     <?php if($mtype == 'estagiario'): ?>
                     <div class="col-md-6">

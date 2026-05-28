@@ -223,9 +223,12 @@ try {
 
                     <!-- CTA Banner -->
                     <div class="cta-banner mt-5 wow fadeInUp">
-                        <h4>Precisa de um Advogado?</h4>
-                        <p class="mb-4 opacity-75">Pesquise a lista de advogados inscritos e em exercício na Ordem dos Advogados da Guiné-Bissau.</p>
-                        <a href="pesquisa-advogados.php" class="btn"><i class="fas fa-search me-2"></i>Pesquisar Advogados</a>
+                        <h4>Serviços Digitais ao Cidadão</h4>
+                        <p class="mb-4 opacity-75">A Ordem disponibiliza canais oficiais imediatos para encontrar profissionais qualificados e participar infracções éticas.</p>
+                        <div class="d-flex flex-wrap gap-3 justify-content-center">
+                            <a href="encontrar-advogado.php" class="btn"><i class="fas fa-search me-2"></i>Encontrar por Especialidade</a>
+                            <a href="apresentar-reclamacao.php" class="btn" style="background: rgba(255,255,255,0.15); border: 1px solid #fff;"><i class="fas fa-gavel me-2"></i>Apresentar Reclamação Deontológica</a>
+                        </div>
                     </div>
                 </div>
             </div>
