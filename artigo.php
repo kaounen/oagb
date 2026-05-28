@@ -608,7 +608,7 @@ $absolute_meta_image = SITE_URL . '/' . $meta_image;
                 <div class="col-lg-8">
                     <!-- Article Header -->
                     <div class="mb-4">
-                        <h1 class="mb-4" style="color:#4D1C21; font-family: 'Libre Baskerville', serif; font-size: 2.5rem; line-height: 1.3;">
+                        <h1 class="mb-4" style="color:#4D1C21; font-family: 'Libre Baskerville', serif; font-size: 2.5rem; font-weight: 400 !important; line-height: 1.3;">
                             <?php echo htmlspecialchars($noticia->titulo); ?>
                         </h1>
                         
@@ -726,92 +726,150 @@ $absolute_meta_image = SITE_URL . '/' . $meta_image;
                     </div>
                     <?php endif; ?>
                     
-                    <!-- Documento Principal (Quick Download) -->
-                    <?php if (!empty($noticia->ficheiro_anexo)): ?>
-                    <div class="mt-5 mb-0">
-                        <a href="uploads/<?php echo $noticia->ficheiro_anexo; ?>" class="text-decoration-none d-block" target="_blank" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(77,28,33,0.12)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
-                            <div class="d-flex align-items-center justify-content-between p-4 rounded-3" style="background: linear-gradient(135deg, #fdfcfa 0%, #f8f5ef 100%); border: 1px solid #ebe6da; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center justify-content-center me-3" style="width: 52px; height: 52px; background: linear-gradient(135deg, #4D1C21 0%, #6b2a30 100%); border-radius: 12px; flex-shrink: 0;">
-                                        <i class="far fa-file-pdf" style="font-size: 1.4rem; color: #fff;"></i>
-                                    </div>
-                                    <div>
-                                        <?php 
-                                            if (!empty($noticia->legenda_anexo)) {
-                                                $display_name = $noticia->legenda_anexo;
-                                            } else {
-                                                // Extract filename without extension first
-                                                $basename = pathinfo($noticia->ficheiro_anexo, PATHINFO_FILENAME);
-                                                
-                                                // Detect system-generated patterns: doc_1_hash, noticia_1_hash, news_hash
-                                                if (preg_match('/^(doc|noticia|news|evento|att)_\d+_[a-f0-9]+$/i', $basename)) {
-                                                    $display_name = 'Documento Anexo';
-                                                } elseif (preg_match('/^[a-f0-9]{10,}$/i', $basename)) {
-                                                    // Pure hash filename
-                                                    $display_name = 'Documento Anexo';
-                                                } else {
-                                                    // Has readable name — clean timestamp prefix and underscores
-                                                    $clean = preg_replace('/^\d{6,}_/', '', $basename);
-                                                    $display_name = str_replace('_', ' ', $clean);
-                                                }
-                                                
-                                                // Override with original name from ficheiros_anexos if available
-                                                if (!empty($attachments)) {
-                                                    foreach ($attachments as $a) {
-                                                        if ($a['nome_ficheiro'] === $noticia->ficheiro_anexo && !empty($a['nome_original'])) {
-                                                            $display_name = str_replace('_', ' ', pathinfo($a['nome_original'], PATHINFO_FILENAME));
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ?>
-                                        <div class="fw-bold" style="font-family: 'Open Sans', sans-serif; font-size: 1rem; color: #333;"><?php echo htmlspecialchars($display_name); ?></div>
-                                        <small style="color: #999; font-family: 'Open Sans', sans-serif; font-size: 0.78rem;">Documento PDF — Clique para abrir</small>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; border-radius: 50%; background: rgba(177,162,118,0.12); flex-shrink: 0; transition: all 0.3s;">
-                                    <i class="fas fa-download" style="color: #B1A276; font-size: 0.9rem;"></i>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <?php endif; ?>
+                    <!-- Dynamic Attachments Logic -->
+                    <?php
+                    $all_files = [];
+                    $added_filenames = [];
 
-                    <!-- Documentos Anexos -->
-                    <?php if (!empty($attachments)): ?>
-                    <div class="mt-4">
-                        <h6 class="mb-3" style="font-family: 'Open Sans', sans-serif; color: #999; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;"><i class="fas fa-paperclip me-2"></i>Documentos Anexos</h6>
-                        <?php foreach ($attachments as $att): ?>
-                        <a href="uploads/<?php echo htmlspecialchars($att['nome_ficheiro']); ?>" class="text-decoration-none d-block mb-2" target="_blank" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(77,28,33,0.12)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
-                            <div class="d-flex align-items-center justify-content-between p-3 rounded-3" style="background: linear-gradient(135deg, #fdfcfa 0%, #f8f5ef 100%); border: 1px solid #ebe6da; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center justify-content-center me-3" style="width: 44px; height: 44px; background: linear-gradient(135deg, #4D1C21 0%, #6b2a30 100%); border-radius: 10px; flex-shrink: 0;">
-                                        <?php if(strpos($att['tipo_mime'], 'pdf') !== false): ?>
-                                            <i class="far fa-file-pdf" style="font-size: 1.2rem; color: #fff;"></i>
-                                        <?php elseif(strpos($att['tipo_mime'], 'image') !== false): ?>
-                                            <i class="far fa-file-image" style="font-size: 1.2rem; color: #fff;"></i>
-                                        <?php else: ?>
-                                            <i class="far fa-file-alt" style="font-size: 1.2rem; color: #fff;"></i>
-                                        <?php endif; ?>
+                    // 1. Gather files from multiple attachments
+                    if (!empty($attachments)) {
+                        foreach ($attachments as $att) {
+                            $filename = $att['nome_ficheiro'];
+                            if (!in_array($filename, $added_filenames)) {
+                                $all_files[] = (object)[
+                                    'nome_ficheiro' => $filename,
+                                    'nome_original' => $att['nome_original'],
+                                    'tipo_mime' => $att['tipo_mime'] ?? 'application/pdf',
+                                    'tamanho' => $att['tamanho'] ?? 0,
+                                    'descricao' => $att['descricao'] ?? ''
+                                ];
+                                $added_filenames[] = $filename;
+                            }
+                        }
+                    }
+
+                    // 2. Gather single main file (ficheiro_anexo)
+                    if (!empty($noticia->ficheiro_anexo)) {
+                        $main_file = $noticia->ficheiro_anexo;
+                        if (!in_array($main_file, $added_filenames)) {
+                            $orig_name = $main_file;
+                            $mime = 'application/pdf';
+                            $size = 0;
+                            $desc = '';
+                            
+                            // Try to match metadata from attachments list
+                            if (!empty($attachments)) {
+                                foreach ($attachments as $att) {
+                                    if ($att['nome_ficheiro'] === $main_file) {
+                                        $orig_name = $att['nome_original'];
+                                        $mime = $att['tipo_mime'] ?? 'application/pdf';
+                                        $size = $att['tamanho'] ?? 0;
+                                        $desc = $att['descricao'] ?? '';
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            // If still unpopulated, fallback to legenda_anexo or clean name
+                            if ($orig_name === $main_file && !empty($noticia->legenda_anexo)) {
+                                $orig_name = $noticia->legenda_anexo;
+                            }
+
+                            // Prepend main file so it appears first in the merged list
+                            array_unshift($all_files, (object)[
+                                'nome_ficheiro' => $main_file,
+                                'nome_original' => $orig_name,
+                                'tipo_mime' => $mime,
+                                'tamanho' => $size,
+                                'descricao' => $desc
+                            ]);
+                            $added_filenames[] = $main_file;
+                        }
+                    }
+
+                    $total_attachments = count($all_files);
+                    ?>
+
+                    <?php if ($total_attachments > 1): ?>
+                        <!-- Multiple Attachments: Grouped beautiful list -->
+                        <div class="mt-4">
+                            <h6 class="mb-3" style="font-family: 'Open Sans', sans-serif; color: #999; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;"><i class="fas fa-paperclip me-2"></i>Documentos Anexos</h6>
+                            <?php foreach ($all_files as $att): ?>
+                            <a href="uploads/<?php echo htmlspecialchars($att->nome_ficheiro); ?>" class="text-decoration-none d-block mb-2" target="_blank" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(77,28,33,0.12)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
+                                <div class="d-flex align-items-center justify-content-between flex-column flex-md-row gap-3 p-3 rounded-3" style="background: linear-gradient(135deg, #fdfcfa 0%, #f8f5ef 100%); border: 1px solid #ebe6da; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+                                    <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center justify-content-center me-3" style="width: 44px; height: 44px; background: linear-gradient(135deg, #4D1C21 0%, #6b2a30 100%); border-radius: 10px; flex-shrink: 0;">
+                                            <?php if(strpos($att->tipo_mime, 'pdf') !== false): ?>
+                                                <i class="far fa-file-pdf" style="font-size: 1.2rem; color: #fff;"></i>
+                                            <?php elseif(strpos($att->tipo_mime, 'image') !== false): ?>
+                                                <i class="far fa-file-image" style="font-size: 1.2rem; color: #fff;"></i>
+                                            <?php else: ?>
+                                                <i class="far fa-file-alt" style="font-size: 1.2rem; color: #fff;"></i>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div>
+                                            <?php 
+                                                $att_display = !empty($att->descricao) ? $att->descricao : $att->nome_original;
+                                                // Clean up original filename 
+                                                $att_display = str_replace('_', ' ', pathinfo($att_display, PATHINFO_FILENAME));
+                                            ?>
+                                            <div class="fw-bold" style="font-family: 'Open Sans', sans-serif; font-size: 0.92rem; color: #333;"><?php echo htmlspecialchars($att_display); ?></div>
+                                            <small style="color: #999; font-family: 'Open Sans', sans-serif; font-size: 0.72rem;"><?php echo $att->tamanho > 0 ? number_format($att->tamanho / 1024, 0) . ' KB' : 'Clique para descarregar'; ?></small>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <?php 
-                                            $att_display = !empty($att['descricao']) ? $att['descricao'] : $att['nome_original'];
-                                            // Clean up original filename 
-                                            $att_display = str_replace('_', ' ', pathinfo($att_display, PATHINFO_FILENAME));
-                                        ?>
-                                        <div class="fw-bold" style="font-family: 'Open Sans', sans-serif; font-size: 0.92rem; color: #333;"><?php echo htmlspecialchars($att_display); ?></div>
-                                        <small style="color: #999; font-family: 'Open Sans', sans-serif; font-size: 0.72rem;"><?php echo number_format($att['tamanho'] / 1024, 0); ?> KB</small>
+                                    <div class="d-flex align-items-center gap-2 ms-auto ms-md-0">
+                                        <!-- Share Button -->
+                                        <button type="button" onclick="event.preventDefault(); event.stopPropagation(); if(navigator.share){navigator.share({title: '<?php echo htmlspecialchars($noticia->titulo, ENT_QUOTES); ?>', url: 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>'});} else { alert('Link copiado!'); navigator.clipboard.writeText('http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>'); }" class="btn btn-sm d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: rgba(177,162,118,0.12); color: #B1A276; border: none; transition: 0.3s;" onmouseover="this.style.background='rgba(177,162,118,0.25)'" onmouseout="this.style.background='rgba(177,162,118,0.12)'" title="Partilhar">
+                                            <i class="fas fa-share-alt" style="font-size: 0.8rem;"></i>
+                                        </button>
+                                        <!-- Download Button -->
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: rgba(77,28,33,0.1); transition: all 0.3s;">
+                                            <i class="fas fa-download" style="color: var(--primary-maroon); font-size: 0.8rem;"></i>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; border-radius: 50%; background: rgba(177,162,118,0.12); flex-shrink: 0;">
-                                    <i class="fas fa-download" style="color: #B1A276; font-size: 0.8rem;"></i>
+                            </a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php elseif ($total_attachments === 1): ?>
+                        <!-- Single Attachment: Premium Quick Download card -->
+                        <?php $att = $all_files[0]; ?>
+                        <div class="mt-5 mb-0">
+                            <a href="uploads/<?php echo htmlspecialchars($att->nome_ficheiro); ?>" class="text-decoration-none d-block" target="_blank" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(77,28,33,0.12)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
+                                <div class="d-flex align-items-center justify-content-between flex-column flex-md-row gap-3 p-4 rounded-3" style="background: linear-gradient(135deg, #fdfcfa 0%, #f8f5ef 100%); border: 1px solid #ebe6da; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+                                    <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center justify-content-center me-3" style="width: 52px; height: 52px; background: linear-gradient(135deg, #4D1C21 0%, #6b2a30 100%); border-radius: 12px; flex-shrink: 0;">
+                                            <?php if(strpos($att->tipo_mime, 'pdf') !== false): ?>
+                                                <i class="far fa-file-pdf" style="font-size: 1.4rem; color: #fff;"></i>
+                                            <?php elseif(strpos($att->tipo_mime, 'image') !== false): ?>
+                                                <i class="far fa-file-image" style="font-size: 1.4rem; color: #fff;"></i>
+                                            <?php else: ?>
+                                                <i class="far fa-file-alt" style="font-size: 1.4rem; color: #fff;"></i>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div>
+                                            <?php 
+                                                $att_display = !empty($att->descricao) ? $att->descricao : $att->nome_original;
+                                                // Clean up original filename 
+                                                $att_display = str_replace('_', ' ', pathinfo($att_display, PATHINFO_FILENAME));
+                                            ?>
+                                            <div class="fw-bold" style="font-family: 'Open Sans', sans-serif; font-size: 1rem; color: #333;"><?php echo htmlspecialchars($att_display); ?></div>
+                                            <small style="color: #999; font-family: 'Open Sans', sans-serif; font-size: 0.78rem;">Documento — Clique para abrir</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 ms-auto ms-md-0">
+                                        <!-- Share Button -->
+                                        <button type="button" onclick="event.preventDefault(); event.stopPropagation(); if(navigator.share){navigator.share({title: '<?php echo htmlspecialchars($noticia->titulo, ENT_QUOTES); ?>', url: 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>'});} else { alert('Link copiado!'); navigator.clipboard.writeText('http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>'); }" class="btn btn-sm d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 42px; height: 42px; background: rgba(177,162,118,0.12); color: #B1A276; border: none; transition: 0.3s;" onmouseover="this.style.background='rgba(177,162,118,0.25)'" onmouseout="this.style.background='rgba(177,162,118,0.12)'" title="Partilhar">
+                                            <i class="fas fa-share-alt" style="font-size: 0.9rem;"></i>
+                                        </button>
+                                        <!-- Download Button -->
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 42px; height: 42px; background: rgba(77,28,33,0.1); transition: all 0.3s;">
+                                            <i class="fas fa-download" style="color: var(--primary-maroon); font-size: 0.9rem;"></i>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                        <?php endforeach; ?>
-                    </div>
+                            </a>
+                        </div>
                     <?php endif; ?>
                     
 
@@ -822,10 +880,10 @@ $absolute_meta_image = SITE_URL . '/' . $meta_image;
                     <!-- Mais Lidas -->
                     <?php if (!empty($mais_lidas)): ?>
                     <div class="mb-5 p-4 rounded-3" style="background: #fff; border: 1px solid #f0ece4; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
-                        <h5 class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 700; position: relative; padding-bottom: 10px;">
-                            Mais Lidas
+                        <div class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 500; text-transform: uppercase; position: relative; padding-bottom: 10px; font-size: 1.25rem; letter-spacing: 1px;">
+                            MAIS LIDAS
                             <span style="position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: #B1A276;"></span>
-                        </h5>
+                        </div>
                         <?php $total_lidas = count($mais_lidas); $lida_idx = 0; foreach ($mais_lidas as $lida): $lida_idx++; ?>
                         <div class="mb-0 group-card-lidas" style="transition: all 0.3s ease;">
                             <a href="artigo.php?id=<?php echo $lida->id; ?>&slug=<?php echo urlencode($lida->slug); ?>" class="text-decoration-none d-block">
@@ -839,9 +897,9 @@ $absolute_meta_image = SITE_URL . '/' . $meta_image;
                                     <div class="mb-2" style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
                                         <i class="far fa-calendar-alt me-1"></i> <?php echo format_date_pt($lida->data_publicacao); ?>
                                     </div>
-                                    <h6 class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.45; color: #4D1C21; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
+                                    <div class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.45; color: #4D1C21; font-weight: 500; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
                                         <?php echo htmlspecialchars($lida->titulo); ?>
-                                    </h6>
+                                    </div>
                                 </div>
                             </a>
                         </div>
@@ -884,12 +942,12 @@ $absolute_meta_image = SITE_URL . '/' . $meta_image;
                             ?>
                             <img src="<?php echo htmlspecialchars($img_relacionada); ?>" alt="<?php echo htmlspecialchars($relacionada->titulo); ?>">
                             <div class="p-4">
-                                <h5 class="mb-3">
+                                <div class="mb-3" style="font-family: 'Libre Baskerville', serif; font-weight: 500; font-size: 1.05rem;">
                                     <a href="artigo.php?id=<?php echo $relacionada->id; ?>&slug=<?php echo urlencode($relacionada->slug); ?>" 
-                                       class="text-dark text-decoration-none fw-bold" style="font-size: 1rem;">
+                                       class="text-decoration-none" style="color: #4D1C21;">
                                         <?php echo htmlspecialchars($relacionada->titulo); ?>
                                     </a>
-                                </h5>
+                                </div>
                                 <p class="text-muted mb-3" style="font-size: 0.85rem;"><?php echo htmlspecialchars(truncate_text($relacionada->resumo, 80)); ?></p>
                                 <small style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
                                     <i class="far fa-calendar-alt me-1"></i>

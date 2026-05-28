@@ -4,11 +4,19 @@
 class GalleryHelper {
     private static $upload_dir = __DIR__ . '/../../uploads/';
 
+    private static function getTableInfo($type) {
+        if ($type === 'noticia') return ['table' => 'noticias_imagens', 'fk' => 'noticia_id'];
+        if ($type === 'cidadaos') return ['table' => 'cidadaos_imagens', 'fk' => 'cidadaos_id'];
+        if ($type === 'estagio' || $type === 'conteudos') return ['table' => 'conteudos_imagens', 'fk' => 'conteudo_id'];
+        return ['table' => 'agenda_imagens', 'fk' => 'agenda_id'];
+    }
+
     public static function save($pdo, $type, $entity_id, $files, $titles = [], $descriptions = []) {
         if (!file_exists(self::$upload_dir)) mkdir(self::$upload_dir, 0777, true);
 
-        $table = ($type === 'noticia') ? 'noticias_imagens' : 'agenda_imagens';
-        $fk_field = ($type === 'noticia') ? 'noticia_id' : 'agenda_id';
+        $info = self::getTableInfo($type);
+        $table = $info['table'];
+        $fk_field = $info['fk'];
 
         foreach ($files['name'] as $i => $name) {
             if ($files['error'][$i] === UPLOAD_ERR_OK) {
@@ -28,8 +36,9 @@ class GalleryHelper {
     }
 
     public static function get($pdo, $type, $entity_id) {
-        $table = ($type === 'noticia') ? 'noticias_imagens' : 'agenda_imagens';
-        $fk_field = ($type === 'noticia') ? 'noticia_id' : 'agenda_id';
+        $info = self::getTableInfo($type);
+        $table = $info['table'];
+        $fk_field = $info['fk'];
         
         $stmt = $pdo->prepare("SELECT * FROM $table WHERE $fk_field = ? ORDER BY ordem_exibicao ASC, created_at DESC");
         $stmt->execute([$entity_id]);
@@ -37,13 +46,15 @@ class GalleryHelper {
     }
 
     public static function update($pdo, $type, $image_id, $legenda, $descricao, $ordem = 0) {
-        $table = ($type === 'noticia') ? 'noticias_imagens' : 'agenda_imagens';
+        $info = self::getTableInfo($type);
+        $table = $info['table'];
         $stmt = $pdo->prepare("UPDATE $table SET legenda = ?, descricao = ?, ordem_exibicao = ? WHERE id = ?");
         return $stmt->execute([$legenda, $descricao, $ordem, $image_id]);
     }
 
     public static function delete($pdo, $type, $image_id) {
-        $table = ($type === 'noticia') ? 'noticias_imagens' : 'agenda_imagens';
+        $info = self::getTableInfo($type);
+        $table = $info['table'];
         $stmt = $pdo->prepare("SELECT * FROM $table WHERE id = ?");
         $stmt->execute([$image_id]);
         $img = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -32,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $pdo->prepare("INSERT INTO conteudos_paginas (pagina,secao,titulo,icone,conteudo,ordem,status,imagem,arquivo) VALUES (?,?,?,?,?,?,?,?,?)")
             ->execute([$pagina,$secao,$titulo,$icone,$conteudo,$ordem,$status,$imagem,$arquivo]);
-        header('Location: index.php?msg=added'); exit;
+        $new_id = $pdo->lastInsertId();
+        header('Location: edit.php?id=' . $new_id . '&msg=added'); exit;
     }
 }
 ?>

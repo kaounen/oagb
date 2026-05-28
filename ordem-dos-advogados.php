@@ -39,6 +39,10 @@ try {
     $stmt->execute();
     $total_estagiarios = $stmt->fetch()->total;
     
+    // Buscar membros fundadores
+    $stmt = $pdo->query("SELECT * FROM membros_fundadores ORDER BY ordem_exibicao ASC");
+    $membros_fundadores = $stmt->fetchAll();
+    
 } catch (Exception $e) {
     error_log("Erro: " . $e->getMessage());
 }
@@ -189,6 +193,22 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
             .info-card { padding: 25px; }
             .container { padding-left: 20px; padding-right: 20px; }
         }
+        
+        .atribuicao-item-text {
+            line-height: 1.3;
+        }
+        @media (min-width: 992px) {
+            .atribuicao-item-text {
+                white-space: nowrap;
+            }
+        }
+        
+        .fundador-card:hover {
+            background: #fff !important;
+            border-color: var(--primary-gold) !important;
+            box-shadow: 0 8px 24px rgba(177, 162, 118, 0.1);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
@@ -240,7 +260,35 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
     <section class="py-4" style="background: #f7f5f0;">
         <div class="container py-lg-3">
             <div class="texto-conteudo" style="font-size: 0.85rem; line-height: 1.7; text-align: justify;">
-                <?php echo oagb_fix_encoding($pagina->conteudo ?? $inst_info->historia ?? ''); ?>
+                <?php 
+                try {
+                    $stmt_atr = $pdo->prepare("SELECT * FROM atribuicoes WHERE ativo = 1 ORDER BY ordem ASC");
+                    $stmt_atr->execute();
+                    $atribuicoes_destacadas = $stmt_atr->fetchAll(PDO::FETCH_OBJ);
+                } catch (PDOException $e) {
+                    $atribuicoes_destacadas = [];
+                }
+
+                $lista_html = '<div class="my-4" style="max-width: 1100px; margin-left: 0; margin-right: auto; padding: 0;">
+                    <ul class="list-unstyled mb-0 d-flex flex-column gap-1" style="background: transparent;">';
+                foreach ($atribuicoes_destacadas as $atr) {
+                    $lista_html .= '
+                        <li class="d-flex align-items-center gap-3 py-3 border-bottom" style="border-color: rgba(177,162,118,0.2) !important;">
+                            <span class="d-flex align-items-center justify-content-center" style="color: var(--primary-gold); font-size: 1.15rem; flex-shrink: 0; width: 24px;">
+                                <i class="' . htmlspecialchars($atr->icone) . '"></i>
+                            </span>
+                            <span class="atribuicao-item-text" style="font-size: 0.85rem; font-family: \'Open Sans\', sans-serif; color: #111923; font-weight: 600; line-height: 1.3;">
+                                ' . htmlspecialchars($atr->texto) . '
+                            </span>
+                        </li>';
+                }
+                $lista_html .= '
+                    </ul>
+                </div>';
+
+                $conteudo_final = str_replace('{{LISTA_ATRIBUICOES}}', $lista_html, $pagina->conteudo ?? $inst_info->historia ?? '');
+                echo oagb_fix_encoding($conteudo_final); 
+                ?>
             </div>
         </div>
     </section>
@@ -254,42 +302,42 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
             </div>
             <div class="row g-4">
                 <div class="col-lg-4">
-                    <div class="mvv-card d-flex align-items-start gap-3 h-100">
-                        <div class="mvv-icon" style="background: rgba(77,28,33,0.06); color: var(--primary-maroon);">
-                            <i class="fas fa-rocket"></i>
+                    <div class="mvv-card d-flex flex-column h-100">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="mvv-icon" style="background: rgba(77,28,33,0.06); color: var(--primary-maroon);">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h6 class="mb-0 fw-bold" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1.05rem;">Missão</h6>
                         </div>
-                        <div>
-                            <h6 class="mb-2 fw-bold" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1rem;">Missão</h6>
-                            <p class="mvv-text mb-0" style="font-size: 0.85rem; font-weight: 500;">
-                                <?php echo oagb_fix_encoding($inst_info->missao ?? 'Defender os direitos, liberdades e garantias dos cidadãos.'); ?>
-                            </p>
-                        </div>
+                        <p class="mvv-text mb-0" style="font-size: 0.85rem; font-weight: 500; text-align: justify; line-height: 1.6;">
+                            <?php echo oagb_fix_encoding($inst_info->missao ?? 'Defender os direitos, liberdades e garantias dos cidadãos.'); ?>
+                        </p>
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="mvv-card d-flex align-items-start gap-3 h-100">
-                        <div class="mvv-icon" style="background: rgba(77,28,33,0.06); color: var(--primary-maroon);">
-                            <i class="fas fa-eye"></i>
+                    <div class="mvv-card d-flex flex-column h-100">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="mvv-icon" style="background: rgba(77,28,33,0.06); color: var(--primary-maroon);">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h6 class="mb-0 fw-bold" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1.05rem;">Visão</h6>
                         </div>
-                        <div>
-                            <h6 class="mb-2 fw-bold" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1rem;">Visão</h6>
-                            <p class="mvv-text mb-0" style="font-size: 0.85rem; font-weight: 500;">
-                                <?php echo oagb_fix_encoding($inst_info->visao ?? 'Ser referência na defesa da legalidade democrática.'); ?>
-                            </p>
-                        </div>
+                        <p class="mvv-text mb-0" style="font-size: 0.85rem; font-weight: 500; text-align: justify; line-height: 1.6;">
+                            <?php echo oagb_fix_encoding($inst_info->visao ?? 'Ser referência na defesa da legalidade democrática.'); ?>
+                        </p>
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="mvv-card d-flex align-items-start gap-3 h-100">
-                        <div class="mvv-icon" style="background: rgba(77,28,33,0.06); color: var(--primary-maroon);">
-                            <i class="fas fa-balance-scale"></i>
+                    <div class="mvv-card d-flex flex-column h-100">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="mvv-icon" style="background: rgba(77,28,33,0.06); color: var(--primary-maroon);">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <h6 class="mb-0 fw-bold" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1.05rem;">Valores</h6>
                         </div>
-                        <div>
-                            <h6 class="mb-2 fw-bold" style="color: var(--primary-maroon); font-family: 'Libre Baskerville', serif; font-size: 1rem;">Valores</h6>
-                            <p class="mvv-text mb-0" style="font-size: 0.85rem; font-weight: 500;">
-                                <?php echo oagb_fix_encoding($inst_info->valores ?? 'Independência, Isenção, Sigilo Profissional.'); ?>
-                            </p>
-                        </div>
+                        <p class="mvv-text mb-0" style="font-size: 0.85rem; font-weight: 500; text-align: justify; line-height: 1.6;">
+                            <?php echo oagb_fix_encoding($inst_info->valores ?? 'Independência, Isenção, Sigilo Profissional.'); ?>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -334,6 +382,101 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
                 <?php else: ?>
                     <div class="text-center py-5">
                         <p class="text-muted">A preparar os marcos históricos…</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= MEMBROS FUNDADORES ======= -->
+    <section class="pb-5 pt-3" style="background: #f7f5f0;">
+        <div class="container py-lg-4">
+            <div class="text-center mb-5">
+                <span class="section-label" style="letter-spacing: 4px; font-weight: 700; color: var(--primary-gold); font-size: 0.75rem;">Os Pioneiros da Advocacia</span>
+                <h2 class="section-heading" style="font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 2.2rem; line-height: 1.3; margin-bottom: 20px;">Membros Fundadores</h2>
+                <p class="text-muted mx-auto" style="max-width: 650px; font-size: 0.9rem; line-height: 1.6;">
+                    Consulte a lista histórica dos 43 profissionais pioneiros que participaram na fundação da Ordem dos Advogados da Guiné-Bissau a 8 de Agosto de 1991.
+                </p>
+            </div>
+            
+            <div class="row g-3 justify-content-center">
+                <?php if (!empty($membros_fundadores)): 
+                    // Separar os primeiros 8 membros visíveis dos restantes
+                    $first_membros = array_slice($membros_fundadores, 0, 8);
+                    $rest_membros = array_slice($membros_fundadores, 8);
+                ?>
+                    <!-- Primeiros 8 Membros Visíveis -->
+                    <?php foreach ($first_membros as $membro): ?>
+                        <div class="col-xl-3 col-lg-4 col-md-6 text-start animate__animated animate__fadeIn">
+                            <div class="fundador-card p-3 d-flex align-items-center gap-3 h-100" style="background: #f3efe6; border: 1px solid rgba(177, 162, 118, 0.15); border-radius: 12px; transition: all 0.3s ease;">
+                                <div class="fundador-avatar d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; border-radius: 50%; background: rgba(77, 28, 33, 0.06); color: var(--primary-maroon); font-weight: 700; font-size: 0.95rem; font-family: 'Libre Baskerville', serif; flex-shrink: 0;">
+                                    <?php 
+                                        $parts = explode(' ', trim($membro->nome));
+                                        $initials = '';
+                                        if (count($parts) > 0) {
+                                            $initials .= mb_substr($parts[0], 0, 1);
+                                            if (count($parts) > 1) {
+                                                $initials .= mb_substr($parts[count($parts) - 1], 0, 1);
+                                            }
+                                        }
+                                        echo htmlspecialchars($initials);
+                                    ?>
+                                </div>
+                                <div style="min-width: 0;">
+                                    <h6 class="mb-1 fw-bold text-truncate" style="font-family: 'Open Sans', sans-serif; font-size: 0.82rem; color: #111923; text-transform: uppercase;" title="<?php echo htmlspecialchars($membro->nome); ?>">
+                                        <?php echo htmlspecialchars($membro->nome); ?>
+                                    </h6>
+                                    <span class="badge" style="background: <?php echo ($membro->cargo != 'Membro Fundador') ? 'rgba(77, 28, 33, 0.1); color: var(--primary-maroon);' : 'rgba(177, 162, 118, 0.15); color: #8C7B50;'; ?> font-size: 0.68rem; font-weight: 600; padding: 4px 8px; border-radius: 4px;">
+                                        <?php echo htmlspecialchars($membro->cargo); ?>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <!-- Conteúdo Collapsible para os restantes 35 membros -->
+                    <div class="collapse w-100" id="collapseFundadores">
+                        <div class="row g-3 justify-content-center pt-3">
+                            <?php foreach ($rest_membros as $membro): ?>
+                                <div class="col-xl-3 col-lg-4 col-md-6 text-start">
+                                    <div class="fundador-card p-3 d-flex align-items-center gap-3 h-100" style="background: #f3efe6; border: 1px solid rgba(177, 162, 118, 0.15); border-radius: 12px; transition: all 0.3s ease;">
+                                        <div class="fundador-avatar d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; border-radius: 50%; background: rgba(77, 28, 33, 0.06); color: var(--primary-maroon); font-weight: 700; font-size: 0.95rem; font-family: 'Libre Baskerville', serif; flex-shrink: 0;">
+                                            <?php 
+                                                $parts = explode(' ', trim($membro->nome));
+                                                $initials = '';
+                                                if (count($parts) > 0) {
+                                                    $initials .= mb_substr($parts[0], 0, 1);
+                                                    if (count($parts) > 1) {
+                                                        $initials .= mb_substr($parts[count($parts) - 1], 0, 1);
+                                                    }
+                                                }
+                                                echo htmlspecialchars($initials);
+                                            ?>
+                                        </div>
+                                        <div style="min-width: 0;">
+                                            <h6 class="mb-1 fw-bold text-truncate" style="font-family: 'Open Sans', sans-serif; font-size: 0.82rem; color: #111923; text-transform: uppercase;" title="<?php echo htmlspecialchars($membro->nome); ?>">
+                                                <?php echo htmlspecialchars($membro->nome); ?>
+                                            </h6>
+                                            <span class="badge" style="background: <?php echo ($membro->cargo != 'Membro Fundador') ? 'rgba(77, 28, 33, 0.1); color: var(--primary-maroon);' : 'rgba(177, 162, 118, 0.15); color: #8C7B50;'; ?> font-size: 0.68rem; font-weight: 600; padding: 4px 8px; border-radius: 4px;">
+                                                <?php echo htmlspecialchars($membro->cargo); ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Botão de Expandir/Colapsar -->
+                    <div class="col-12 text-center mt-4">
+                        <button class="btn btn-outline-primary rounded-pill px-4 py-2 mt-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFundadores" aria-expanded="false" aria-controls="collapseFundadores" id="btnToggleFundadores" style="border-color: var(--primary-maroon); color: var(--primary-maroon); font-weight: 600; font-size: 0.85rem; transition: .3s;" onmouseover="this.style.background='var(--primary-maroon)'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='var(--primary-maroon)';">
+                            <span id="toggleText"><i class="fas fa-chevron-down me-2"></i> Ver Todos os Membros Fundadores (43)</span>
+                        </button>
+                    </div>
+
+                <?php else: ?>
+                    <div class="col-12 text-center py-4">
+                        <p class="text-muted">Lista de membros fundadores indisponível temporariamente.</p>
                     </div>
                 <?php endif; ?>
             </div>
@@ -394,6 +537,18 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
                 var last = entries[entries.length - 1];
                 var container = line.parentElement;
                 line.style.height = (last.offsetTop + 20) + 'px';
+            }
+
+            // Collapsible fundadores button text toggler
+            var collapseEl = document.getElementById('collapseFundadores');
+            var toggleTextEl = document.getElementById('toggleText');
+            if (collapseEl && toggleTextEl) {
+                collapseEl.addEventListener('shown.bs.collapse', function () {
+                    toggleTextEl.innerHTML = '<i class="fas fa-chevron-up me-2"></i> Ver Menos';
+                });
+                collapseEl.addEventListener('hidden.bs.collapse', function () {
+                    toggleTextEl.innerHTML = '<i class="fas fa-chevron-down me-2"></i> Ver Todos os Membros Fundadores (43)';
+                });
             }
         });
     </script>

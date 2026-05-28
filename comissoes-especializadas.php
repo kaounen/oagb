@@ -183,62 +183,139 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
                 </div>
             </div>
 
-            <!-- Lista de Comissões -->
-            <div class="row">
-                <?php if (!empty($comissoes)): foreach ($comissoes as $c): ?>
-                <div class="col-lg-6 mb-4 wow fadeInUp">
-                    <div class="commission-card">
-                        <div class="commission-header">
-                            <div class="commission-icon">
-                                <?php
-                                $icon = 'fa-gavel';
-                                $area = strtolower($c->area_atuacao ?? '');
-                                if (strpos($area, 'humanos') !== false) $icon = 'fa-user-shield';
-                                elseif (strpos($area, 'formação') !== false || strpos($area, 'estágio') !== false) $icon = 'fa-graduation-cap';
-                                elseif (strpos($area, 'ética') !== false || strpos($area, 'deontologia') !== false) $icon = 'fa-balance-scale';
-                                elseif (strpos($area, 'legislação') !== false) $icon = 'fa-book-reader';
-                                elseif (strpos($area, 'apoio') !== false) $icon = 'fa-hands-helping';
-                                ?>
-                                <i class="fas <?php echo $icon; ?>"></i>
-                            </div>
-                            <h4 class="commission-name"><?php echo oagb_fix_encoding($c->nome); ?></h4>
-                            <?php if (!empty($c->area_atuacao)): ?>
-                                <span class="commission-area"><?php echo oagb_fix_encoding($c->area_atuacao); ?></span>
-                            <?php endif; ?>
-                        </div>
-                        <div class="commission-body">
-                            <p class="commission-description">
-                                <?php echo oagb_fix_encoding($c->descricao); ?>
-                            </p>
-                            
-                            <?php if (!empty($c->presidente)): ?>
-                            <div class="commission-info border-start border-4" style="border-color: var(--primary-gold) !important;">
-                                <h5>Presidência</h5>
-                                <p><?php echo oagb_fix_encoding($c->presidente); ?></p>
-                            </div>
-                            <?php endif; ?>
-                            
-                            <?php if (!empty($c->membros)): ?>
-                            <div class="commission-info">
-                                <h5>Membros da Comissão</h5>
-                                <ul class="member-list">
-                                    <?php 
-                                    $membros = explode(',', $c->membros);
-                                    foreach ($membros as $m):
+            <!-- Seccionamento de Comissões e Direções -->
+            <?php
+            $especializadas = [];
+            $direcoes = [];
+            foreach ($comissoes as $c) {
+                if ($c->area_atuacao == 'Direção Executiva') {
+                    $direcoes[] = $c;
+                } else {
+                    $especializadas[] = $c;
+                }
+            }
+            ?>
+
+            <!-- Secção 1: Comissões Especializadas -->
+            <div class="mb-5">
+                <h3 class="group-header" style="font-size: 1.5rem; border-left: 5px solid var(--primary-maroon); padding-left: 15px; margin-bottom: 30px; font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700;">Comissões Especializadas</h3>
+                <div class="row">
+                    <?php if (!empty($especializadas)): foreach ($especializadas as $c): ?>
+                    <div class="col-lg-6 mb-4 wow fadeInUp">
+                        <div class="commission-card">
+                            <div class="commission-header">
+                                <div class="commission-icon">
+                                    <?php
+                                    $icon = 'fa-gavel';
+                                    $area = strtolower($c->area_atuacao ?? '');
+                                    if (strpos($area, 'humanos') !== false) $icon = 'fa-user-shield';
+                                    elseif (strpos($area, 'formação') !== false || strpos($area, 'estágio') !== false) $icon = 'fa-graduation-cap';
+                                    elseif (strpos($area, 'ética') !== false || strpos($area, 'deontologia') !== false) $icon = 'fa-balance-scale';
+                                    elseif (strpos($area, 'legislação') !== false) $icon = 'fa-book-reader';
+                                    elseif (strpos($area, 'apoio') !== false || strpos($area, 'assistência') !== false) $icon = 'fa-hands-helping';
+                                    elseif (strpos($area, 'comunicação') !== false) $icon = 'fa-bullhorn';
+                                    elseif (strpos($area, 'mediação') !== false) $icon = 'fa-handshake';
+                                    elseif (strpos($area, 'cultura') !== false) $icon = 'fa-trophy';
                                     ?>
-                                    <li><?php echo trim(oagb_fix_encoding($m)); ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
+                                    <i class="fas <?php echo $icon; ?>"></i>
+                                </div>
+                                <h4 class="commission-name"><?php echo oagb_fix_encoding($c->nome); ?></h4>
+                                <?php if (!empty($c->area_atuacao)): ?>
+                                    <span class="commission-area"><?php echo oagb_fix_encoding($c->area_atuacao); ?></span>
+                                <?php endif; ?>
                             </div>
-                            <?php endif; ?>
+                            <div class="commission-body">
+                                <p class="commission-description">
+                                    <?php echo oagb_fix_encoding($c->descricao); ?>
+                                </p>
+                                
+                                <?php if (!empty($c->presidente)): ?>
+                                <div class="commission-info border-start border-4" style="border-color: var(--primary-gold) !important;">
+                                    <h5>Coordenação / Presidência</h5>
+                                    <p><?php echo oagb_fix_encoding($c->presidente); ?></p>
+                                </div>
+                                <?php endif; ?>
+                                
+                                <?php if (!empty($c->membros)): ?>
+                                <div class="commission-info">
+                                    <h5>Membros Constituintes</h5>
+                                    <ul class="member-list">
+                                        <?php 
+                                        $membros = explode(',', $c->membros);
+                                        foreach ($membros as $m):
+                                        ?>
+                                        <li><?php echo trim(oagb_fix_encoding($m)); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
+                    <?php endforeach; else: ?>
+                        <div class="col-12 text-center py-5">
+                            <p class="text-muted">Nenhuma comissão especializada ativa encontrada.</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <?php endforeach; else: ?>
-                    <div class="col-12 text-center py-5">
-                        <p class="text-muted">Nenhuma comissão ativa encontrada.</p>
+            </div>
+
+            <!-- Secção 2: Direções Executivas -->
+            <div class="mb-5 pt-4">
+                <h3 class="group-header" style="font-size: 1.5rem; border-left: 5px solid var(--primary-gold); padding-left: 15px; margin-bottom: 30px; font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700;">Direções Executivas</h3>
+                <div class="row">
+                    <?php if (!empty($direcoes)): foreach ($direcoes as $c): ?>
+                    <div class="col-lg-6 mb-4 wow fadeInUp">
+                        <div class="commission-card">
+                            <div class="commission-header" style="background: linear-gradient(135deg, var(--primary-gold) 0%, #908258 100%) !important;">
+                                <div class="commission-icon" style="background: rgba(255,255,255,0.2) !important;">
+                                    <?php
+                                    $icon = 'fa-folder-open';
+                                    $nome_dir = strtolower($c->nome ?? '');
+                                    if (strpos($nome_dir, 'financeira') !== false) $icon = 'fa-wallet';
+                                    elseif (strpos($nome_dir, 'estudos') !== false) $icon = 'fa-brain';
+                                    elseif (strpos($nome_dir, 'escola') !== false) $icon = 'fa-university';
+                                    elseif (strpos($nome_dir, 'cadastro') !== false) $icon = 'fa-id-card';
+                                    ?>
+                                    <i class="fas <?php echo $icon; ?>"></i>
+                                </div>
+                                <h4 class="commission-name"><?php echo oagb_fix_encoding($c->nome); ?></h4>
+                                <span class="commission-area" style="background: rgba(255, 255, 255, 0.25) !important; border-color: rgba(255,255,255,0.3) !important;">Direção Executiva</span>
+                            </div>
+                            <div class="commission-body">
+                                <p class="commission-description">
+                                    <?php echo oagb_fix_encoding($c->descricao); ?>
+                                </p>
+                                
+                                <?php if (!empty($c->presidente)): ?>
+                                <div class="commission-info border-start border-4" style="border-color: var(--primary-maroon) !important;">
+                                    <h5>Diretor / Responsável</h5>
+                                    <p><?php echo oagb_fix_encoding($c->presidente); ?></p>
+                                </div>
+                                <?php endif; ?>
+                                
+                                <?php if (!empty($c->membros)): ?>
+                                <div class="commission-info">
+                                    <h5>Âmbito de Atuação</h5>
+                                    <ul class="member-list">
+                                        <?php 
+                                        $membros = explode(',', $c->membros);
+                                        foreach ($membros as $m):
+                                        ?>
+                                        <li><?php echo trim(oagb_fix_encoding($m)); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     </div>
-                <?php endif; ?>
+                    <?php endforeach; else: ?>
+                        <div class="col-12 text-center py-5">
+                            <p class="text-muted">Nenhuma direção executiva ativa encontrada.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <!-- CTA -->

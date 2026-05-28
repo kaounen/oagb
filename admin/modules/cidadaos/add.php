@@ -11,7 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $pdo->prepare("INSERT INTO info_cidadaos (titulo,slug,icone,conteudo,ordem,status) VALUES (?,?,?,?,?,?)")
             ->execute([$titulo,$slug,$icone,$conteudo,$ordem,$status]);
-        header('Location: index.php?msg=added'); exit;
+        $new_id = $pdo->lastInsertId();
+        header('Location: edit.php?id=' . $new_id . '&msg=added'); exit;
     }
 }
 ?>

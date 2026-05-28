@@ -16,6 +16,13 @@ if (!function_exists('oagb_fix_encoding')) {
 $page_title = "Cooperação Institucional";
 $meta_description = "Protocolos e parcerias nacionais e internacionais da Ordem dos Advogados da Guiné-Bissau";
 $header_image = 'uploads/justice-symbol-legal-law.jpg';
+
+try {
+    $stmt_coop = $pdo->query("SELECT * FROM parcerias_internacionais WHERE status = 'Ativo' ORDER BY data_assinatura DESC");
+    $parcerias = $stmt_coop->fetchAll(PDO::FETCH_OBJ);
+} catch (PDOException $e) {
+    $parcerias = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -139,28 +146,28 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
                     <p class="lead mb-5" style="color: #444;">A Ordem dos Advogados da Guiné-Bissau promove o diálogo e a cooperação estratégica com entidades nacionais e internacionais de relevo, fortalecendo a posição jurídica do país e a dignidade da profissão.</p>
                     
                     <div class="row g-4 mb-5">
-                        <div class="col-md-6 wow fadeInUp">
-                            <div class="coop-card">
-                                <h4>Parcerias Nacionais</h4>
-                                <p>Colaboração estreita com as principais instituições do Estado para garantir a melhoria contínua do sistema judicial.</p>
-                                <ul class="coop-list">
-                                    <li><i class="fas fa-check-circle"></i> Ministério da Justiça</li>
-                                    <li><i class="fas fa-check-circle"></i> Conselho Superior da Magistratura</li>
-                                    <li><i class="fas fa-check-circle"></i> Instituições Académicas</li>
-                                </ul>
+                        <?php if (!empty($parcerias)): ?>
+                            <?php foreach ($parcerias as $p): ?>
+                                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                    <div class="coop-card p-4 bg-white border rounded shadow-sm h-100" style="transition: all 0.3s ease;">
+                                        <div class="d-flex align-items-center gap-2 mb-3">
+                                            <span class="badge bg-danger-subtle text-danger px-3 py-2 small border border-danger-subtle" style="font-size:0.75rem;"><?php echo htmlspecialchars($p->pais); ?></span>
+                                            <span class="badge bg-secondary-subtle text-secondary px-3 py-2 small" style="font-size:0.75rem;"><?php echo htmlspecialchars($p->tipo_acordo); ?></span>
+                                        </div>
+                                        <h4 style="font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-size: 1.15rem; font-weight: 700;" class="mb-3">
+                                            <?php echo htmlspecialchars($p->entidade_parceira); ?>
+                                        </h4>
+                                        <p class="small text-muted mb-0">
+                                            <i class="far fa-calendar-alt me-2 text-gold"></i> Assinado em: <?php echo $p->data_assinatura ? date('d/m/Y', strtotime($p->data_assinatura)) : '-'; ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="col-12 text-center py-4">
+                                <p class="text-muted">Sem acordos de cooperação registados.</p>
                             </div>
-                        </div>
-                        <div class="col-md-6 wow fadeInUp">
-                            <div class="coop-card">
-                                <h4>Cooperação Internacional</h4>
-                                <p>Representação ativa em fóruns internacionais de advocacia e intercâmbio de conhecimento jurídico.</p>
-                                <ul class="coop-list">
-                                    <li><i class="fas fa-check-circle"></i> Advogados da CEDEAO</li>
-                                    <li><i class="fas fa-check-circle"></i> União Internacional de Advogados</li>
-                                    <li><i class="fas fa-check-circle"></i> Advogados de Língua Portuguesa</li>
-                                </ul>
-                            </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                     
                     <div class="cta-box shadow-lg wow zoomIn">
@@ -181,8 +188,6 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
                             <a href="comissoes-especializadas.php" class="sidebar-link"><i class="fas fa-gavel"></i> Comissões Especializadas</a>
                             <a href="cooperacao-institucional.php" class="sidebar-link active"><i class="fas fa-handshake"></i> Cooperação Institucional</a>
                         </div>
-                        
-
                     </div>
                 </div>
 
@@ -204,4 +209,3 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
     <script src="js/main.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
-

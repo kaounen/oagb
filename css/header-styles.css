@@ -473,7 +473,7 @@
     }
 
     .header-light-page .mobile-navbar-wrapper .navbar-toggler::after {
-        color: #B1A276 !important;
+        color: white !important;
     }
 
     .mobile-navbar-wrapper .navbar-collapse {
@@ -748,9 +748,11 @@
     }
 
     /* Mobile "MENU" text color for light pages */
-    .header-light-page #mobile-header-simple .navbar-toggler::after,
-    .header-light-page .mobile-navbar-wrapper .navbar-toggler::after {
+    .header-light-page #mobile-header-simple .navbar-toggler::after {
         color: #B1A276 !important;
+    }
+    .header-light-page .mobile-navbar-wrapper .navbar-toggler::after {
+        color: white !important;
     }
 
     #topbar:not(.topbar-scrolled) .topbar-btn:hover i,
@@ -763,9 +765,11 @@
         color: #4D1C21 !important;
     }
 
-    .header-light-page #mobile-header-simple .navbar-toggler i,
-    .header-light-page .mobile-navbar-wrapper .navbar-toggler i {
+    .header-light-page #mobile-header-simple .navbar-toggler i {
         color: #B1A276 !important;
+    }
+    .header-light-page .mobile-navbar-wrapper .navbar-toggler i {
+        color: white !important;
     }
 
     /* Ajustar padding do conteúdo para não ficar sobreposto pelo navbar fixo */

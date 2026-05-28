@@ -6,18 +6,36 @@ require_once 'connect.php';
 $letra_atual = isset($_GET['letra']) ? strtoupper(substr($_GET['letra'], 0, 1)) : 'A';
 if (!preg_match('/^[A-Z]$/', $letra_atual)) { $letra_atual = 'A'; }
 
-// Fetch lawyers for selected letter
-$stmt = $pdo->prepare("SELECT numero_registo, nome_completo, regiao, localidade, telefone, email, data_inscricao, foto 
-                       FROM advogados 
-                       WHERE status = 'ativo' AND nome_completo LIKE ? 
-                       ORDER BY nome_completo ASC");
+// Fetch lawyers for selected letter (only those with active quotas in day)
+$stmt = $pdo->prepare("SELECT a.numero_registo, a.nome_completo, a.regiao, a.localidade, a.telefone, a.email, a.data_inscricao, a.foto 
+                       FROM advogados a
+                       WHERE a.status = 'ativo' 
+                         AND a.nome_completo LIKE ? 
+                         AND EXISTS (
+                             SELECT 1 FROM finan_pagamentos fp 
+                             WHERE fp.advogado_id = a.id 
+                               AND fp.membro_tipo = 'advogado' 
+                               AND fp.tipo_pagamento_id = 1 
+                               AND fp.status = 'confirmado' 
+                               AND fp.valid_until >= CURDATE()
+                         )
+                       ORDER BY a.nome_completo ASC");
 $stmt->execute([$letra_atual . '%']);
 $advogados = $stmt->fetchAll();
 
-// Counts per letter
+// Counts per letter with quota check
 $alfabeto = range('A', 'Z');
 $contagem = [];
-$stmt_count = $pdo->prepare("SELECT COUNT(*) FROM advogados WHERE status = 'ativo' AND nome_completo LIKE ?");
+$stmt_count = $pdo->prepare("SELECT COUNT(*) FROM advogados a 
+                             WHERE a.status = 'ativo' AND a.nome_completo LIKE ?
+                               AND EXISTS (
+                                   SELECT 1 FROM finan_pagamentos fp 
+                                   WHERE fp.advogado_id = a.id 
+                                     AND fp.membro_tipo = 'advogado' 
+                                     AND fp.tipo_pagamento_id = 1 
+                                     AND fp.status = 'confirmado' 
+                                     AND fp.valid_until >= CURDATE()
+                               )");
 foreach ($alfabeto as $l) {
     $stmt_count->execute([$l . '%']);
     $contagem[$l] = $stmt_count->fetchColumn();

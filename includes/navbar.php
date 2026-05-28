@@ -3,7 +3,7 @@
 $pagina_atual = basename($_SERVER['PHP_SELF']);
 
 // Páginas do menu ORDEM
-$ordem_pages = ['ordem-dos-advogados.php', 'bastonario-ordem.php', 'orgaos-sociais.php', 'comissoes-especializadas.php', 'cooperacao-institucional.php', 'deontologia-etica.php', 'centro-estagio.php'];
+$ordem_pages = ['ordem-dos-advogados.php', 'bastonario-ordem.php', 'orgaos-sociais.php', 'comissoes-especializadas.php', 'cooperacao-institucional.php', 'deontologia-etica.php', 'centro-estagio.php', 'planos_accao.php', 'plano.php'];
 
 // Páginas do menu ADVOGADOS
 $advogados_pages = ['pesquisa-advogados.php', 'advogados-inscritos.php', 'pesquisa-estagiarios.php', 'estagiarios-inscritos.php', 'solicitacao-advogados.php', 'inscricao-ordem.php', 'formacao.php'];
@@ -39,10 +39,11 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="ordem-dos-advogados.php" class="dropdown-item">Apresentação e História</a>
 					<a href="bastonario-ordem.php" class="dropdown-item">O Bastonário</a>
                     <a href="orgaos-sociais.php" class="dropdown-item">Órgãos Sociais</a>
-                    <a href="comissoes-especializadas.php" class="dropdown-item">Comissões Especializadas</a>
+                    <a href="comissoes-especializadas.php" class="dropdown-item">Órgãos Técnicos</a>
                     <a href="cooperacao-institucional.php" class="dropdown-item">Cooperação Institucional</a>
                     <a href="deontologia-etica.php" class="dropdown-item">Deontologia e Ética</a>
                     <a href="centro-estagio.php" class="dropdown-item">Centro de Estágio</a>
+                    <a href="planos_accao.php" class="dropdown-item">Planos de Acção</a>
                 </div>
             </div>
             <div class="nav-item dropdown">
@@ -146,6 +147,12 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
         border-radius: 8px;
         padding: 1rem 0;
         margin-top: 1rem;
+    }
+
+    /* Evitar que os breadcrumbs sobreponham o menu no mobile quando aberto */
+    .navbar-collapse.show,
+    .navbar-collapse.collapsing {
+        margin-bottom: 55px !important;
     }
 
     .navbar-collapse .nav-link {

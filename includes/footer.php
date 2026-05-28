@@ -144,3 +144,76 @@ if (document.getElementById('newsletter-form')) {
 
 <!-- Header Functions (Componente Reutilizável) -->
 <script src="js/header-functions.js?v=<?php echo time(); ?>"></script>
+
+<?php
+// Load VAPID Public Key for Web Push
+$vapidPublicKey = '';
+$vapidPath = __DIR__ . '/../vapid.json';
+if (file_exists($vapidPath)) {
+    $vapidData = json_decode(file_get_contents($vapidPath), true);
+    $vapidPublicKey = $vapidData['publicKey'] ?? '';
+}
+?>
+<?php if (!empty($vapidPublicKey)): ?>
+<script>
+    // PWA & Web Push Notification Logic
+    function urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/oagb/sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                
+                // Request Push Notification Permission automatically if not granted or denied
+                if (Notification.permission === 'default') {
+                    Notification.requestPermission().then(function(permission) {
+                        if (permission === 'granted') {
+                            subscribeUserToPush(registration);
+                        }
+                    });
+                } else if (Notification.permission === 'granted') {
+                    // Already granted, ensure we are subscribed
+                    registration.pushManager.getSubscription().then(function(subscription) {
+                        if (!subscription) {
+                            subscribeUserToPush(registration);
+                        }
+                    });
+                }
+            }).catch(function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+
+        function subscribeUserToPush(registration) {
+            const applicationServerKey = urlBase64ToUint8Array('<?php echo $vapidPublicKey; ?>');
+            registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey
+            })
+            .then(function(subscription) {
+                // Send subscription to backend
+                fetch('/oagb/ajax/subscribe_pwa.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(subscription)
+                })
+                .then(response => response.json())
+                .then(data => console.log('PWA Subscription Saved:', data))
+                .catch(err => console.error('PWA Subscription Error:', err));
+            })
+            .catch(function(err) {
+                console.log('Failed to subscribe the user: ', err);
+            });
+        }
+    }
+</script>
+<?php endif; ?>

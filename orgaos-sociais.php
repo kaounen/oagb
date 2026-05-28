@@ -92,7 +92,7 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
         .text-center .section-heading::after { margin-left: auto; margin-right: auto; }
 
         /* === ÓRGÃOS CARDS === */
-        .group-header { border-left: 5px solid var(--primary-gold); padding-left: 15px; margin-bottom: 30px; font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; }
+        .group-header { margin-bottom: 30px; font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; }
         .member-card { transition: all 0.3s; border: 1px solid #f0ece4; border-radius: 16px; overflow: hidden; height: 100%; background: #fff; }
         .member-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(177, 162, 118, 0.12) !important; }
         .member-img { width: 100%; height: 280px; object-fit: cover; }
@@ -101,8 +101,12 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
         .member-name { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
         .member-mandato { font-size: 0.75rem; color: #888; margin-top: 10px; }
 
-        .organogram-container { background: #fff; border-radius: 20px; padding: 40px; margin-bottom: 40px; border: 1px solid #f0ece4; overflow-x: auto; }
+        .organogram-container { border-radius: 20px; padding: 10px; margin-bottom: 40px; background: transparent; border: none; overflow-x: hidden; }
         .btn-toggle-view { border-radius: 50px; padding: 10px 30px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px; transition: .3s; }
+        
+        .btn-custom-active { background: var(--primary-maroon); color: #fff; border: 1px solid var(--primary-maroon); }
+        .btn-custom-inactive { background: transparent; color: var(--primary-maroon); border: 1px solid transparent; }
+        .btn-custom-inactive:hover { background: rgba(77,28,33,0.05); }
         
         /* Tree Adjustments */
         /* === ADVANCED ORGANOGRAM CSS === */
@@ -159,7 +163,7 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
         .tree li .node .n-name { font-weight: 700; margin-bottom: 2px; font-family: 'Libre Baskerville', serif; font-size: 0.85rem; }
         .tree li .node .n-role { font-size: 11px; opacity: 0.7; font-weight: 600; text-transform: uppercase; color: var(--primary-gold); }
         /* === RESPONSIVE ORGANOGRAM (MOBILE VERTICAL TREE) === */
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 991px) {
             .organogram-container { padding: 20px 5px; overflow-x: hidden !important; }
             .tree ul { display: block; padding-top: 0; }
             .tree li { display: block; padding: 12px 0 0 30px !important; text-align: left; position: relative; }
@@ -179,7 +183,7 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
             }
             
             .tree ul ul::before { display: none !important; }
-            .tree li .node { width: calc(100% - 10px); max-width: 250px; text-align: left; padding: 10px 14px; }
+            .tree li .node { width: calc(100% - 10px); max-width: 320px; text-align: left; padding: 10px 14px; }
             .tree li:only-child { padding-top: 12px !important; }
             .tree li:first-child::before { top: 0; }
         }
@@ -243,8 +247,8 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
                 <h2 class="section-heading" style="font-size: 1.3rem;">Estrutura dos Órgãos Sociais</h2>
                 
                 <div class="btn-group shadow-sm p-1 bg-white rounded-pill mt-4 border">
-                    <button class="btn btn-primary rounded-pill px-4 btn-toggle-view" id="view-list-btn" onclick="toggleView('list')"><i class="fas fa-users me-2"></i> Lista de Membros</button>
-                    <button class="btn btn-light rounded-pill px-4 btn-toggle-view" id="view-chart-btn" onclick="toggleView('chart')"><i class="fas fa-sitemap me-2"></i> Organograma</button>
+                    <button class="btn btn-custom-active rounded-pill px-4 btn-toggle-view" id="view-list-btn" onclick="toggleView('list')"><i class="fas fa-users me-2"></i> Lista de Membros</button>
+                    <button class="btn btn-custom-inactive rounded-pill px-4 btn-toggle-view" id="view-chart-btn" onclick="toggleView('chart')"><i class="fas fa-sitemap me-2"></i> Organograma</button>
                 </div>
             </div>
 
@@ -306,76 +310,47 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
                         </div>
                         <div class="tree py-4">
                             <ul>
-                                <!-- Nível 1: Congresso dos Advogados (órgão supremo) -->
+                                <!-- Nível 1: Mesa da Assembleia Geral (órgão supremo) -->
                                 <li>
-                                    <div class="node shadow-sm" style="background: var(--primary-maroon); color: #fff; border-color: var(--primary-maroon); width: 220px;">
-                                        <div class="n-name" style="color: #fff;">Congresso dos Advogados</div>
+                                    <div class="node shadow-sm" style="background: var(--primary-maroon); color: #fff; border-color: var(--primary-maroon); width: 260px;">
+                                        <div class="n-name" style="color: #fff;">MESA DA ASSEMBLEIA GERAL</div>
                                         <div class="n-role" style="color: var(--primary-gold);">Órgão Deliberativo Supremo</div>
                                     </div>
                                     <ul>
-                                        <!-- Nível 2: Assembleia Geral -->
+                                        <!-- Nível 2: Conselho da Ordem -->
                                         <li>
-                                            <div class="node shadow-sm" style="border-left: 3px solid var(--primary-gold);">
-                                                <div class="n-name">Assembleia Geral</div>
+                                            <div class="node shadow-sm" style="width: 220px;">
+                                                <div class="n-name">CONSELHO DA ORDEM</div>
                                                 <div class="n-role">Órgão Deliberativo</div>
                                             </div>
                                         </li>
                                         <!-- Nível 2: Bastonário -->
                                         <li>
-                                            <div class="node shadow-sm" style="background: rgba(77,28,33,0.06); border-left: 3px solid var(--primary-maroon);">
-                                                <div class="n-name">Bastonário</div>
+                                            <div class="node shadow-sm" style="background: rgba(77,28,33,0.06); border-color: var(--primary-maroon); width: 220px;">
+                                                <div class="n-name">BASTONÁRIO</div>
                                                 <div class="n-role">Representante Máximo</div>
                                             </div>
                                             <ul>
-                                                <!-- Nível 3: Órgãos sob alçada do Bastonário -->
+                                                <!-- Nível 3: Direção e Secretário -->
                                                 <li>
                                                     <div class="node shadow-sm">
-                                                        <div class="n-name">Conselho Nacional</div>
+                                                        <div class="n-name">DIREÇÃO NACIONAL</div>
                                                         <div class="n-role">Órgão Executivo</div>
                                                     </div>
-                                                    <ul>
-                                                        <li>
-                                                            <div class="node shadow-sm" style="width: 160px;">
-                                                                <div class="n-name" style="font-size: 0.78rem;">Conselho Regional</div>
-                                                                <div class="n-role">Delegação Regional</div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="node shadow-sm" style="width: 160px;">
-                                                                <div class="n-name" style="font-size: 0.78rem;">Centro de Estágio</div>
-                                                                <div class="n-role">Formação</div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
                                                 </li>
                                                 <li>
                                                     <div class="node shadow-sm">
-                                                        <div class="n-name">Conselho Fiscal</div>
-                                                        <div class="n-role">Fiscalização</div>
+                                                        <div class="n-name">SECRETÁRIO-GERAL</div>
+                                                        <div class="n-role">Administração</div>
                                                     </div>
                                                 </li>
                                             </ul>
                                         </li>
-                                        <!-- Nível 2: Órgãos independentes -->
+                                        <!-- Nível 2: Conselho de Deontologia -->
                                         <li>
-                                            <div class="node shadow-sm" style="border-left: 3px solid #2c6e49;">
-                                                <div class="n-name">Conselho de Deontologia</div>
+                                            <div class="node shadow-sm" style="width: 260px;">
+                                                <div class="n-name">CONSELHO DE DEONTOLOGIA E DISCIPLINA</div>
                                                 <div class="n-role" style="color: #2c6e49;">Ética Profissional</div>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <div class="node shadow-sm" style="border-left: 3px solid #c0392b;">
-                                                        <div class="n-name">Tribunal de Ética</div>
-                                                        <div class="n-role" style="color: #c0392b;">Disciplina</div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <!-- Nível 2: Conselho de Jurisdição -->
-                                        <li>
-                                            <div class="node shadow-sm" style="border-left: 3px solid #2980b9;">
-                                                <div class="n-name">Conselho de Jurisdição</div>
-                                                <div class="n-role" style="color: #2980b9;">Contencioso</div>
                                             </div>
                                         </li>
                                     </ul>
@@ -411,13 +386,13 @@ $header_image = 'uploads/justice-symbol-legal-law.jpg';
             if (view === 'list') {
                 listView.classList.remove('d-none');
                 chartView.classList.add('d-none');
-                listBtn.classList.replace('btn-light', 'btn-primary');
-                chartBtn.classList.replace('btn-primary', 'btn-light');
+                listBtn.className = 'btn btn-custom-active rounded-pill px-4 btn-toggle-view';
+                chartBtn.className = 'btn btn-custom-inactive rounded-pill px-4 btn-toggle-view';
             } else {
                 listView.classList.add('d-none');
                 chartView.classList.remove('d-none');
-                chartBtn.classList.replace('btn-light', 'btn-primary');
-                listBtn.classList.replace('btn-primary', 'btn-light');
+                chartBtn.className = 'btn btn-custom-active rounded-pill px-4 btn-toggle-view';
+                listBtn.className = 'btn btn-custom-inactive rounded-pill px-4 btn-toggle-view';
             }
         }
     </script>

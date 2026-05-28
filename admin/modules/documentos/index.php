@@ -52,7 +52,20 @@ try {
                             </td>
                             <td>
                                 <span class="badge bg-light text-dark border py-2 px-3 small border-secondary-subtle">
-                                    <?php echo strtoupper($row['tipo']); ?>
+                                    <?php 
+                                    $label = strtoupper($row['tipo']);
+                                    if ($row['tipo'] == 'comunicado' && !empty($row['subtipo'])) {
+                                        $sub_labels = [
+                                            'comunicado' => 'COMUNICADO',
+                                            'circular' => 'CIRCULAR',
+                                            'nota-pesar' => 'NOTA DE PESAR',
+                                            'comunicado-imprensa' => 'C. IMPRENSA',
+                                            'convocatoria-ag' => 'CONV. AG'
+                                        ];
+                                        $label .= ' / ' . ($sub_labels[$row['subtipo']] ?? strtoupper($row['subtipo']));
+                                    }
+                                    echo $label; 
+                                    ?>
                                 </span>
                             </td>
                             <td class="small">

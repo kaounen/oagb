@@ -48,19 +48,20 @@ try {
         .bg-header { background-attachment: scroll !important; }
         html, body { overflow-x: hidden !important; width: 100%; margin: 0; padding: 0; }
         .subpage-breadcrumb-bar { padding: 10px 0 0 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 20px; }
-        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: rgba(255,255,255,0.85) !important; text-decoration: none !important; font-size: 0.8rem; letter-spacing: 0.5px; transition: .3s; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: rgba(255,255,255,0.85) !important; text-decoration: none !important; font-size: 0.85rem; letter-spacing: 0.5px; transition: .3s; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
         .subpage-breadcrumb-bar a:hover { color: #fff; }
-        .subpage-breadcrumb-bar .bc-active { color: #fff; font-weight: 600; font-size: 0.8rem !important; }
+        .subpage-breadcrumb-bar .bc-active { color: #fff; font-weight: 600; font-size: 0.85rem !important; opacity: 1 !important; }
         .bc-sep { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--primary-gold); margin: 0 10px; vertical-align: middle; opacity: 0.6; }
         .quick-links a { width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); display: inline-flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.9); transition: .3s; font-size: 0.8rem; }
         .quick-links a:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: var(--primary-gold); }
         @media (max-width: 991px) {
             .mobile-breadcrumb-bar { background: transparent; padding: 10px 0; position: absolute; bottom: 0; left: 0; right: 0; z-index: 1045 !important; }
             .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span { font-size: 0.72rem; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+            .mobile-breadcrumb-bar .bc-active { font-weight: 600; font-size: 0.72rem !important; }
             #header-carousel-mobile .carousel-item { min-height: 62vh !important; }
         }
         .section-heading { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 2.2rem; line-height: 1.3; margin-bottom: 30px; border-left: 5px solid var(--primary-gold); padding-left: 20px; }
-        .sidebar-widget { background: #fff; border-radius: 20px; padding: 30px; border: 1px solid #f0ece4; position: sticky; top: 120px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .sidebar-widget { background: #fff; border-radius: 20px; padding: 30px; border: 1px solid #f0ece4; position: sticky; top: 150px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
         .sidebar-link { display: flex; align-items: center; padding: 14px 20px; border-radius: 12px; background: #fafafa; margin-bottom: 10px; text-decoration: none !important; color: #555; font-weight: 600; transition: all 0.3s; border: 1px solid transparent; }
         .sidebar-link:hover, .sidebar-link.active { background: var(--primary-maroon); color: #fff !important; transform: translateX(5px); }
         .sidebar-link i { margin-right: 15px; color: var(--primary-gold); width: 20px; text-align: center; }
@@ -68,7 +69,7 @@ try {
         .lei-card { background: #fff; border: 1px solid #f0ece4; border-radius: 16px; padding: 25px; margin-bottom: 20px; transition: .3s; display: flex; gap: 20px; align-items: flex-start; }
         .lei-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.04); }
         .lei-icon { width: 55px; height: 55px; background: rgba(77, 28, 33, 0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--primary-maroon); flex-shrink: 0; }
-        .lei-card h4 { font-family: 'Libre Baskerville', serif; font-weight: 700; color: var(--primary-maroon); font-size: 1.05rem; margin-bottom: 5px; }
+        .lei-card h4 { font-family: 'Libre Baskerville', serif; font-weight: 500 !important; color: var(--primary-maroon); font-size: 1.15rem; margin-bottom: 5px; line-height: 1.3; }
         .lei-diploma { font-size: 0.78rem; color: var(--primary-gold); font-weight: 700; margin-bottom: 8px; }
         .cat-badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; background: rgba(177,162,118,0.12); color: var(--primary-maroon); margin-bottom: 10px; }
         .filter-btn { padding: 6px 16px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; border: 1px solid #e0dcd2; background: #fff; color: #555; transition: .3s; margin: 3px; text-decoration: none !important; }
@@ -93,6 +94,7 @@ try {
                     <div class="quick-links d-flex align-items-center gap-2">
                         <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
                         <a href="javascript:window.print()"><i class="fas fa-print"></i></a>
+                        <a href="#" onclick="if(navigator.share){navigator.share({title:document.title,url:window.location.href});}return false;"><i class="fas fa-share-alt"></i></a>
                     </div>
                 </div>
             </div>
@@ -133,9 +135,8 @@ try {
                     <?php endif; ?>
                 </div>
                 <div class="col-lg-4 mt-5 mt-lg-0 pt-lg-4">
-                    <div class="sidebar-widget shadow-sm sticky-top" style="top: 120px;">
-                        <h5 class="fw-bold mb-4" style="font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); border-bottom: 2px solid var(--primary-gold); padding-bottom: 10px; display: inline-block;">Publicações</h5>
-                        <div class="mt-3">
+                    <div class="sidebar-widget shadow-sm sticky-top" style="top: 150px;">
+                        <div class="mt-0">
                             <a href="publicacoes.php" class="sidebar-link"><i class="fas fa-book"></i> Publicações</a>
                             <a href="revista-oagb.php" class="sidebar-link"><i class="far fa-newspaper"></i> Revista da OAGB</a>
                             <a href="legislacao-nacional.php" class="sidebar-link active"><i class="fas fa-gavel"></i> Legislação Nacional</a>

@@ -80,11 +80,11 @@ if (isset($_GET['ajax'])) {
                     </div>
                     <?php endif; ?>
                     <div class="p-4 d-flex flex-column flex-grow-1">
-                        <h5 class="mb-3 titulo-artigo">
-                            <a href="anuncio.php?id=<?php echo $anuncio->id; ?>" class="linkSublinhado text-decoration-none" style="color:#4D1C21; font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 1.1rem;">
+                        <h4 class="mb-3" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.15rem; font-weight: 600; line-height: 1.3;">
+                            <a href="anuncio.php?id=<?php echo $anuncio->id; ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
                                 <?php echo htmlspecialchars($anuncio->titulo); ?>
                             </a>
-                        </h5>
+                        </h4>
                         <div class="d-flex mb-3">
                             <small style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
                                 <i class="fas fa-bullhorn me-2 text-warning"></i><?php echo format_date_pt($anuncio->data_inicio); ?>
@@ -288,11 +288,11 @@ if (isset($_GET['ajax'])) {
                                     </div>
                                     <?php endif; ?>
                                     <div class="p-4 d-flex flex-column flex-grow-1">
-                                        <h5 class="mb-3 titulo-artigo">
-                                            <a href="anuncio.php?id=<?php echo $anuncio->id; ?>" class="linkSublinhado text-decoration-none" style="color:#4D1C21; font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 1.1rem;">
+                                         <h4 class="mb-3" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.15rem; font-weight: 600; line-height: 1.3;">
+                                            <a href="anuncio.php?id=<?php echo $anuncio->id; ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
                                                 <?php echo htmlspecialchars($anuncio->titulo); ?>
                                             </a>
-                                        </h5>
+                                         </h4>
                                         <div class="d-flex mb-3">
                                             <small style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
                                                 <i class="fas fa-bullhorn me-2 text-warning"></i><?php echo format_date_pt($anuncio->data_inicio); ?>
@@ -325,10 +325,10 @@ if (isset($_GET['ajax'])) {
                     <!-- Ultimos Anuncios -->
                     <?php if (!empty($ultimos)): ?>
                     <div class="mb-5 p-4 rounded-3" style="background: #fff; border: 1px solid #f0ece4; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
-                        <h5 class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 700; position: relative; padding-bottom: 10px;">
-                            Últimos Anúncios
+                        <div class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 500; text-transform: uppercase; position: relative; padding-bottom: 10px; font-size: 1.25rem; letter-spacing: 1px;">
+                            ÚLTIMOS ANÚNCIOS
                             <span style="position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: #B1A276;"></span>
-                        </h5>
+                        </div>
                         <?php $total_ultimos = count($ultimos); $ultimo_idx = 0; foreach ($ultimos as $lida): $ultimo_idx++; ?>
                         <div class="d-flex align-items-center mb-0">
                             <?php if (!empty($lida->imagem)): ?>
@@ -338,11 +338,11 @@ if (isset($_GET['ajax'])) {
                             <?php else: ?>
                                 <div class="w-100">
                             <?php endif; ?>
-                                <h6 class="mb-1" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.4;">
-                                    <a href="anuncio.php?id=<?php echo $lida->id; ?>" class="text-decoration-none fw-bold" style="color: #4D1C21; transition: 0.3s;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
+                                <div class="mb-1" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.4;">
+                                    <a href="anuncio.php?id=<?php echo $lida->id; ?>" class="text-decoration-none" style="color: #4D1C21; font-weight: 400; transition: 0.3s;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
                                         <?php echo htmlspecialchars(truncate_text($lida->titulo, 50)); ?>
                                     </a>
-                                </h6>
+                                </div>
                                 <small style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;"><i class="fas fa-bullhorn text-warning me-1"></i> <?php echo format_date_pt($lida->data_inicio); ?></small>
                             </div>
                         </div>

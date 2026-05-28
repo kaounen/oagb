@@ -275,7 +275,7 @@ require_once __DIR__ . '/auth_check.php';
                 <a href="<?php echo ADMIN_PATH; ?>/modules/utilizadores/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/utilizadores/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-user-shield"></i> Equipa (Staff)
                 </a>
-                <a href="<?php echo ADMIN_PATH; ?>/modules/configuracoes/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/configuracoes/index.php?t=portal" class="list-group-item <?php echo (strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/') !== false && strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/assinaturas') === false && (!isset($_GET['t']) || $_GET['t'] !== 'pilares')) ? 'active' : ''; ?>">
                     <i class="fas fa-cog"></i> Configurações do Portal
                 </a>
                 <a href="<?php echo ADMIN_PATH; ?>/modules/configuracoes/assinaturas.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/assinaturas.php') !== false ? 'active' : ''; ?>">

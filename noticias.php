@@ -189,7 +189,7 @@ if (isset($_GET['ajax'])) {
     if (!empty($noticias)) {
         foreach ($noticias as $noticia) {
             ?>
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-md-6 mb-4">
                 <div class="blog-item rounded overflow-hidden d-flex flex-column" style="background: #fff; border: 1px solid #f0ece4; transition: .3s;">
                     <?php 
                     $raw_noticia_imagem = $noticia->imagem_destaque ?? '';
@@ -207,20 +207,20 @@ if (isset($_GET['ajax'])) {
                     </div>
                     <?php endif; ?>
                     <div class="p-4 d-flex flex-column flex-grow-1">
-                        <h4 class="mb-3 titulo-artigo">
-                            <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="linkSublinhado text-decoration-none" style="color:#4D1C21;">
+                        <div class="mb-3" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.15rem; font-weight: 500; line-height: 1.3;">
+                            <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
                                 <?php echo htmlspecialchars($noticia->titulo); ?>
                             </a>
-                        </h4>
+                        </div>
                         <div class="d-flex mb-3">
                             <small style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
-                                <?php echo format_date_pt($noticia->data_publicacao); ?>
+                                <i class="far fa-calendar-alt me-2"></i><?php echo format_date_pt($noticia->data_publicacao); ?>
                             </small>
                         </div>
-                        <p class="texto-conteudo mb-3 flex-grow-1">
-                            <?php echo htmlspecialchars(truncate_text($noticia->resumo, 120)); ?>
+                        <p class="texto-conteudo mb-3 flex-grow-1" style="font-size: 0.9rem; color: #666; line-height: 1.6;">
+                            <?php echo htmlspecialchars(truncate_text($noticia->resumo, 100)); ?>
                         </p>
-                        <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="d-block mt-auto pt-3">
+                        <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="d-block mt-auto pt-2">
                             <div class="btn-arrow-only">
                                 <i class="bi bi-arrow-right"></i>
                             </div>
@@ -547,11 +547,11 @@ if (isset($_GET['ajax'])) {
                                     </div>
                                     <?php endif; ?>
                                     <div class="p-4 d-flex flex-column flex-grow-1">
-                                        <h5 class="mb-3 titulo-artigo">
-                                            <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="linkSublinhado text-decoration-none" style="color:#4D1C21; font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 1.1rem;">
+                                         <div class="mb-3" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.15rem; font-weight: 500; line-height: 1.3;">
+                                            <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
                                                 <?php echo htmlspecialchars($noticia->titulo); ?>
                                             </a>
-                                        </h5>
+                                         </div>
                                         <div class="d-flex mb-3">
                                             <small style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
                                                 <i class="far fa-calendar-alt me-2"></i><?php echo format_date_pt($noticia->data_publicacao); ?>
@@ -587,10 +587,10 @@ if (isset($_GET['ajax'])) {
                     <!-- Mais Lidas -->
                     <?php if (!empty($mais_lidas)): ?>
                     <div class="mb-5 p-4 rounded-3" style="background: #fff; border: 1px solid #f0ece4; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
-                        <h5 class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 700; position: relative; padding-bottom: 10px;">
-                            Mais Lidas
+                        <div class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 500; text-transform: uppercase; position: relative; padding-bottom: 10px; font-size: 1.25rem; letter-spacing: 1px;">
+                            MAIS LIDAS
                             <span style="position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: #B1A276;"></span>
-                        </h5>
+                        </div>
                         <?php $total_lidas = count($mais_lidas); $lida_idx = 0; foreach ($mais_lidas as $lida): $lida_idx++; ?>
                         <div class="mb-0 group-card-lidas" style="transition: all 0.3s ease;">
                             <a href="artigo.php?id=<?php echo $lida->id; ?>&slug=<?php echo urlencode($lida->slug); ?>" class="text-decoration-none d-block">
@@ -604,9 +604,9 @@ if (isset($_GET['ajax'])) {
                                     <div class="mb-2" style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
                                         <i class="far fa-calendar-alt me-1"></i> <?php echo format_date_pt($lida->data_publicacao); ?>
                                     </div>
-                                    <h6 class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.45; color: #4D1C21; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
+                                    <div class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.45; color: #4D1C21; font-weight: 500; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
                                         <?php echo htmlspecialchars($lida->titulo); ?>
-                                    </h6>
+                                    </div>
                                 </div>
                             </a>
                         </div>
@@ -642,6 +642,9 @@ if (isset($_GET['ajax'])) {
                     <span class="visually-hidden">A carregar...</span>
                 </div>
             </div>
+
+            <!-- Sentinel for Infinite Scroll (Lazy Load) -->
+            <div id="scroll-sentinel" style="height: 10px; margin: 10px 0;"></div>
         </div>
     </div>
 
@@ -654,53 +657,77 @@ if (isset($_GET['ajax'])) {
     
     <script>
         $(document).ready(function() {
-
-
             // Infinite Scroll (Lazy Load)
             let page = 1;
             let loading = false;
             let hasMore = <?php echo ($total_paginas > 1) ? 'true' : 'false'; ?>;
             let totalPages = <?php echo $total_paginas; ?>;
 
-            $(window).scroll(function() {
-                if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-                    if (hasMore && !loading) {
-                        loading = true;
-                        page++;
-                        $('#loading-spinner').show();
+            function loadNextPage() {
+                loading = true;
+                page++;
+                $('#loading-spinner').show();
 
-                        $.ajax({
-                            url: 'noticias.php',
-                            type: 'GET',
-                            data: {
-                                ajax: 1,
-                                pagina: page,
-                                categoria: '<?php echo $categoria; ?>',
-                                busca: '<?php echo $busca; ?>',
-                                tag: '<?php echo $tag; ?>',
-                                ano: '<?php echo $ano; ?>'
-                            },
-                            success: function(data) {
-                                if (data.trim() === '') {
-                                    hasMore = false;
-                                } else {
-                                    $('#news-container').append(data);
-                                }
-                                loading = false;
-                                $('#loading-spinner').hide();
-                                
-                                if (page >= totalPages) {
-                                    hasMore = false;
-                                }
-                            },
-                            error: function() {
-                                loading = false;
-                                $('#loading-spinner').hide();
-                            }
-                        });
+                $.ajax({
+                    url: 'noticias.php',
+                    type: 'GET',
+                    data: {
+                        ajax: 1,
+                        pagina: page,
+                        categoria: '<?php echo $categoria; ?>',
+                        busca: '<?php echo $busca; ?>',
+                        tag: '<?php echo $tag; ?>',
+                        ano: '<?php echo $ano; ?>'
+                    },
+                    success: function(data) {
+                        if (data.trim() === '') {
+                            hasMore = false;
+                        } else {
+                            $('#news-container').append(data);
+                        }
+                        loading = false;
+                        $('#loading-spinner').hide();
+                        
+                        if (page >= totalPages) {
+                            hasMore = false;
+                        }
+                    },
+                    error: function() {
+                        loading = false;
+                        $('#loading-spinner').hide();
                     }
+                });
+            }
+
+            // Use IntersectionObserver for modern and performance-efficient scroll detection
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver(function(entries) {
+                    if (entries[0].isIntersecting && hasMore && !loading) {
+                        loadNextPage();
+                    }
+                }, { 
+                    root: null, // relative to document viewport
+                    rootMargin: '150px', // trigger 150px before the element enters the viewport for smoother UX
+                    threshold: 0.1 
+                });
+
+                const sentinel = document.getElementById('scroll-sentinel');
+                if (sentinel) {
+                    observer.observe(sentinel);
                 }
-            });
+            } else {
+                // Fallback for legacy browsers without IntersectionObserver
+                $(window).scroll(function() {
+                    var scrollTop = $(window).scrollTop() || $("html").scrollTop() || $("body").scrollTop();
+                    var docHeight = $(document).height();
+                    var winHeight = $(window).height();
+                    if (scrollTop + winHeight > docHeight - 200) {
+                        if (hasMore && !loading) {
+                            loadNextPage();
+                        }
+                    }
+                });
+            }
         });
     </script>
 </body>

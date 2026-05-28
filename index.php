@@ -386,18 +386,19 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                         <div class="facts-title">
                             <i class="fas fa-gavel fa-2x me-3" style="color: white;"></i>
                             <h5 style="color: white; font-family: 'Open Sans', sans-serif; font-weight: 600; margin: 0;">
-                                Pareceres e Deliberações
+                                <a href="pareceres-deliberacoes.php" style="color: white; text-decoration: none;">Pareceres e Deliberações</a>
                             </h5>
                         </div>
                         <div class="facts-content">
                             <?php if($ultimo_parecer && is_object($ultimo_parecer)): ?>
                                 <?php 
-                                    $link_parecer = (!empty($ultimo_parecer->arquivo) && $ultimo_parecer->arquivo !== '#') ? 'uploads/' . $ultimo_parecer->arquivo : ($ultimo_parecer->link_url ?? 'pareceres-deliberacoes.php'); 
+                                    $page_detail = ($ultimo_parecer->tipo === 'deliberacao') ? 'deliberacao.php' : 'parecer.php';
+                                    $link_parecer = $page_detail . "?id=" . $ultimo_parecer->id; 
                                 ?>
                                 <small style="color:#fff; font-family: 'Open Sans', sans-serif; opacity: 0.8;">
                                     <?php echo !empty($ultimo_parecer->data_emissao) ? format_date_pt($ultimo_parecer->data_emissao) : 'Data não disponível'; ?>
                                 </small>
-                                <a href="<?php echo htmlspecialchars($link_parecer); ?>" class="linkSublinhado" target="_blank" style="color:#fff; font-family: 'Open Sans', sans-serif; font-size: 1rem;">
+                                <a href="<?php echo htmlspecialchars($link_parecer); ?>" class="linkSublinhado" style="color:#fff; font-family: 'Open Sans', sans-serif; font-size: 1rem;">
                                     <?php echo htmlspecialchars($ultimo_parecer->numero ?? ''); ?> - <?php echo htmlspecialchars(truncate_text($ultimo_parecer->assunto, 40)); ?>
                                 </a>
                             <?php else: ?>
@@ -416,7 +417,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                         <div class="facts-title">
                             <i class="fas fa-search fa-2x me-3" style="color: white;"></i>
                             <h5 style="color: white; font-family: 'Open Sans', sans-serif; font-weight: 600; margin: 0;">
-                                Pesquisa de Advogados
+                                <a href="pesquisa-advogados.php" style="color: white; text-decoration: none;">Pesquisa de Advogados</a>
                             </h5>
                         </div>
                         <div class="facts-content">
@@ -431,7 +432,7 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                         <div class="facts-title">
                             <i class="fas fa-bullhorn fa-2x me-3" style="color: white;"></i>
                             <h5 style="color: white; font-family: 'Open Sans', sans-serif; font-weight: 600; margin: 0;">
-                                Comunicados
+                                <a href="anuncios.php" style="color: white; text-decoration: none;">Comunicados</a>
                             </h5>
                         </div>
                         <div class="facts-content">
@@ -464,7 +465,9 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
         <div class="container pt-2 pb-0"> <!-- Restaurado pt-4 para dar um pouco de respiro em relação ao topo (Desktop) -->
             <div class="section-title text-center position-relative pb-4 mb-5 mx-auto" style="max-width: 600px;"> <!-- Aumentado pb-4 para afastar artigos do título e sua linha cor-de-laranja -->
                 <h5 class="text-primary text-uppercase" style="font-family: 'Open Sans', sans-serif; font-weight: 400;">Artigos recentes</h5>
-                <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">Últimas notícias</h1>
+                <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">
+                    <a href="noticias.php" style="color:#5B463F; text-decoration: none;">Últimas notícias</a>
+                </h1>
             </div>
             <div class="row g-4"> <!-- Reduzido g-5 para g-4 para cartões mais coesos -->
                 <?php foreach ($noticias_destaque as $noticia): ?>
@@ -484,8 +487,8 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                             <img class="img-fluid" src="<?php echo htmlspecialchars($img_noticia); ?>" alt="<?php echo htmlspecialchars($noticia->titulo); ?>">
                         </div>
                         <div class="p-4 d-flex flex-column flex-grow-1">
-                            <h4 class="mb-3 titulo-artigo">
-                                <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="linkSublinhado" style="color:#4D1C21;">
+                             <h4 class="mb-3" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.15rem; font-weight: 600; line-height: 1.3;">
+                                 <a href="artigo.php?id=<?php echo $noticia->id; ?>&slug=<?php echo urlencode($noticia->slug); ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
                                     <?php echo htmlspecialchars($noticia->titulo); ?>
                                 </a>
                             </h4>
@@ -522,7 +525,9 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
         <div class="container pt-1 pb-4" style="position: relative; z-index: 2;"> <!-- pt-1 para compactar -->
             <div class="section-title text-center position-relative pb-4 mb-5 mx-auto" style="max-width: 600px;"> <!-- Aumentado pb-4 mb-5 para afastar eventos do título -->
                 <h5 class="text-primary text-uppercase" style="font-family: 'Open Sans', sans-serif; font-weight: 400;">Próximos Eventos</h5>
-                <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">Agenda</h1>
+                <h1 class="mb-0" style="color:#5B463F; font-family: 'Libre Baskerville', serif; font-weight: 400; font-size:280%;">
+                    <a href="agenda.php" style="color:#5B463F; text-decoration: none;">Agenda</a>
+                </h1>
             </div>
             
             <?php if (!empty($proximos_eventos)): ?>
@@ -562,8 +567,8 @@ $meta_description = "Site oficial da Ordem dos Advogados da Guiné-Bissau - OAGB
                         
                         <!-- Conteúdo à direita -->
                         <div class="col-lg-9 col-md-8 agenda-conteudo-container">
-                            <h4 class="mb-2" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.3rem; font-weight: 600; line-height: 1.3;">
-                                <a href="evento.php?id=<?php echo $evento->id; ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
+                             <h4 class="mb-2" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.15rem; font-weight: 600; line-height: 1.3;">
+                                 <a href="evento.php?id=<?php echo $evento->id; ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
                                     <?php echo htmlspecialchars($evento->titulo); ?>
                                 </a>
                             </h4>

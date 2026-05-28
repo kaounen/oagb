@@ -14,6 +14,14 @@ try {
 } catch (Exception $e) {
     $documentos = [];
 }
+
+// Group documents by year
+$documentos_agrupados = [];
+foreach ($documentos as $doc) {
+    $ano = !empty($doc->data_documento) ? date('Y', strtotime($doc->data_documento)) : 'Outros';
+    $documentos_agrupados[$ano][] = $doc;
+}
+krsort($documentos_agrupados);
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -44,9 +52,9 @@ try {
         
         /* === SUBPAGE BREADCRUMB BAR === */
         .subpage-breadcrumb-bar { padding: 10px 0 0 0; padding-top: 20px; background: transparent; z-index: 10; width: 100%; margin-bottom: 20px; }
-        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: rgba(255,255,255,0.85) !important; text-decoration: none !important; font-size: 0.8rem; letter-spacing: 0.5px; transition: .3s; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+        .subpage-breadcrumb-bar a, .subpage-breadcrumb-bar span { color: rgba(255,255,255,0.85) !important; text-decoration: none !important; font-size: 0.85rem; letter-spacing: 0.5px; transition: .3s; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
         .subpage-breadcrumb-bar a:hover { color: #fff; }
-        .subpage-breadcrumb-bar .bc-active { color: #fff; font-weight: 600; font-size: 0.8rem !important; opacity: 1 !important; }
+        .subpage-breadcrumb-bar .bc-active { color: #fff; font-weight: 600; font-size: 0.85rem !important; opacity: 1 !important; }
         .bc-sep { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--primary-gold); margin: 0 10px; vertical-align: middle; opacity: 0.6; }
 
         .quick-links a {
@@ -65,7 +73,7 @@ try {
             .mobile-breadcrumb-bar a, .mobile-breadcrumb-bar span { 
                 font-size: 0.72rem; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
             }
-            .mobile-breadcrumb-bar .bc-active { font-weight: 500; font-size: 0.72rem !important; }
+            .mobile-breadcrumb-bar .bc-active { font-weight: 600; font-size: 0.72rem !important; }
             .mobile-breadcrumb-bar .quick-links a { 
                 border-color: rgba(255,255,255,0.4); color: #fff; width: 28px; height: 28px; font-size: 0.65rem; 
             }
@@ -75,7 +83,7 @@ try {
         .section-label { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; color: var(--primary-gold); display: block; margin-bottom: 12px; }
         .section-heading { font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 2.2rem; line-height: 1.3; margin-bottom: 30px; border-left: 5px solid var(--primary-gold); padding-left: 20px; }
 
-        .sidebar-widget { background: #fff; border-radius: 20px; padding: 30px; border: 1px solid #f0ece4; position: sticky; top: 120px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .sidebar-widget { background: #fff; border-radius: 20px; padding: 30px; border: 1px solid #f0ece4; position: sticky; top: 150px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
         .sidebar-link { display: flex; align-items: center; padding: 14px 20px; border-radius: 12px; background: #fafafa; margin-bottom: 10px; text-decoration: none !important; color: #555; font-weight: 600; transition: all 0.3s; border: 1px solid transparent; }
         .sidebar-link:hover, .sidebar-link.active { background: var(--primary-maroon); color: #fff !important; transform: translateX(5px); }
         .sidebar-link i { margin-right: 15px; color: var(--primary-gold); width: 20px; text-align: center; }
@@ -83,9 +91,11 @@ try {
 
         .doc-card { background: #fff; border: 1px solid #f0ece4; border-radius: 12px; padding: 25px; margin-bottom: 20px; transition: .3s; display: flex; align-items: flex-start; gap: 20px; }
         .doc-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.04); border-color: #e0dcd2; }
-        .doc-icon { width: 60px; height: 60px; background: rgba(177, 162, 118, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--primary-gold); flex-shrink: 0; }
+        .doc-icon { width: 60px; height: 60px; background: rgba(77, 28, 33, 0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--primary-maroon); flex-shrink: 0; }
         .doc-content { flex: 1; }
-        .doc-title { font-family: 'Libre Baskerville', serif; font-weight: 700; color: var(--primary-maroon); font-size: 1.15rem; margin-bottom: 8px; }
+        .doc-title { font-family: 'Libre Baskerville', serif; font-weight: 500; color: var(--primary-maroon); font-size: 1.15rem; margin-bottom: 8px; line-height: 1.3; }
+        .doc-title a { color: var(--primary-maroon) !important; text-decoration: none; transition: color 0.3s; font-weight: 500; }
+        .doc-title a:hover { color: var(--primary-gold) !important; }
         .doc-meta { font-size: 0.8rem; color: #888; margin-bottom: 15px; display: flex; gap: 15px; font-weight: 600;}
         .doc-meta span { display: flex; align-items: center; gap: 5px; }
         .btn-download { background: var(--primary-maroon); color: #fff; border-radius: 50px; padding: 8px 20px; font-size: 0.85rem; font-weight: 600; transition: .3s; border: none; text-decoration:none; display: inline-flex; align-items: center; gap: 8px; }
@@ -141,24 +151,38 @@ try {
 
                     <p class="lead mb-5" style="color: #444;">Acompanhe a documentação financeira, orçamentação e prestação de contas da Ordem dos Advogados da Guiné-Bissau.</p>
 
-                    <div class="doc-list">
-                        <?php if (count($documentos) > 0): ?>
-                            <?php foreach ($documentos as $doc): ?>
-                                <div class="doc-card wow fadeInUp">
-                                    <div class="doc-icon"><i class="far fa-file-pdf"></i></div>
-                                    <div class="doc-content">
-                                        <h4 class="doc-title"><?php echo htmlspecialchars($doc->titulo); ?></h4>
-                                        <div class="doc-meta">
-                                            <span><i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($doc->data_documento)); ?></span>
-                                            <?php if($doc->numero_documento): ?>
-                                            <span><i class="fas fa-hashtag"></i> <?php echo htmlspecialchars($doc->numero_documento); ?></span>
-                                            <?php endif; ?>
+                    <div class="doc-list-grouped">
+                        <?php if (count($documentos_agrupados) > 0): ?>
+                            <?php foreach ($documentos_agrupados as $ano => $docs_do_ano): ?>
+                                <h3 class="year-heading my-4" style="font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); font-weight: 700; font-size: 1.8rem; border-bottom: 2px solid var(--primary-gold); padding-bottom: 8px; margin-top: 40px !important;"><?php echo $ano; ?></h3>
+                                <div class="doc-list mb-5">
+                                    <?php foreach ($docs_do_ano as $doc): ?>
+                                        <?php 
+                                            $file_link = (!empty($doc->arquivo) && $doc->arquivo != '#') ? 'uploads/documentos/' . htmlspecialchars($doc->arquivo) : '#';
+                                        ?>
+                                        <div class="doc-card wow fadeInUp">
+                                            <div class="doc-icon"><i class="fas fa-chart-pie"></i></div>
+                                            <div class="doc-content">
+                                                <h4 class="doc-title">
+                                                    <a href="<?php echo $file_link; ?>" target="_blank">
+                                                        <?php echo htmlspecialchars($doc->titulo); ?>
+                                                    </a>
+                                                </h4>
+                                                <div class="doc-meta">
+                                                    <span><i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($doc->data_documento)); ?></span>
+                                                    <?php if($doc->numero_documento): ?>
+                                                        <span><i class="fas fa-hashtag"></i> <?php echo htmlspecialchars($doc->numero_documento); ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <?php if($doc->descricao): ?>
+                                                    <p class="text-muted" style="font-size:0.9rem; margin-bottom:15px;"><?php echo nl2br(htmlspecialchars($doc->descricao)); ?></p>
+                                                <?php endif; ?>
+                                                <a href="<?php echo $file_link; ?>" class="btn-download" target="_blank">
+                                                    <i class="fas fa-download"></i> Descarregar Documento
+                                                </a>
+                                            </div>
                                         </div>
-                                        <?php if($doc->descricao): ?>
-                                            <p class="text-muted" style="font-size:0.9rem; margin-bottom:15px;"><?php echo nl2br(htmlspecialchars($doc->descricao)); ?></p>
-                                        <?php endif; ?>
-                                        <a href="<?php echo (!empty($doc->arquivo) && $doc->arquivo != '#') ? 'uploads/documentos/' . htmlspecialchars($doc->arquivo) : '#'; ?>" class="btn-download"><i class="fas fa-download"></i> Descarregar Ficheiro</a>
-                                    </div>
+                                    <?php endforeach; ?>
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -172,19 +196,12 @@ try {
                 </div>
 
                 <div class="col-lg-4 mt-5 mt-lg-0 pt-lg-4">
-                    <div class="sidebar-widget shadow-sm sticky-top" style="top: 120px;">
-                        <h5 class="fw-bold mb-4" style="font-family: 'Libre Baskerville', serif; color: var(--primary-maroon); border-bottom: 2px solid var(--primary-gold); padding-bottom: 10px; display: inline-block;">Menu Público</h5>
-                        <div class="mt-3">
-                            <a href="pareceres-deliberacoes.php" class="sidebar-link <?php echo (basename($_SERVER['PHP_SELF']) == 'pareceres-deliberacoes.php') ? 'active' : ''; ?>"><i class="fas fa-gavel"></i> Pareceres e Deliberações</a>
-                            <a href="comunicados.php" class="sidebar-link <?php echo (basename($_SERVER['PHP_SELF']) == 'comunicados.php') ? 'active' : ''; ?>"><i class="fas fa-bullhorn"></i> Comunicados</a>
-                            <a href="publicacoes.php" class="sidebar-link <?php echo (basename($_SERVER['PHP_SELF']) == 'publicacoes.php') ? 'active' : ''; ?>"><i class="fas fa-book"></i> Publicações</a>
-                            <a href="orcamento.php" class="sidebar-link <?php echo (basename($_SERVER['PHP_SELF']) == 'orcamento.php') ? 'active' : ''; ?>"><i class="fas fa-chart-pie"></i> Orçamento</a>
-                        </div>
-                        
-                        <div class="mt-5 p-4 rounded" style="background: rgba(177, 162, 118, 0.05); border: 1px solid rgba(177, 162, 118, 0.2);">
-                            <h6 class="fw-bold mb-3" style="color: var(--primary-maroon);">Precisa de informações?</h6>
-                            <p class="small text-muted mb-3">Se procura um documento específico que não se encontra listado, por favor contacte a secretaria da Ordem.</p>
-                            <a href="contacto.php" class="btn btn-sm btn-contact-sidebar w-100 py-2">Contactar Ordem</a>
+                    <div class="sidebar-widget shadow-sm sticky-top" style="top: 150px;">
+                        <div class="mt-0">
+                            <a href="pareceres-deliberacoes.php" class="sidebar-link"><i class="fas fa-gavel"></i> Pareceres e Deliberações</a>
+                            <a href="comunicados.php" class="sidebar-link"><i class="fas fa-bullhorn"></i> Comunicados</a>
+                            <a href="publicacoes.php" class="sidebar-link"><i class="fas fa-book"></i> Publicações</a>
+                            <a href="orcamento.php" class="sidebar-link active"><i class="fas fa-chart-pie"></i> Orçamento</a>
                         </div>
                     </div>
                 </div>

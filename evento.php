@@ -28,6 +28,31 @@ try {
     $stmt->execute([$evento->id]);
     $imagens_evento = $stmt->fetchAll();
 
+    $todas_imagens = [];
+    $destaque_na_galeria = false;
+    if (!empty($evento->imagem_destaque)) {
+        foreach ($imagens_evento as $img) {
+            if ($img->imagem === $evento->imagem_destaque) {
+                $destaque_na_galeria = true;
+                break;
+            }
+        }
+    }
+    if (!empty($evento->imagem_destaque) && !$destaque_na_galeria) {
+        $todas_imagens[] = (object)[
+            'imagem' => $evento->imagem_destaque,
+            'legenda' => $evento->resumo ?? '',
+            'descricao' => ''
+        ];
+    }
+    foreach ($imagens_evento as $img) {
+        $todas_imagens[] = (object)[
+            'imagem' => $img->imagem,
+            'legenda' => $img->legenda ?? '',
+            'descricao' => $img->descricao ?? ''
+        ];
+    }
+
     $attachments = AttachmentHelper::get($pdo, 'evento', $evento->id);
 
     // Buscar eventos relacionados
@@ -161,7 +186,7 @@ $page_title = "Agenda";
             .navbar-dark .navbar-nav .nav-link.active { color: var(--primary-maroon) !important; }
         }
 
-        .titulo-evento { color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 2.2rem; font-weight: 400; margin-bottom: 1rem !important; }
+        .titulo-evento { color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 2.5rem; font-weight: 400 !important; margin-bottom: 1rem !important; }
         .texto-conteudo { color: #111923; font-family: 'Open Sans', sans-serif; font-weight: 600; }
         .bg-color-4 { background-color: #a98c78; }
 
@@ -212,6 +237,135 @@ $page_title = "Agenda";
             width: 40px;
             height: 3px;
             background: var(--primary-gold);
+        }
+
+        /* ======= PREMIUM EVENT SLIDER ======= */
+        #eventoCarousel {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+        #eventoCarousel .carousel-item {
+            position: relative;
+        }
+        #eventoCarousel .carousel-item img {
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        /* Caption gradient bar */
+        .evento-slide-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(0deg, rgba(17,25,35,0.82) 0%, rgba(17,25,35,0.45) 60%, transparent 100%);
+            padding: 50px 28px 18px 28px;
+            z-index: 3;
+        }
+        .evento-slide-caption p {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.95);
+            margin: 0;
+            letter-spacing: 0.2px;
+            line-height: 1.5;
+        }
+        .evento-slide-caption .slide-desc {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 4px;
+        }
+        /* Custom nav arrows */
+        .evento-slider-nav {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.6);
+            background: rgba(17,25,35,0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            opacity: 0.7;
+            padding: 0;
+        }
+        .evento-slider-nav:hover {
+            background: rgba(77,28,33,0.85);
+            border-color: rgba(177,162,118,0.8);
+            opacity: 1;
+            transform: translateY(-50%) scale(1.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .evento-slider-nav i {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        .evento-slider-nav.prev { left: 16px; }
+        .evento-slider-nav.next { right: 16px; }
+        /* Slide counter badge */
+        .evento-slide-counter {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: rgba(17,25,35,0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: rgba(255,255,255,0.9);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            z-index: 5;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        /* Dot indicators */
+        #eventoCarousel .carousel-indicators {
+            margin-bottom: 10px;
+            z-index: 4;
+        }
+        #eventoCarousel .carousel-indicators button {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.7);
+            background: transparent;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            margin: 0 4px;
+        }
+        #eventoCarousel .carousel-indicators button.active {
+            background: #B1A276;
+            border-color: #B1A276;
+            opacity: 1;
+            transform: scale(1.15);
+        }
+        /* Single image container */
+        .evento-single-img {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+        
+        #eventoCarousel .carousel-item img,
+        .evento-single-img img {
+            height: 500px;
+            object-fit: cover;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .evento-slider-nav { width: 40px; height: 40px; }
+            .evento-slider-nav.prev { left: 10px; }
+            .evento-slider-nav.next { right: 10px; }
+            .evento-slide-caption { padding: 40px 18px 14px 18px; }
+            .evento-slide-caption p { font-size: 0.85rem; }
+            .evento-slide-counter { top: 10px; right: 10px; font-size: 0.7rem; padding: 4px 10px; }
+            #eventoCarousel .carousel-item img,
+            .evento-single-img img { height: 320px !important; }
         }
     </style>
 </head>
@@ -339,75 +493,219 @@ $page_title = "Agenda";
                             <?php endif; ?>
                         </div>
                         
-                        <?php if (!empty($evento->imagem_destaque) || !empty($imagens_evento)): ?>
-                        <div class="mb-4">
-                            <?php if (count($imagens_evento) > 1 || (!empty($evento->imagem_destaque) && count($imagens_evento) > 0)): ?>
-                            <!-- Slider para múltiplas imagens -->
-                            <div class="owl-carousel evento-carousel">
-                                <?php if (!empty($evento->imagem_destaque)): ?>
-                                <div class="item">
-                                    <img class="img-fluid rounded" src="uploads/<?php echo htmlspecialchars($evento->imagem_destaque); ?>" alt="">
+                        <!-- Slider / Imagem Premium -->
+                        <?php if (count($todas_imagens) > 1): ?>
+                            <?php $total_slides = count($todas_imagens); ?>
+                            <div id="eventoCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="6000">
+                                <!-- Slide Counter -->
+                                <div class="evento-slide-counter">
+                                    <i class="far fa-images me-1"></i>
+                                    <span id="slideCurrentNum">1</span> / <?php echo $total_slides; ?>
                                 </div>
-                                <?php endif; ?>
-                                <?php foreach ($imagens_evento as $img): ?>
-                                <div class="item position-relative">
-                                    <img class="img-fluid rounded" src="uploads/<?php echo htmlspecialchars($img->imagem); ?>" alt="<?php echo htmlspecialchars($img->legenda ?? ''); ?>">
-                                    <?php if (!empty($img->legenda) || !empty($img->descricao)): ?>
-                                    <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: rgba(0,0,0,0.6); border-bottom-left-radius: 0.25rem; border-bottom-right-radius: 0.25rem; text-align: left;">
+                                <div class="carousel-inner">
+                                    <?php foreach ($todas_imagens as $index => $img): ?>
+                                    <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
+                                        <?php $img_path = oagb_resolve_media_path($img->imagem, 'uploads/OAGB-Placeholder.jpg'); ?>
+                                        <img src="<?php echo htmlspecialchars($img_path); ?>" class="d-block w-100" style="object-fit: cover; height: 500px;" alt="<?php echo htmlspecialchars(!empty($img->legenda) ? $img->legenda : $evento->titulo); ?>">
                                         <?php if (!empty($img->legenda)): ?>
-                                        <h6 class="text-white mb-1" style="font-size: 0.95rem; font-weight: 700;"><?php echo htmlspecialchars($img->legenda); ?></h6>
-                                        <?php endif; ?>
-                                        <?php if (!empty($img->descricao)): ?>
-                                        <p class="text-white small mb-0" style="font-size: 0.8rem; opacity: 0.9;"><?php echo htmlspecialchars($img->descricao); ?></p>
+                                        <div class="evento-slide-caption">
+                                            <p><?php echo htmlspecialchars($img->legenda); ?></p>
+                                            <?php if (!empty($img->descricao)): ?>
+                                            <p class="slide-desc"><?php echo htmlspecialchars($img->descricao); ?></p>
+                                            <?php endif; ?>
+                                        </div>
                                         <?php endif; ?>
                                     </div>
-                                    <?php endif; ?>
+                                    <?php endforeach; ?>
                                 </div>
-                                <?php endforeach; ?>
+                                <!-- Dot Indicators -->
+                                <div class="carousel-indicators">
+                                    <?php for ($i = 0; $i < $total_slides; $i++): ?>
+                                    <button type="button" data-bs-target="#eventoCarousel" data-bs-slide-to="<?php echo $i; ?>" <?php echo $i === 0 ? 'class="active" aria-current="true"' : ''; ?>></button>
+                                    <?php endfor; ?>
+                                </div>
+                                <!-- Custom Arrow Prev -->
+                                <button class="evento-slider-nav prev" type="button" data-bs-target="#eventoCarousel" data-bs-slide="prev" aria-label="Anterior">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <!-- Custom Arrow Next -->
+                                <button class="evento-slider-nav next" type="button" data-bs-target="#eventoCarousel" data-bs-slide="next" aria-label="Próximo">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
                             </div>
-                            <?php else: ?>
-                            <!-- Imagem única -->
-                            <img class="img-fluid w-100 rounded" src="uploads/<?php echo htmlspecialchars($evento->imagem_destaque); ?>" alt="<?php echo htmlspecialchars($evento->titulo); ?>">
-                            <?php endif; ?>
-                        </div>
+                            <!-- Slide counter JS -->
+                            <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var carousel = document.getElementById('eventoCarousel');
+                                if (carousel) {
+                                    carousel.addEventListener('slid.bs.carousel', function(e) {
+                                        var counter = document.getElementById('slideCurrentNum');
+                                        if (counter) counter.textContent = e.to + 1;
+                                    });
+                                }
+                            });
+                            </script>
+                        <?php elseif (count($todas_imagens) === 1): ?>
+                            <?php $img_path = oagb_resolve_media_path($todas_imagens[0]->imagem, 'uploads/OAGB-Placeholder.jpg'); ?>
+                            <div class="evento-single-img mb-4">
+                                <img src="<?php echo htmlspecialchars($img_path); ?>" class="img-fluid w-100" style="height: 500px; object-fit: cover; display: block;" alt="<?php echo htmlspecialchars(!empty($todas_imagens[0]->legenda) ? $todas_imagens[0]->legenda : $evento->titulo); ?>">
+                                <?php if (!empty($todas_imagens[0]->legenda)): ?>
+                                <div class="evento-slide-caption">
+                                    <p><?php echo htmlspecialchars($todas_imagens[0]->legenda); ?></p>
+                                </div>
+                                <?php endif; ?>
+                            </div>
                         <?php endif; ?>
                         
                         <div class="content texto-conteudo" style="line-height: 1.8;">
                             <?php echo nl2br(htmlspecialchars($evento->descricao)); ?>
                         </div>
 
-                        <!-- Documentos Anexos -->
-                        <?php if (!empty($attachments)): ?>
-                        <div class="mt-5 p-4 rounded-3" style="background: #fcfbf8; border: 1px dashed #B1A276;">
-                            <h5 class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21;">
-                                <i class="fas fa-paperclip me-2" style="color: var(--primary-gold);"></i> Documentos Anexos
-                            </h5>
-                            <div class="list-group list-group-flush bg-transparent">
-                                <?php foreach ($attachments as $att): ?>
-                                <a href="uploads/attachments/<?php echo $att['nome_ficheiro']; ?>" class="list-group-item list-group-item-action bg-transparent d-flex justify-content-between align-items-center py-3 px-0 border-bottom" target="_blank">
+                    <!-- Dynamic Attachments Logic -->
+                    <?php
+                    $all_files = [];
+                    $added_filenames = [];
+
+                    // 1. Gather files from multiple attachments
+                    if (!empty($attachments)) {
+                        foreach ($attachments as $att) {
+                            $filename = $att['nome_ficheiro'];
+                            if (!in_array($filename, $added_filenames)) {
+                                $all_files[] = (object)[
+                                    'nome_ficheiro' => $filename,
+                                    'nome_original' => $att['nome_original'],
+                                    'tipo_mime' => $att['tipo_mime'] ?? 'application/pdf',
+                                    'tamanho' => $att['tamanho'] ?? 0,
+                                    'descricao' => $att['descricao'] ?? ''
+                                ];
+                                $added_filenames[] = $filename;
+                            }
+                        }
+                    }
+
+                    // 2. Gather single main file (ficheiro_anexo)
+                    if (!empty($evento->ficheiro_anexo)) {
+                        $main_file = $evento->ficheiro_anexo;
+                        if (!in_array($main_file, $added_filenames)) {
+                            $orig_name = $main_file;
+                            $mime = 'application/pdf';
+                            $size = 0;
+                            $desc = '';
+                            
+                            // Try to match metadata from attachments list
+                            if (!empty($attachments)) {
+                                foreach ($attachments as $att) {
+                                    if ($att['nome_ficheiro'] === $main_file) {
+                                        $orig_name = $att['nome_original'];
+                                        $mime = $att['tipo_mime'] ?? 'application/pdf';
+                                        $size = $att['tamanho'] ?? 0;
+                                        $desc = $att['descricao'] ?? '';
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            // If still unpopulated, fallback to legenda_anexo or clean name
+                            if ($orig_name === $main_file && !empty($evento->legenda_anexo)) {
+                                $orig_name = $evento->legenda_anexo;
+                            }
+
+                            // Prepend main file so it appears first in the merged list
+                            array_unshift($all_files, (object)[
+                                'nome_ficheiro' => $main_file,
+                                'nome_original' => $orig_name,
+                                'tipo_mime' => $mime,
+                                'tamanho' => $size,
+                                'descricao' => $desc
+                            ]);
+                            $added_filenames[] = $main_file;
+                        }
+                    }
+
+                    $total_attachments = count($all_files);
+                    ?>
+
+                    <?php if ($total_attachments > 1): ?>
+                        <!-- Multiple Attachments: Grouped beautiful list -->
+                        <div class="mt-4">
+                            <h6 class="mb-3" style="font-family: 'Open Sans', sans-serif; color: #999; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;"><i class="fas fa-paperclip me-2"></i>Documentos Anexos</h6>
+                            <?php foreach ($all_files as $att): ?>
+                            <a href="uploads/<?php echo htmlspecialchars($att->nome_ficheiro); ?>" class="text-decoration-none d-block mb-2" target="_blank" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(77,28,33,0.12)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
+                                <div class="d-flex align-items-center justify-content-between flex-column flex-md-row gap-3 p-3 rounded-3" style="background: linear-gradient(135deg, #fdfcfa 0%, #f8f5ef 100%); border: 1px solid #ebe6da; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
                                     <div class="d-flex align-items-center">
-                                        <div class="bg-white p-2 rounded shadow-sm me-3">
-                                            <?php if(strpos($att['tipo_mime'], 'pdf') !== false): ?>
-                                                <i class="far fa-file-pdf fa-2x text-danger"></i>
-                                            <?php elseif(strpos($att['tipo_mime'], 'image') !== false): ?>
-                                                <i class="far fa-file-image fa-2x text-primary"></i>
+                                        <div class="d-flex align-items-center justify-content-center me-3" style="width: 44px; height: 44px; background: linear-gradient(135deg, #4D1C21 0%, #6b2a30 100%); border-radius: 10px; flex-shrink: 0;">
+                                            <?php if(strpos($att->tipo_mime, 'pdf') !== false): ?>
+                                                <i class="far fa-file-pdf" style="font-size: 1.2rem; color: #fff;"></i>
+                                            <?php elseif(strpos($att->tipo_mime, 'image') !== false): ?>
+                                                <i class="far fa-file-image" style="font-size: 1.2rem; color: #fff;"></i>
                                             <?php else: ?>
-                                                <i class="far fa-file-alt fa-2x text-muted"></i>
+                                                <i class="far fa-file-alt" style="font-size: 1.2rem; color: #fff;"></i>
                                             <?php endif; ?>
                                         </div>
                                         <div>
-                                            <div class="fw-bold text-dark"><?php echo htmlspecialchars($att['nome_original']); ?></div>
-                                            <div class="small text-muted"><?php echo number_format($att['tamanho'] / 1024, 0); ?> KB</div>
+                                            <?php 
+                                                $att_display = !empty($att->descricao) ? $att->descricao : $att->nome_original;
+                                                // Clean up original filename 
+                                                $att_display = str_replace('_', ' ', pathinfo($att_display, PATHINFO_FILENAME));
+                                            ?>
+                                            <div class="fw-bold" style="font-family: 'Open Sans', sans-serif; font-size: 0.92rem; color: #333;"><?php echo htmlspecialchars($att_display); ?></div>
+                                            <small style="color: #999; font-family: 'Open Sans', sans-serif; font-size: 0.72rem;"><?php echo $att->tamanho > 0 ? number_format($att->tamanho / 1024, 0) . ' KB' : 'Clique para descarregar'; ?></small>
                                         </div>
                                     </div>
-                                    <span class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                                        <i class="fas fa-download me-1"></i> Descarregar
-                                    </span>
-                                </a>
-                                <?php endforeach; ?>
-                            </div>
+                                    <div class="d-flex align-items-center gap-2 ms-auto ms-md-0">
+                                        <!-- Share Button -->
+                                        <button type="button" onclick="event.preventDefault(); event.stopPropagation(); if(navigator.share){navigator.share({title: '<?php echo htmlspecialchars($evento->titulo, ENT_QUOTES); ?>', url: 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>'});} else { alert('Link copiado!'); navigator.clipboard.writeText('http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>'); }" class="btn btn-sm d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: rgba(177,162,118,0.12); color: #B1A276; border: none; transition: 0.3s;" onmouseover="this.style.background='rgba(177,162,118,0.25)'" onmouseout="this.style.background='rgba(177,162,118,0.12)'" title="Partilhar">
+                                            <i class="fas fa-share-alt" style="font-size: 0.8rem;"></i>
+                                        </button>
+                                        <!-- Download Button -->
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: rgba(77,28,33,0.1); transition: all 0.3s;">
+                                            <i class="fas fa-download" style="color: var(--primary-maroon); font-size: 0.8rem;"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <?php endforeach; ?>
                         </div>
-                        <?php endif; ?>
+                    <?php elseif ($total_attachments === 1): ?>
+                        <!-- Single Attachment: Premium Quick Download card -->
+                        <?php $att = $all_files[0]; ?>
+                        <div class="mt-5 mb-0">
+                            <a href="uploads/<?php echo htmlspecialchars($att->nome_ficheiro); ?>" class="text-decoration-none d-block" target="_blank" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(77,28,33,0.12)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
+                                <div class="d-flex align-items-center justify-content-between flex-column flex-md-row gap-3 p-4 rounded-3" style="background: linear-gradient(135deg, #fdfcfa 0%, #f8f5ef 100%); border: 1px solid #ebe6da; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+                                    <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center justify-content-center me-3" style="width: 52px; height: 52px; background: linear-gradient(135deg, #4D1C21 0%, #6b2a30 100%); border-radius: 12px; flex-shrink: 0;">
+                                            <?php if(strpos($att->tipo_mime, 'pdf') !== false): ?>
+                                                <i class="far fa-file-pdf" style="font-size: 1.4rem; color: #fff;"></i>
+                                            <?php elseif(strpos($att->tipo_mime, 'image') !== false): ?>
+                                                <i class="far fa-file-image" style="font-size: 1.4rem; color: #fff;"></i>
+                                            <?php else: ?>
+                                                <i class="far fa-file-alt" style="font-size: 1.4rem; color: #fff;"></i>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div>
+                                            <?php 
+                                                $att_display = !empty($att->descricao) ? $att->descricao : $att->nome_original;
+                                                // Clean up original filename 
+                                                $att_display = str_replace('_', ' ', pathinfo($att_display, PATHINFO_FILENAME));
+                                            ?>
+                                            <div class="fw-bold" style="font-family: 'Open Sans', sans-serif; font-size: 1rem; color: #333;"><?php echo htmlspecialchars($att_display); ?></div>
+                                            <small style="color: #999; font-family: 'Open Sans', sans-serif; font-size: 0.78rem;">Documento — Clique para abrir</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 ms-auto ms-md-0">
+                                        <!-- Share Button -->
+                                        <button type="button" onclick="event.preventDefault(); event.stopPropagation(); if(navigator.share){navigator.share({title: '<?php echo htmlspecialchars($evento->titulo, ENT_QUOTES); ?>', url: 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>'});} else { alert('Link copiado!'); navigator.clipboard.writeText('http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>'); }" class="btn btn-sm d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 42px; height: 42px; background: rgba(177,162,118,0.12); color: #B1A276; border: none; transition: 0.3s;" onmouseover="this.style.background='rgba(177,162,118,0.25)'" onmouseout="this.style.background='rgba(177,162,118,0.12)'" title="Partilhar">
+                                            <i class="fas fa-share-alt" style="font-size: 0.9rem;"></i>
+                                        </button>
+                                        <!-- Download Button -->
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 42px; height: 42px; background: rgba(77,28,33,0.1); transition: all 0.3s;">
+                                            <i class="fas fa-download" style="color: var(--primary-maroon); font-size: 0.9rem;"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    <?php endif; ?>
                         
                         <?php if (!empty($evento->contacto_info)): ?>
                         <div class="mt-4 p-3 bg-white rounded">
@@ -423,7 +721,10 @@ $page_title = "Agenda";
                     <!-- Related Events -->
                     <?php if (!empty($eventos_relacionados)): ?>
                     <div class="sidebar-card">
-                        <h4>Outros Eventos</h4>
+                        <div class="mb-4" style="font-family: 'Libre Baskerville', serif; color: #4D1C21; font-weight: 500; text-transform: uppercase; position: relative; padding-bottom: 10px; font-size: 1.25rem; letter-spacing: 1px;">
+                            OUTROS EVENTOS
+                            <span style="position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: #B1A276;"></span>
+                        </div>
                         <?php 
                         $count = 0;
                         $total_relacionados = count($eventos_relacionados);
@@ -442,9 +743,9 @@ $page_title = "Agenda";
                                     <div class="mb-2" style="color:#615759; font-family: 'Open Sans', sans-serif; font-weight: 300; font-size:90%;">
                                         <i class="far fa-calendar-alt me-1"></i> <?php echo format_date_pt($relacionado->data_evento); ?>
                                     </div>
-                                    <h6 class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.45; color: #4D1C21; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
+                                    <div class="mb-0" style="font-family: 'Libre Baskerville', serif; font-size: 0.95rem; line-height: 1.45; color: #4D1C21; font-weight: 500; transition: color 0.3s ease;" onmouseover="this.style.color='#B1A276'" onmouseout="this.style.color='#4D1C21'">
                                         <?php echo htmlspecialchars($relacionado->titulo); ?>
-                                    </h6>
+                                    </div>
                                 </div>
                             </a>
                         </div>

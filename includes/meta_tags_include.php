@@ -54,3 +54,9 @@ if (strpos($meta_image, 'http') !== 0) {
 <!-- Favicon -->
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 <link href="img/favicon.ico" rel="icon">
+
+<!-- PWA Manifest & Theme -->
+<link rel="manifest" href="/oagb/site.webmanifest">
+<meta name="theme-color" content="#4D1C21">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">

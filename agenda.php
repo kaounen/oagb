@@ -105,6 +105,15 @@ try {
     $stmt->execute();
     $stats = $stmt->fetch();
     
+    // Buscar todos os destaques da Bastonária para a card lateral
+    $stmt = $pdo->prepare("
+        SELECT id, titulo, slug FROM agenda 
+        WHERE ativo = 1 AND destaque = 1 
+        ORDER BY data_evento DESC
+    ");
+    $stmt->execute();
+    $destaques_bastonaria = $stmt->fetchAll();
+    
 } catch (Exception $e) {
     error_log("Erro ao buscar eventos: " . $e->getMessage());
     $eventos = [];
@@ -115,6 +124,72 @@ try {
 
 $page_title = "Agenda de Eventos";
 $meta_description = "Agenda de eventos, formações, congressos e atividades da Ordem dos Advogados da Guiné-Bissau";
+
+// AJAX response for infinite scroll
+if (isset($_GET['ajax'])) {
+    if (!empty($eventos)) {
+        foreach ($eventos as $evento) {
+            $data_evento = new DateTime($evento->data_evento);
+            $dia = $data_evento->format('d');
+            $mes = $data_evento->format('M');
+            $ano = $data_evento->format('Y');
+            
+            $meses_pt = [
+                'Jan' => 'JAN', 'Feb' => 'FEV', 'Mar' => 'MAR',
+                'Apr' => 'ABR', 'May' => 'MAI', 'Jun' => 'JUN',
+                'Jul' => 'JUL', 'Aug' => 'AGO', 'Sep' => 'SET',
+                'Oct' => 'OUT', 'Nov' => 'NOV', 'Dec' => 'DEZ'
+            ];
+            $mes_pt = $meses_pt[$mes] ?? $mes;
+            ?>
+            <div class="col-12 mb-3">
+                <div class="agenda-evento-novo row align-items-center" style="padding: 2rem; min-height: 180px;">
+                    <div class="col-lg-3 col-md-4 text-center agenda-data-container">
+                        <div class="agenda-data-display">
+                            <div class="agenda-dia" style="font-size: 4rem; font-weight: 700; color: #B1A276; line-height: 1; font-family: 'Libre Baskerville', serif;">
+                                <?php echo $dia; ?>
+                            </div>
+                            <div class="agenda-mes" style="font-size: 1.5rem; font-weight: 600; color: #5B463F; margin-top: -10px; font-family: 'Open Sans', sans-serif;">
+                                <?php echo $mes_pt; ?>
+                            </div>
+                            <div class="agenda-ano" style="font-size: 1.2rem; font-weight: 400; color: #888; font-family: 'Open Sans', sans-serif;">
+                                <?php echo $ano; ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-9 col-md-8 agenda-conteudo-container">
+                         <h4 class="mb-2" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.15rem; font-weight: 600; line-height: 1.3;">
+                             <a href="evento.php?id=<?php echo $evento->id; ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
+                                <?php echo htmlspecialchars($evento->titulo); ?>
+                            </a>
+                        </h4>
+                        
+                        <?php if (!empty($evento->local_evento)): ?>
+                        <p class="mb-2" style="color: #B1A276; font-family: 'Open Sans', sans-serif; font-size: 1rem; font-weight: 500;">
+                            <i class="fa fa-map-marker-alt me-2" style="color: #B1A276;"></i><?php echo htmlspecialchars($evento->local_evento); ?>
+                        </p>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($evento->descricao)): ?>
+                        <p class="texto-conteudo mb-3" style="line-height: 1.6;">
+                            <?php echo htmlspecialchars(truncate_text($evento->descricao, 200)); ?>
+                        </p>
+                        <?php endif; ?>
+                        
+                        <a href="evento.php?id=<?php echo $evento->id; ?>" class="d-block" style="margin-top: 1rem;">
+                            <div class="btn-arrow-only">
+                                <i class="bi bi-arrow-right"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <?php
+        }
+    }
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -440,32 +515,6 @@ $meta_description = "Agenda de eventos, formações, congressos e atividades da 
 <!-- Agenda Start -->
     <div class="container-fluid py-5">
         <div class="container">
-            <!-- Eventos em Destaque -->
-            <?php if (!empty($eventos_destaque)): ?>
-            <div class="highlight-event">
-                <div class="row align-items-center">
-                    <div class="col-lg-12">
-                        <h3 class="mb-3">
-                            <i class="fa fa-star me-2"></i>
-                            <?php echo htmlspecialchars($eventos_destaque[0]->titulo); ?>
-                        </h3>
-                        <p class="mb-3"><?php echo htmlspecialchars(truncate_text($eventos_destaque[0]->descricao, 150)); ?></p>
-                        <div class="d-flex flex-wrap gap-3">
-                            <span><i class="far fa-calendar me-2"></i><?php echo format_date_pt($eventos_destaque[0]->data_evento); ?></span>
-                            <?php if (!empty($eventos_destaque[0]->local_evento)): ?>
-                            <span><i class="fa fa-map-marker-alt me-2"></i><?php echo htmlspecialchars($eventos_destaque[0]->local_evento); ?></span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 text-end">
-                        <a href="evento.php?id=<?php echo $eventos_destaque[0]->id; ?>" class="btn btn-light btn-lg">
-                            Ver Detalhes <i class="fa fa-arrow-right ms-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
-            
             <!-- Filtros -->
             <div class="mb-5">
                 <form method="GET" action="agenda.php" id="agendaSearchForm" autocomplete="off">
@@ -527,12 +576,14 @@ $meta_description = "Agenda de eventos, formações, congressos e atividades da 
                     </div>
                 </form>
             </div>
-            
+
             <div class="row g-5">
                 <!-- Lista de Eventos -->
-                <div class="col-lg-12">
+                <div class="col-lg-8">
+
+                    <!-- Lista de Eventos -->
                     <?php if (!empty($eventos)): ?>
-                    <div class="row g-0 justify-content-center">
+                    <div class="row g-0 justify-content-center" id="agenda-container">
                 <?php foreach ($eventos as $evento): 
                     // Extrair componentes da data
                     $data_evento = new DateTime($evento->data_evento);
@@ -568,8 +619,8 @@ $meta_description = "Agenda de eventos, formações, congressos e atividades da 
                         
                         <!-- Conteúdo à direita -->
                         <div class="col-lg-9 col-md-8 agenda-conteudo-container">
-                            <h4 class="mb-2" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.3rem; font-weight: 600; line-height: 1.3;">
-                                <a href="evento.php?id=<?php echo $evento->id; ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
+                             <h4 class="mb-2" style="color: #4D1C21; font-family: 'Libre Baskerville', serif; font-size: 1.15rem; font-weight: 600; line-height: 1.3;">
+                                 <a href="evento.php?id=<?php echo $evento->id; ?>" class="linkSublinhado text-decoration-none" style="color: #4D1C21;">
                                     <?php echo htmlspecialchars($evento->titulo); ?>
                                 </a>
                             </h4>
@@ -597,36 +648,15 @@ $meta_description = "Agenda de eventos, formações, congressos e atividades da 
                 <?php endforeach; ?>
                 </div>
                     
-                    <!-- Paginação -->
-                    <?php if ($total_paginas > 1): ?>
-                    <nav aria-label="Paginação" class="mt-5">
-                        <ul class="pagination justify-content-center">
-                            <?php if ($pagina > 1): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $pagina - 1])); ?>">
-                                    <i class="bi bi-arrow-left"></i> Anterior
-                                </a>
-                            </li>
-                            <?php endif; ?>
-                            
-                            <?php for ($i = max(1, $pagina - 2); $i <= min($total_paginas, $pagina + 2); $i++): ?>
-                            <li class="page-item <?php echo $i == $pagina ? 'active' : ''; ?>">
-                                <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $i])); ?>">
-                                    <?php echo $i; ?>
-                                </a>
-                            </li>
-                            <?php endfor; ?>
-                            
-                            <?php if ($pagina < $total_paginas): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $pagina + 1])); ?>">
-                                    Próximo <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </li>
-                            <?php endif; ?>
-                        </ul>
-                    </nav>
-                    <?php endif; ?>
+                    <!-- Loading Spinner for Lazy Load -->
+                    <div id="loading-spinner" class="text-center my-4" style="display: none;">
+                        <div class="spinner-border text-primary" role="status" style="color: #B1A276 !important;">
+                            <span class="visually-hidden">A carregar...</span>
+                        </div>
+                    </div>
+
+                    <!-- Sentinel for Infinite Scroll (Lazy Load) -->
+                    <div id="scroll-sentinel" style="height: 10px; margin: 10px 0;"></div>
                     
                     <?php else: ?>
                     <div class="text-center py-5">
@@ -638,6 +668,24 @@ $meta_description = "Agenda de eventos, formações, congressos e atividades da 
                         </a>
                     </div>
                     <?php endif; ?>
+                </div>
+
+                <!-- Sidebar Destaques da Bastonária -->
+                <div class="col-lg-4 mt-5 mt-lg-4">
+                    <div class="sidebar-widget shadow-sm sticky-top" style="top: 120px; background: #fff; border-radius: 20px; padding: 30px; border: 1px solid #f0ece4; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+                        <div class="mt-3">
+                            <?php if (!empty($destaques_bastonaria)): ?>
+                                <?php foreach ($destaques_bastonaria as $dest): ?>
+                                    <a href="evento.php?id=<?php echo $dest->id; ?>" class="sidebar-link d-flex align-items-center mb-3 text-decoration-none" style="display: flex; align-items: center; padding: 14px 20px; border-radius: 12px; background: #fafafa; color: #555; font-weight: 600; transition: all 0.3s; border: 1px solid transparent;">
+                                        <i class="fas fa-star me-3" style="color: var(--primary-gold); margin-right: 15px; width: 20px; text-align: center;"></i>
+                                        <span><?php echo htmlspecialchars($dest->titulo); ?></span>
+                                    </a>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p class="text-muted small">Sem eventos em destaque no momento.</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
                 
                             </div>
@@ -693,6 +741,71 @@ $meta_description = "Agenda de eventos, formações, congressos e atividades da 
             $('.bastonario-card').on('click', function() {
                 $(this).find('.bio-extra').slideToggle();
             });
+
+            // Infinite Scroll (Lazy Load) logic
+            let page = 1;
+            let loading = false;
+            let hasMore = <?php echo ($total_paginas > 1) ? 'true' : 'false'; ?>;
+            let totalPages = <?php echo $total_paginas; ?>;
+
+            function loadNextPage() {
+                loading = true;
+                page++;
+                $('#loading-spinner').show();
+
+                $.ajax({
+                    url: 'agenda.php',
+                    type: 'GET',
+                    data: {
+                        ajax: 1,
+                        pagina: page,
+                        tipo: '<?php echo $tipo; ?>',
+                        busca: '<?php echo $busca; ?>',
+                        mes: '<?php echo $mes; ?>',
+                        ano: '<?php echo $ano; ?>'
+                    },
+                    success: function(data) {
+                        if (data.trim() === '') {
+                            hasMore = false;
+                        } else {
+                            $('#agenda-container').append(data);
+                        }
+                        loading = false;
+                        $('#loading-spinner').hide();
+                        
+                        if (page >= totalPages) {
+                            hasMore = false;
+                        }
+                    },
+                    error: function() {
+                        loading = false;
+                        $('#loading-spinner').hide();
+                    }
+                });
+            }
+
+            // Use IntersectionObserver for modern scroll detection
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver(function(entries) {
+                    if (entries[0].isIntersecting && hasMore && !loading) {
+                        loadNextPage();
+                    }
+                }, { rootMargin: '150px', threshold: 0.1 });
+
+                const sentinel = document.getElementById('scroll-sentinel');
+                if (sentinel) observer.observe(sentinel);
+            } else {
+                $(window).scroll(function() {
+                    var scrollTop = $(window).scrollTop() || $("html").scrollTop() || $("body").scrollTop();
+                    var docHeight = $(document).height();
+                    var winHeight = $(window).height();
+                    if (scrollTop + winHeight > docHeight - 200) {
+                        if (hasMore && !loading) {
+                            loadNextPage();
+                        }
+                    }
+                });
+            }
         });
     </script>
 </body>

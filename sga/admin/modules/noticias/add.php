@@ -48,6 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once __DIR__ . '/../../includes/LogHelper.php';
         LogHelper::create($pdo, 'noticias', $new_id, $titulo);
 
+        // SEND PWA PUSH NOTIFICATION
+        require_once __DIR__ . '/../../../../includes/push_sender.php';
+        $push_url = "/oagb/artigo.php?id={$new_id}&slug={$slug}";
+        send_pwa_push_notification($pdo, $titulo, "Nova publicação no portal da OAGB. Toque para ler agora.", $push_url);
+
         header("Location: index.php?success=1");
         exit;
     } catch (PDOException $e) {

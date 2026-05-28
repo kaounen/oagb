@@ -174,8 +174,20 @@ require_once __DIR__ . '/auth_check.php';
                 </a>
 
                 <div class="sidebar-section-title">A Ordem & Institucional</div>
-                <a href="<?php echo ADMIN_PATH; ?>/modules/paginas/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/paginas/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/paginas/edit.php?id=1" class="list-group-item <?php echo (strpos($_SERVER['PHP_SELF'], '/modules/paginas/edit.php') !== false && isset($_GET['id']) && $_GET['id'] == 1) ? 'active' : ''; ?>">
+                    <i class="fas fa-edit"></i> Texto da Apresentação
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/membros-fundadores/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/membros-fundadores/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-users"></i> Membros Fundadores
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/configuracoes/index.php?t=pilares" class="list-group-item <?php echo (strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/') !== false && strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/assinaturas') === false && isset($_GET['t']) && $_GET['t'] === 'pilares') ? 'active' : ''; ?>">
+                    <i class="fas fa-eye"></i> Pilares Institucionais (MVV)
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/paginas/index.php" class="list-group-item <?php echo (strpos($_SERVER['PHP_SELF'], '/modules/paginas/') !== false && strpos($_SERVER['PHP_SELF'], 'edit.php') === false) ? 'active' : ''; ?>">
                     <i class="fas fa-file-alt"></i> Páginas Institucionais
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/atribuicoes/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/atribuicoes/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-balance-scale"></i> Atribuições Destacadas
                 </a>
                 <a href="<?php echo ADMIN_PATH; ?>/modules/actas/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/actas/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-file-signature"></i> Livro de Actas
@@ -191,6 +203,9 @@ require_once __DIR__ . '/auth_check.php';
                 </a>
                 <a href="<?php echo ADMIN_PATH; ?>/modules/orgaos-sociais/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/orgaos-sociais/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-sitemap"></i> Órgãos Sociais
+                </a>
+                <a href="<?php echo ADMIN_PATH; ?>/modules/planos-accao/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/planos-accao/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-clipboard-list"></i> Planos de Acção
                 </a>
                 <a href="<?php echo ADMIN_PATH; ?>/modules/comissoes/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/comissoes/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-users-cog"></i> Comissões Especializadas
@@ -275,7 +290,7 @@ require_once __DIR__ . '/auth_check.php';
                 <a href="<?php echo ADMIN_PATH; ?>/modules/utilizadores/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/utilizadores/') !== false ? 'active' : ''; ?>">
                     <i class="fas fa-user-shield"></i> Equipa (Staff)
                 </a>
-                <a href="<?php echo ADMIN_PATH; ?>/modules/configuracoes/index.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/') !== false ? 'active' : ''; ?>">
+                <a href="<?php echo ADMIN_PATH; ?>/modules/configuracoes/index.php?t=portal" class="list-group-item <?php echo (strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/') !== false && strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/assinaturas') === false && (!isset($_GET['t']) || $_GET['t'] !== 'pilares')) ? 'active' : ''; ?>">
                     <i class="fas fa-cog"></i> Configurações do Portal
                 </a>
                 <a href="<?php echo ADMIN_PATH; ?>/modules/configuracoes/assinaturas.php" class="list-group-item <?php echo strpos($_SERVER['PHP_SELF'], '/modules/configuracoes/assinaturas.php') !== false ? 'active' : ''; ?>">
