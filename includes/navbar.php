@@ -6,10 +6,10 @@ $pagina_atual = basename($_SERVER['PHP_SELF']);
 $ordem_pages = ['ordem-dos-advogados.php', 'bastonario-ordem.php', 'orgaos-sociais.php', 'comissoes-especializadas.php', 'cooperacao-institucional.php', 'deontologia-etica.php', 'centro-estagio.php', 'planos_accao.php', 'plano.php'];
 
 // Páginas do menu ADVOGADOS
-$advogados_pages = ['pesquisa-advogados.php', 'advogados-inscritos.php', 'pesquisa-estagiarios.php', 'estagiarios-inscritos.php', 'solicitacao-advogados.php', 'inscricao-ordem.php', 'formacao.php'];
+$advogados_pages = ['pesquisa-advogados.php', 'encontrar-advogado.php', 'advogado-perfil.php', 'advogados-inscritos.php', 'pesquisa-estagiarios.php', 'estagiarios-inscritos.php', 'solicitacao-advogados.php', 'inscricao-ordem.php', 'formacao.php'];
 
 // Páginas do menu PÚBLICO
-$publico_pages = ['pareceres-deliberacoes.php', 'comunicados.php', 'publicacoes.php', 'orcamento.php', 'revista-oagb.php', 'legislacao-nacional.php', 'legislacao-internacional.php', 'glossario-juridico.php', 'biblioteca-oagb.php', 'cidadaos.php'];
+$publico_pages = ['pareceres-deliberacoes.php', 'comunicados.php', 'publicacoes.php', 'orcamento.php', 'revista-oagb.php', 'legislacao-nacional.php', 'legislacao-internacional.php', 'glossario-juridico.php', 'biblioteca-oagb.php', 'cidadaos.php', 'helpdesk-diaspora.php'];
 
 // Páginas do menu COMUNICAÇÃO
 $comunicacao_pages = ['agenda.php', 'noticias.php', 'anuncios.php'];
@@ -49,7 +49,8 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle <?php echo $advogados_ativo ? 'active' : ''; ?>" data-bs-toggle="dropdown">ADVOGADOS</a>
                 <div class="dropdown-menu m-0">
-                    <a href="pesquisa-advogados.php" class="dropdown-item">Pesquisa de Advogados</a>
+                    <a href="pesquisa-advogados.php" class="dropdown-item">Pesquisa por Nome/Registo</a>
+                    <a href="encontrar-advogado.php" class="dropdown-item">Pesquisa por Especialidade</a>
                     <a href="advogados-inscritos.php" class="dropdown-item">Advogados Inscritos em vigor</a>
                     <a href="pesquisa-estagiarios.php" class="dropdown-item">Pesquisa de Advogados Estagiários</a>
                     <a href="estagiarios-inscritos.php" class="dropdown-item">Estagiários Inscritos em vigor</a>
@@ -71,6 +72,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="glossario-juridico.php" class="dropdown-item">Glossário Jurídico</a>
                     <a href="biblioteca-oagb.php" class="dropdown-item">Biblioteca OAGB</a>
                     <a href="cidadaos.php" class="dropdown-item">Cidadãos</a>
+                    <a href="helpdesk-diaspora.php" class="dropdown-item">Help Desk da Diáspora</a>
                 </div>
             </div>
             <div class="nav-item dropdown">
