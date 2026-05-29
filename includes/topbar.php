@@ -32,8 +32,16 @@
                     </div>
                 </div>
                 
+                <a href="submeter-oportunidade.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center topbar-btn" style="border-radius: 20px; border-color: rgba(255,255,255,0.15); font-size: 0.65rem; letter-spacing: 0.8px; background: rgba(255,255,255,0.03); height: 28px;">
+                    <i class="fas fa-handshake me-1 text-warning"></i> PARCEIROS
+                </a>
+                
+                <a href="staff/login.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center topbar-btn" target="_blank" style="border-radius: 20px; border-color: rgba(255,255,255,0.15); font-size: 0.65rem; letter-spacing: 0.8px; background: rgba(255,255,255,0.03); height: 28px;">
+                    <i class="fas fa-lock me-1 text-danger"></i> STAFF
+                </a>
+
                 <a href="portal/login.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center topbar-btn" style="border-radius: 20px; border-color: rgba(255,255,255,0.15); font-size: 0.65rem; letter-spacing: 0.8px; background: rgba(255,255,255,0.03); height: 28px;">
-                    <i class="fas fa-user-circle me-1"></i> Área Reservada
+                    <i class="fas fa-user-circle me-1"></i> ÁREA RESERVADA
                 </a>
             </div>
         </div>
