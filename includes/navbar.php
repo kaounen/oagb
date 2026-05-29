@@ -73,9 +73,7 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="biblioteca-oagb.php" class="dropdown-item">Biblioteca OAGB</a>
                     <a href="cidadaos.php" class="dropdown-item">Cidadãos</a>
                     <a href="apresentar-reclamacao.php" class="dropdown-item">Ética & Reclamações</a>
-                    <a href="submeter-oportunidade.php" class="dropdown-item">Publicar Oportunidade (Parceiros)</a>
                     <a href="helpdesk-diaspora.php" class="dropdown-item">Help Desk da Diáspora</a>
-                    <a href="staff/login.php" class="dropdown-item fw-bold text-warning" target="_blank"><i class="fas fa-lock me-1"></i> Intranet do Staff</a>
                 </div>
             </div>
             <div class="nav-item dropdown">
