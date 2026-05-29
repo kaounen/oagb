@@ -110,9 +110,7 @@ $payments = $stmt->fetchAll();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(empty($payments)): ?>
-                            <tr><td colspan="5" class="text-center py-5">Nenhum pagamento registado.</td></tr>
-                        <?php else: ?>
+                        <?php if(!empty($payments)): ?>
                             <?php foreach($payments as $p): ?>
                                 <tr>
                                     <td class="p-3" data-order="<?php echo strtotime($p['data_pagamento']) . str_pad($p['id'], 10, '0', STR_PAD_LEFT); ?>">

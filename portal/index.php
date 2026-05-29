@@ -19,6 +19,19 @@ $stmt = $pdo->prepare("SELECT * FROM $table WHERE id = ?");
 $stmt->execute([$lid]);
 $lawyer = $stmt->fetch();
 
+if (!$lawyer) {
+    // Self-healing fallback: query other table!
+    $fallback_type = ($mtype == 'estagiario') ? 'advogado' : 'estagiario';
+    $table = ($fallback_type == 'estagiario') ? 'advogados_estagiarios' : 'advogados';
+    $stmt = $pdo->prepare("SELECT * FROM $table WHERE id = ?");
+    $stmt->execute([$lid]);
+    $lawyer = $stmt->fetch();
+    if ($lawyer) {
+        $mtype = $fallback_type;
+        $_SESSION['member_type'] = $fallback_type;
+    }
+}
+
 // Fetch Financial Config
 $stmt = $pdo->query("SELECT chave, valor FROM finan_config");
 $fconfig = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -45,6 +58,11 @@ $regularizado = $is_regularized;
 $stmt = $pdo->prepare("SELECT * FROM finan_pagamentos WHERE advogado_id = ? ORDER BY data_pagamento DESC LIMIT 5");
 $stmt->execute([$lid]);
 $history = $stmt->fetchAll();
+
+// Fetch unread notifications count
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM portal_notificacoes WHERE advogado_id = ? AND lida = 0");
+$stmt->execute([$lid]);
+$unread_notif_count = intval($stmt->fetchColumn());
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -59,9 +77,10 @@ $history = $stmt->fetchAll();
     <meta name="theme-color" content="#B1A276">
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('/oagb/sw.js');
         }
     </script>
+    <script src="/oagb/js/pwa-install.js"></script>
     <style>
         :root { --primary-gold: #B1A276; --bg-main: #f5f6f8; --sidebar-dark: #111923; }
         body { font-family: 'Open Sans', sans-serif; background-color: var(--bg-main); overflow-x: hidden; }
@@ -81,7 +100,15 @@ $history = $stmt->fetchAll();
     <header class="portal-header">
         <div class="container d-flex justify-content-between align-items-center">
             <img src="<?php echo ROOT_URL; ?>/img/LogoOA.png" alt="OAGB" style="height: 75px;">
-            <div class="d-flex gap-4">
+            <div class="d-flex gap-4 align-items-center">
+                <a href="notificacoes.php" class="text-white text-decoration-none position-relative fw-bold me-2 d-inline-flex align-items-center">
+                    <i class="fas fa-bell fa-lg text-warning"></i>
+                    <?php if ($unread_notif_count > 0): ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; padding: 0.35em 0.5em;">
+                            <?php echo $unread_notif_count; ?>
+                        </span>
+                    <?php endif; ?>
+                </a>
                 <a href="logout.php" class="text-white text-decoration-none opacity-50 small fw-bold">SAIR DO PORTAL <i class="fas fa-sign-out-alt ms-1"></i></a>
             </div>
         </div>
@@ -269,6 +296,24 @@ $history = $stmt->fetchAll();
                         </div>
                     </div>
                     <?php endif; ?>
+
+                    <div class="col-md-6">
+                        <div class="quick-box border-primary-subtle shadow-sm bg-white">
+                            <i class="fas fa-landmark fa-2x text-primary mb-3"></i>
+                            <h5 class="fw-bold">Assembleias & Urna Digital</h5>
+                            <p class="text-muted small">Confirme presenças nas convocatórias, participe em votações institucionais e assista a assembleias gerais híbridas.</p>
+                            <a href="assembleias.php" class="btn btn-portal-action bg-dark text-white border-0">ACEDER AO HUB DIGITAL</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="quick-box">
+                            <i class="fas fa-video fa-2x text-danger mb-3"></i>
+                            <h5 class="fw-bold">Sala Virtual de Reuniões</h5>
+                            <p class="text-muted small">Participe em reuniões oficiais da Ordem, formações virtuais e workshops especializados.</p>
+                            <a href="reunioes.php" class="btn btn-portal-action bg-danger text-white border-0">ACEDER ÀS REUNIÕES</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card border-0 shadow-sm p-5 mt-5 bg-white">

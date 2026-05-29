@@ -2,6 +2,7 @@
 session_start();
 if(!isset($_SESSION['lawyer_id'])) { header("Location: login.php"); exit; }
 require_once __DIR__ . '/../connect.php';
+require_once __DIR__ . '/../includes/functions.php';
 $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 $lid = $_SESSION['lawyer_id'];
@@ -12,7 +13,20 @@ $stmt = $pdo->prepare("SELECT * FROM $table WHERE id = ?");
 $stmt->execute([$lid]);
 $user = $stmt->fetch();
 
-if (!$user) { exit("Utilizador inválido."); }
+if (!$user) {
+    // Self-healing fallback: query other table!
+    $fallback_type = ($mtype == 'estagiario') ? 'advogado' : 'estagiario';
+    $table = ($fallback_type == 'estagiario') ? 'advogados_estagiarios' : 'advogados';
+    $stmt = $pdo->prepare("SELECT * FROM $table WHERE id = ?");
+    $stmt->execute([$lid]);
+    $user = $stmt->fetch();
+    if ($user) {
+        $mtype = $fallback_type;
+        $_SESSION['member_type'] = $fallback_type;
+    } else {
+        exit("Utilizador inválido.");
+    }
+}
 
 // Check Regularized Status (Using valid_until)
 $tipo_quota_id = ($mtype == 'estagiario') ? 2 : 1; 
