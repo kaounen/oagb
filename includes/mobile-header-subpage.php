@@ -16,7 +16,7 @@
                     </div>
                     
                     <div class="row mb-1 mx-0">
-                        <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center !important; align-items: center !important; gap: 12px; width: 100%;">
+                        <div class="col-12" style="display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; justify-content: center !important; align-items: center !important; gap: 8px; width: 100%;">
                             <button type="button" class="btn btn-sm btn-outline-light px-2 fw-bold d-flex align-items-center mobile-pill-btn" data-bs-toggle="modal" data-bs-target="#searchModal">
                                  <i class="fa fa-search" style="font-size: 1rem;"></i>
                             </button>
@@ -34,8 +34,14 @@
                                     <a href="#" onclick="changeLanguage('ru'); return false;" class="dropdown-item py-1 d-flex align-items-center rounded-2" style="transition: .3s; font-size: 0.8rem;"><span class="me-3" style="font-size: 1.1rem;">🇷🇺</span> <span class="text-dark">Русский</span></a>
                                 </div>
                             </div>
+                            <a href="submeter-oportunidade.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center mobile-pill-btn">
+                                <i class="fas fa-handshake me-1 text-warning" style="font-size: 1rem;"></i> PARCEIROS
+                            </a>
+                            <a href="staff/login.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center mobile-pill-btn" target="_blank">
+                                <i class="fas fa-lock me-1 text-danger" style="font-size: 1rem;"></i> STAFF
+                            </a>
                             <a href="portal/login.php" class="btn btn-sm btn-outline-light px-2 fw-bold text-uppercase d-flex align-items-center mobile-pill-btn">
-                                <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> Área Reservada
+                                <i class="fas fa-user-circle me-1" style="font-size: 1rem;"></i> ÁREA RESERVADA
                             </a>
                         </div>
                     </div>

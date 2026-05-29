@@ -12,7 +12,7 @@ $advogados_pages = ['pesquisa-advogados.php', 'encontrar-advogado.php', 'advogad
 $publico_pages = ['pareceres-deliberacoes.php', 'comunicados.php', 'publicacoes.php', 'orcamento.php', 'revista-oagb.php', 'legislacao-nacional.php', 'legislacao-internacional.php', 'glossario-juridico.php', 'biblioteca-oagb.php', 'cidadaos.php', 'helpdesk-diaspora.php'];
 
 // Páginas do menu COMUNICAÇÃO
-$comunicacao_pages = ['agenda.php', 'noticias.php', 'anuncios.php'];
+$comunicacao_pages = ['agenda.php', 'noticias.php', 'anuncios.php', 'boletins.php'];
 
 
 // Verificar se está em uma página de dropdown
@@ -72,7 +72,10 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="glossario-juridico.php" class="dropdown-item">Glossário Jurídico</a>
                     <a href="biblioteca-oagb.php" class="dropdown-item">Biblioteca OAGB</a>
                     <a href="cidadaos.php" class="dropdown-item">Cidadãos</a>
+                    <a href="apresentar-reclamacao.php" class="dropdown-item">Ética & Reclamações</a>
+                    <a href="submeter-oportunidade.php" class="dropdown-item">Publicar Oportunidade (Parceiros)</a>
                     <a href="helpdesk-diaspora.php" class="dropdown-item">Help Desk da Diáspora</a>
+                    <a href="staff/login.php" class="dropdown-item fw-bold text-warning" target="_blank"><i class="fas fa-lock me-1"></i> Intranet do Staff</a>
                 </div>
             </div>
             <div class="nav-item dropdown">
@@ -81,16 +84,23 @@ $comunicacao_ativo = in_array($pagina_atual, $comunicacao_pages);
                     <a href="agenda.php" class="dropdown-item">Agenda</a>
                     <a href="noticias.php" class="dropdown-item">Notícias</a>
                     <a href="anuncios.php" class="dropdown-item">Anúncios</a>
+                    <a href="boletins.php" class="dropdown-item fw-bold text-gold"><i class="fas fa-book-bookmark me-1 text-warning"></i> Boletim Jurídico</a>
                 </div>
             </div>
             <a href="contacto.php" class="nav-item nav-link pe-lg-0 <?php echo (basename($_SERVER['PHP_SELF']) == 'contacto.php') ? 'active' : ''; ?>">CONTACTO</a>
         </div>
         
         <!-- Mobile Buttons (Visible only on mobile) -->
-        <button type="button" class="btn text-primary ms-3 d-lg-none" data-bs-toggle="modal" data-bs-target="#searchModal">
+        <button type="button" class="btn text-primary ms-2 d-lg-none" data-bs-toggle="modal" data-bs-target="#searchModal" title="Pesquisar">
             <i class="fa fa-search"></i>
         </button>
-        <a href="portal/login.php" class="btn text-primary ms-2 d-lg-none" title="Portal do Membro">
+        <a href="submeter-oportunidade.php" class="btn text-warning ms-2 d-lg-none" title="PARCEIROS">
+            <i class="fas fa-handshake"></i>
+        </a>
+        <a href="staff/login.php" class="btn text-danger ms-2 d-lg-none" title="STAFF" target="_blank">
+            <i class="fas fa-lock"></i>
+        </a>
+        <a href="portal/login.php" class="btn text-primary ms-2 d-lg-none" title="ÁREA RESERVADA">
             <i class="fas fa-user-circle"></i>
         </a>
         <div id="" class="d-lg-none">&nbsp;</div>
